@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<link href="/saga//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"	rel="stylesheet"></link>
+
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Processos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+				<div class="form-group col-md-7">	
+					<ol class="breadcrumb">
+						<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+						<li class="active">Avaliação</li>
+						<li class="active">Inclusão</li>
+					</ol>
+				</div>
+				<div class="form-group col-md-3">	
+					<ol class="breadcrumb">
+						<li class="active">Usuário: </li>
+						<li th:text="${usuarioNome}"></li>
+						<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>  
+					</ol>
+				</div>
+				<div class="form-group col-md-2">	
+						<a href="/saga/avaliacaoHome" style="float: right" class="btn btn-primary btn-xs margin">Voltar</a>
+						<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+						<a href="/saga/avaliacaoRelMenu" style="float: right" class="btn btn-primary btn-xs margin">Relatório</a>
+				</div>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form action="avaliacaoCreate" th:object="${avaliacaoForm}"
+					th:action="@{/avaliacaoCreate}" method="POST">
+
+					<div class="alert alert-success" th:text="${mensagem}"
+						th:if="${not #strings.isEmpty(mensagem)}"></div>
+
+					<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+
+						<div th:each="detailedError : ${#fields.detailedErrors()}">
+							<span th:text="${detailedError.message}"></span>
+						</div>
+
+					</div>
+
+					<input type="hidden" class="form-control" id="avaliacaoPK"
+						th:field="*{avaliacaoPK}" th:value="${avaliacaoPK}">
+
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('avaliacaoNome')} ? has-error"
+							style="color: white;">
+							<label for="avaliacaoNome">Nome</label> <input type="text"
+								class="form-control" id="avaliacaoNome"
+								th:field="*{avaliacaoNome}" th:value="${avaliacaoNome}"
+								placeholder="Informe o nome do Avaliação" autofocus="autofocus">
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('avaliacaoDescricao')} ? has-error"
+							style="color: white;">
+							<label for="avaliacaoDescricao">Descrição</label> <input
+								type="text" class="form-control" id="avaliacaoDescricao"
+								th:field="*{avaliacaoDescricao}"
+								th:value="${avaliacaoDescricao}"
+								placeholder="Informe a descrição da Avaliação">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('avaliacaoMotivoOperacao')} ? has-error"
+							style="color: white;">
+							<label for="avaliacaoMotivoOperacao">Motivo da Operação</label> <input
+								type="text" class="form-control" id="avaliacaoMotivoOperacao"
+								th:field="*{avaliacaoMotivoOperacao}"
+								th:value="${avaliacaoMotivoOperacao}"
+								placeholder="Informe o Motivo da Operação da Avaliação">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('avaliacaoResponsavel')} ? has-error"
+							style="color: white;">
+							<label for="avaliacaoResponsavel">Responsável</label> <select
+								class="form-control" th:field="*{avaliacaoResponsavel}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}"></option>
+							</select>
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('avaliacaoStatus')} ? has-error"
+							style="color: white;">
+							<label for="avaliacaoStatus">Status</label>
+							<div>
+								<span th:each="ty : ${avaliacaoStatusValues}"> <input
+									type="radio" th:field="*{avaliacaoStatus}" th:value="${ty}" />
+									<label th:for="${#ids.prev('avaliacaoStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div id="actions" class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary btn-xs">Salvar</button>
+							<a href="/saga/avaliacaoHome" class="btn btn-default btn-xs">Cancelar</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

@@ -1,0 +1,1004 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
+
+<script>
+function enviar() {
+	document.form1.action.value="/processoEdit";
+	document.form1.submit();
+}
+
+$(document).ready(function() {
+	/* Get iframe src attribute value i.e. YouTube video url
+	and store it in a variable */
+	var url1 = $("#myVideo01").attr('src');
+	var url2 = $("#myVideo02").attr('src');
+	var url3 = $("#myVideo03").attr('src');
+	var url4 = $("#myVideo04").attr('src');
+	var url5 = $("#myVideo05").attr('src');
+
+	/* Assign empty url value to the iframe src attribute when
+	modal hide, which stop the video playing */
+	$("#myModalVideo01").on('hide.bs.modal', function() {
+		$("#myVideo01").attr('src', '');
+	});
+
+	$("#myModalVideo02").on('hide.bs.modal', function() {
+		$("#myVideo02").attr('src', '');
+	});
+
+	$("#myModalVideo03").on('hide.bs.modal', function() {
+		$("#myVideo03").attr('src', '');
+	});
+
+	$("#myModalVideo04").on('hide.bs.modal', function() {
+		$("#myVideo04").attr('src', '');
+	});
+
+	$("#myModalVideo05").on('hide.bs.modal', function() {
+		$("#myVideo05").attr('src', '');
+	});
+
+	/* Assign the initially stored url back to the iframe src
+	attribute when modal is displayed again */
+	$("#myModalVideo01").on('show.bs.modal', function() {
+		$("#myVideo01").attr('src', url1);
+	});
+	$("#myModalVideo02").on('show.bs.modal', function() {
+		$("#myVideo02").attr('src', url2);
+	});
+	$("#myModalVideo03").on('show.bs.modal', function() {
+		$("#myVideo03").attr('src', url3);
+	});
+	$("#myModalVideo04").on('show.bs.modal', function() {
+		$("#myVideo04").attr('src', url4);
+	});
+	$("#myModalVideo05").on('show.bs.modal', function() {
+		$("#myVideo05").attr('src', url5);
+	});
+});
+
+</script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Processos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<div class="form-group col-md-7">	
+				<ol class="breadcrumb">
+					<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+					<li class="active">Processo</li>
+					<li class="active">Edição</li>
+				</ol>
+			</div>
+				<div class="form-group col-md-3">	
+					<ol class="breadcrumb">
+						<li class="active">Usuário: </li>
+						<li th:text="${usuarioNome}"></li>
+						<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>  
+					</ol>
+				</div>
+			<div class="form-group col-md-2">	
+					<a href="/saga/processoHome" style="float: right" class="btn btn-primary btn-xs margin">Voltar</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/processoRelMenu" style="float: right" class="btn btn-primary btn-xs margin">Relatório</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/processoAdd" style="float: right" class="btn btn-primary btn-xs margin">Novo</a>
+			</div>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form action="processoSave" th:object="${processoForm}"
+					th:action="@{/processoSave}" method="POST">
+
+					<div class="alert alert-success" th:text="${mensagem}"
+						th:if="${not #strings.isEmpty(mensagem)}"></div>
+
+					<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+
+						<div th:each="detailedError : ${#fields.detailedErrors()}">
+							<span th:text="${detailedError.message}"></span>
+						</div>
+
+					</div>
+
+					<input type="hidden" class="form-control" id="processoPK"
+						name="processoPK" th:field="*{processoPK}"
+						th:value="${processoPK}">
+
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('processoNome')} ? has-error"
+							style="color: white;">
+							<label for="processoNome">Nome</label> <input type="text"
+								class="form-control" id="processoNome"
+								th:field="*{processoNome}" th:value="${processoNome}"
+								placeholder="Informe o nome do Processo" autofocus="autofocus"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('processoDescricao')} ? has-error"
+							style="color: white;">
+							<label for="processoDescricao">Descrição</label> <input
+								type="text" class="form-control" id="processoDescricao"
+								th:field="*{processoDescricao}" th:value="${processoDescricao}"
+								placeholder="Informe a descrição do Processo"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('processoGestor')} ? has-error"
+							style="color: white;">
+							<label for="processoGestor">Gestor</label> <select
+								class="form-control" th:field="*{processoGestor}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Gestor</option>
+							</select>
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('processoDono')} ? has-error"
+							style="color: white;">
+							<label for="processoDono">Dono</label> <select
+								class="form-control" th:field="*{processoDono}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Dono</option>
+							</select>
+						</div>
+						<div class="form-group col-md-1">
+							<label for="processoDuracao">Duração(min)</label> <span
+								class="form-control" id="processoDuracao"
+								th:text="${processoForm.processoDuracao}"></span>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('processoMotivoOperacao')} ? has-error"
+							style="color: white;">
+							<label for="processoMotivoOperacao">Motivo da Operação</label> <input
+								type="text" class="form-control" id="processoMotivoOperacao"
+								th:field="*{processoMotivoOperacao}"
+								th:value="${processoMotivoOperacao}"
+								placeholder="Informe o Motivo da Operação do Processo"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('processoResponsavel')} ? has-error"
+							style="color: white;">
+							<label for="processoResponsavel">Responsável</label> <select
+								class="form-control" th:field="*{processoResponsavel}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Responsável</option>
+							</select>
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('processoStatus')} ? has-error"
+							style="color: white;">
+							<label for="processoStatus">Status</label>
+							<div>
+								<span th:each="ty : ${processoStatusValues}"> <input
+									type="radio" th:field="*{processoStatus}" th:value="${ty}"
+									onKeyPress="if(window.event.keyCode==13){enviar();return false;}return " />
+									<label th:for="${#ids.prev('processoStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<!-- Button trigger modal -->
+						<label for="myButton">Relacionamentos</label>
+						<div>
+							<button type="button" class="btn btn-primary btn-lg"
+								id="myButton" data-toggle="modal" data-target="#myModal">Atividades</button>
+								&nbsp;
+							<button type="button" class="btn btn-primary btn-lg"
+								id="myButton" data-toggle="modal" data-target="#myModalCertificacao">Certificação</button>
+								&nbsp;
+							<button type="button" class="btn btn-primary btn-lg"
+								id="myButton" data-toggle="modal" data-target="#myModalCurso">Curso</button>
+								&nbsp;
+							<button type="button" class="btn btn-primary btn-lg"
+								id="myButton" data-toggle="modal" data-target="#myModalFormacao">Formação</button>
+								&nbsp;
+							<button type="button" class="btn btn-primary btn-lg"
+								id="myButton" data-toggle="modal" data-target="#myModalHabilidade">Habilidade</button>
+								
+						</div>
+					</div>
+
+					<!-- Modal -->
+					<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+						aria-labelledby="myModalLabel">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/processoAtividadeHome"
+											style="float: right" class="btn btn-info btn-xs margin">Processo/Atividade</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<input type="hidden" id="processoPK" name="processoPK"
+											value="${processoPK}" />
+
+										<table class="table table-hover">
+											<thead>
+												<tr>
+													<th class="col-lg-5" data-field="Processo"  data-sortable="true">Processo</th>
+													<th class="col-lg-4" data-field="Atividade"	data-sortable="true">Atividade</th>
+													<th class="col-lg-2" data-field="Sequência"	data-sortable="true">Sequência</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="processoAtividade : ${processoAtividadePage}">
+													<td
+														th:text="${processoAtividade.getProcesso().processoNome}"></td>
+													<td
+														th:text="${processoAtividade.getAtividade().atividadeNome}"></td>
+													<td
+														th:text="${processoAtividade.getProcessoAtividadeSequencia()}"></td>
+												</tr>
+
+											</tbody>
+										</table>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Modal -->
+					<div class="modal fade" id="myModalCertificacao" tabindex="-1" role="dialog"
+						aria-labelledby="myModalLabel">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Certificação : <a href="/saga/processoCertificacaoHome"
+											style="float: right" class="btn btn-info btn-xs margin">Processo/Certificação</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<input type="hidden" id="processoPK" name="processoPK"
+											value="${processoPK}" />
+
+										<table class="table table-hover">
+											<thead>
+												<tr>
+													<th class="col-lg-5" data-field="Processo"  data-sortable="true">Processo</th>
+													<th class="col-lg-4" data-field="Certificacao"	data-sortable="true">Certificação</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="processoCertificacao : ${processoCertificacaoPage}">
+													<td
+														th:text="${processoCertificacao.getProcesso().processoNome}"></td>
+													<td
+														th:text="${processoCertificacao.getCertificacao().certificacaoNome}"></td>
+												</tr>
+
+											</tbody>
+										</table>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Modal -->
+					<div class="modal fade" id="myModalCurso" tabindex="-1" role="dialog"
+						aria-labelledby="myModalLabel">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Curso : <a href="/saga/processoCursoHome"
+											style="float: right" class="btn btn-info btn-xs margin">Processo/Curso</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<table class="table table-hover">
+											<thead>
+												<tr>
+													<th class="col-lg-5" data-field="Processo"  data-sortable="true">Processo</th>
+													<th class="col-lg-4" data-field="Curso"	data-sortable="true">Curso</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="processoCurso : ${processoCursoPage}">
+													<td
+														th:text="${processoCurso.getProcesso().processoNome}"></td>
+													<td
+														th:text="${processoCurso.getCurso().cursoNome}"></td>
+												</tr>
+
+											</tbody>
+										</table>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Modal -->
+					<div class="modal fade" id="myModalFormacao" tabindex="-1" role="dialog"
+						aria-labelledby="myModalLabel">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Formação : <a href="/saga/processoFormacaoHome"
+											style="float: right" class="btn btn-info btn-xs margin">Processo/Formação</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<table class="table table-hover">
+											<thead>
+												<tr>
+													<th class="col-lg-5" data-field="Processo"  data-sortable="true">Processo</th>
+													<th class="col-lg-4" data-field="Formacao"	data-sortable="true">Formação</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="processoFormacao : ${processoFormacaoPage}">
+													<td
+														th:text="${processoFormacao.getProcesso().processoNome}"></td>
+													<td
+														th:text="${processoFormacao.getFormacao().formacaoNome}"></td>
+												</tr>
+
+											</tbody>
+										</table>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<!-- Modal -->
+					<div class="modal fade" id="myModalHabilidade" tabindex="-1" role="dialog"
+						aria-labelledby="myModalLabel">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Habilidade : <a href="/saga/processoHabilidadeHome"
+											style="float: right" class="btn btn-info btn-xs margin">Processo/Habilidade</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<table class="table table-hover">
+											<thead>
+												<tr>
+													<th class="col-lg-5" data-field="Processo"  data-sortable="true">Processo</th>
+													<th class="col-lg-4" data-field="Habilidade"	data-sortable="true">Habilidade</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="processoHabilidade : ${processoHabilidadePage}">
+													<td
+														th:text="${processoHabilidade.getProcesso().processoNome}"></td>
+													<td
+														th:text="${processoHabilidade.getHabilidade().habilidadeNome}"></td>
+												</tr>
+
+											</tbody>
+										</table>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<!-- Button trigger modal -->
+						<label for="myButton">Vídeos</label>
+						<div>
+							<table>
+								<tr>
+									<td
+										th:each="processoVideo,iterStat : ${processoVideoList}">
+										<div>
+											<button type="button" class="btn btn-primary btn-lg"
+												id="myButton" data-toggle="modal"
+												th:attr="data-target='#myModalVideo0'+${iterStat.index+1}"
+												th:text="${processoVideo.video.videoNomeBotao}">Vídeo xx</button>
+											&nbsp; &nbsp;
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<hr />
+					<div class="modal fade" id="myModalVideo01" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/processoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Vídeo Processo 01</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="processoVideo,iterStat : ${processoVideoList}">
+											<div th:if="${iterStat.index} == 0">
+												<video id="myVideo01" width="853" height="480" controls
+													th:src="${processoVideoList[__${iterStat.index}__].video.videoURL}"
+													th:text="${processoVideoList[__${iterStat.index}__].video.videoURL}"></video>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalVideo02" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/processoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Vídeo Processo 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="processoVideo,iterStat : ${processoVideoList}">
+											<div th:if="${iterStat.index} == 1">
+												<video id="myVideo02" width="853" height="480" controls
+													th:src="${processoVideoList[__${iterStat.index}__].video.videoURL}"
+													th:text="${processoVideoList[__${iterStat.index}__].video.videoURL}"></video>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalVideo03" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/processoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Vídeo Processo 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="processoVideo,iterStat : ${processoVideoList}">
+											<div th:if="${iterStat.index} == 2">
+												<video id="myVideo03" width="853" height="480" controls
+													th:src="${processoVideoList[__${iterStat.index}__].video.videoURL}"
+													th:text="${processoVideoList[__${iterStat.index}__].video.videoURL}"></video>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalVideo04" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/processoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Vídeo Processo 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="processoVideo,iterStat : ${processoVideoList}">
+											<div th:if="${iterStat.index} == 3">
+												<video id="myVideo04" width="853" height="480" controls
+													th:src="${processoVideoList[__${iterStat.index}__].video.videoURL}"
+													th:text="${processoVideoList[__${iterStat.index}__].video.videoURL}"></video>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalVideo05" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/processoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Vídeo Processo 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="processoVideo,iterStat : ${processoVideoList}">
+											<div th:if="${iterStat.index} == 4">
+												<video id="myVideo05" width="853" height="480" controls
+													th:src="${processoVideoList[__${iterStat.index}__].video.videoURL}"
+													th:text="${processoVideoList[__${iterStat.index}__].video.videoURL}"></video>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<!-- Button trigger modal -->
+						<label for="myButton">Textos</label>
+						<div>
+							<table>
+								<tr>
+									<td
+										th:each="processoTexto,iterStat : ${processoTextoList}">
+										<div>
+											<button type="button" class="btn btn-primary btn-lg"
+												id="myButton" data-toggle="modal"
+												th:attr="data-target='#myModalTexto0'+${iterStat.index+1}"
+												th:text="${processoTexto.texto.textoNomeBotao}">Texto xx</button>
+											&nbsp; &nbsp;
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<hr />
+					<div class="modal fade" id="myModalTexto01" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/processoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Texto Processo 01</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="processoTexto,iterStat : ${processoTextoList}">
+											<div th:if="${iterStat.index} == 0">
+												<embed id="myTexto01" width="853" height="480"
+													th:src="${processoTextoList[__${iterStat.index}__].texto.textoURL}"></embed>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalTexto02" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/processoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Texto Processo 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="processoTexto,iterStat : ${processoTextoList}">
+											<div th:if="${iterStat.index} == 1">
+												<embed id="myTexto02" width="853" height="480"
+													th:src="${processoTextoList[__${iterStat.index}__].texto.textoURL}"
+													th:text="${processoTextoList[__${iterStat.index}__].texto.textoURL}"></embed>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalTexto03" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/processoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Texto Processo 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="processoTexto,iterStat : ${processoTextoList}">
+											<div th:if="${iterStat.index} == 2">
+												<embed id="myTexto03" width="853" height="480"
+													th:src="${processoTextoList[__${iterStat.index}__].texto.textoURL}"
+													th:text="${processoTextoList[__${iterStat.index}__].texto.textoURL}"></embed>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalTexto04" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/processoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Texto Processo 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="processoTexto,iterStat : ${processoTextoList}">
+											<div th:if="${iterStat.index} == 3">
+												<embed id="myTexto04" width="853" height="480"
+													th:src="${processoTextoList[__${iterStat.index}__].texto.textoURL}"
+													th:text="${processoTextoList[__${iterStat.index}__].texto.textoURL}"></embed>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalTexto05" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/processoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Texto Processo 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="processoTexto,iterStat : ${processoTextoList}">
+											<div th:if="${iterStat.index} == 4">
+												<embed id="myTexto05" width="853" height="480"
+													th:src="${processoTextoList[__${iterStat.index}__].texto.textoURL}"
+													th:text="${processoTextoList[__${iterStat.index}__].texto.textoURL}"></embed>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row">
+						<!-- Button trigger modal -->
+						<label for="myButton">Imagems</label>
+						<div>
+							<table>
+								<tr>
+									<td
+										th:each="processoImagem,iterStat : ${processoImagemList}">
+										<div>
+											<button type="button" class="btn btn-primary btn-lg"
+												id="myButton" data-toggle="modal"
+												th:attr="data-target='#myModalImagem0'+${iterStat.index+1}"
+												th:text="${processoImagem.imagem.imagemNomeBotao}">Imagem xx</button>
+											&nbsp; &nbsp;
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<hr />
+					<div class="modal fade" id="myModalImagem01" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/processoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Imagem Processo 01</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="processoImagem,iterStat : ${processoImagemList}">
+											<div th:if="${iterStat.index} == 0">
+												<img id="myImagem01" width="853" height="480"
+													th:src="${processoImagemList[__${iterStat.index}__].imagem.imagemURL}"
+													th:text="${processoImagemList[__${iterStat.index}__].imagem.imagemURL}"></img>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalImagem02" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/processoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Imagem Processo 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="processoImagem,iterStat : ${processoImagemList}">
+											<div th:if="${iterStat.index} == 1">
+												<img id="myImagem02" width="853" height="480"
+													th:src="${processoImagemList[__${iterStat.index}__].imagem.imagemURL}"
+													th:text="${processoImagemList[__${iterStat.index}__].imagem.imagemURL}"></img>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalImagem03" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/processoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Imagem Processo 03</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="processoImagem,iterStat : ${processoImagemList}">
+											<div th:if="${iterStat.index} == 2">
+												<img id="myImagem03" width="853" height="480"
+													th:src="${processoImagemList[__${iterStat.index}__].imagem.imagemURL}"
+													th:text="${processoImagemList[__${iterStat.index}__].imagem.imagemURL}"></img>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalImagem04" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/processoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Imagem Processo 04</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="processoImagem,iterStat : ${processoImagemList}">
+											<div th:if="${iterStat.index} == 3">
+												<img id="myImagem04" width="853" height="480"
+													th:src="${processoImagemList[__${iterStat.index}__].imagem.imagemURL}"
+													th:text="${processoImagemList[__${iterStat.index}__].imagem.imagemURL}"></img>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalImagem05" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/processoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Imagem Processo 05</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="processoImagem,iterStat : ${processoImagemList}">
+											<div th:if="${iterStat.index} == 4">
+												<img id="myImagem05" width="853" height="480"
+													th:src="${processoImagemList[__${iterStat.index}__].imagem.imagemURL}"
+													th:text="${processoImagemList[__${iterStat.index}__].imagem.imagemURL}"></img>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="actions" class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary btn-xs">Salvar</button>
+							<a href="/saga/processoHome" class="btn btn-default btn-xs">Cancelar</a>
+						</div>
+					</div>
+				</form>
+				<hr />
+			</div>
+		</div>
+	</div>
+</body>
+</html>

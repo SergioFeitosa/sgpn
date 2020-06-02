@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8" />
+<title>Spring Boot + JPA + Datatables</title>
+<link rel="stylesheet"
+	href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link href="css/collapse.css" rel="stylesheet">
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script
+	src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<link rel="stylesheet"
+	href="https://cdn.datatables.net/1.10.12/css/jquery.dataTables.min.css">
+<script
+	src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
+<script src="/js/datatable.js"></script>
+<script src="/js/collapse.js"></script>
+
+<script>
+
+
+
+	
+</script>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>&nbsp;&nbsp;&nbsp;Lumino</span>Pro</a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+
+
+	<!--nav sidebar -->
+	<aside>
+		<nav class="navbar navbar-inverse sidebar navbar-fixed-top"
+			role="navigation">
+			<link
+				href="/saga//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+				rel="stylesheet">
+
+			<div class="nav-side-menu">
+				<div class="brand">Brand Logo</div>
+				<i class="fa fa-bars fa-2x toggle-btn" data-toggle="collapse"
+					data-target="#menu-content"></i>
+
+				<div class="menu-list">
+
+					<ul id="menu-content" class="menu-content collapse out">
+
+						<li data-toggle="collapse" data-target="#indexes"
+							class="collapsed active"><a href="#"><i
+								class="fa fa-gift fa-lg"></i> Index <i
+								class="fa fa-gift fa-lg btn pull-right" style="margin-top: 5px"></i></a>
+							<ul class="sub-menu collapse" id="indexes">
+								<li class="active"><a href="indexBootstrap"><span
+										class="glyphicon glyphicon-dashboard"></span> Evento </a></li>
+							</ul></li>
+						<li data-toggle="collapse" data-target="#eventos"
+							class="collapsed active"><a href="#"><i
+								class="fa fa-gift fa-lg"></i> Evento <i
+								class="fa fa-gift fa-lg btn pull-right" style="margin-top: 5px"></i></a>
+							<ul class="sub-menu collapse" id="eventos">
+								<li class="active"><a href="evento"><span
+										class="glyphicon glyphicon-dashboard"></span> Evento </a></li>
+							</ul></li>
+						<li role="presentation" class="divider"></li>
+						<li><a href="login.html"> <i
+								class="glyphicon glyphicon-user"></i> Logout
+						</a></li>
+					</ul>
+				</div>
+			</div>
+		</nav>
+
+	</aside>
+
+	<div class="main"></div>
+
+
+	<div class="col-sm-9 col-sm-offset-3 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<ol class="breadcrumb">
+				<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+				<li class="active">Tables</li>
+			</ol>
+		</div>
+		<!--/.row-->
+
+		<div class="row">
+			<div class="col-lg-12">
+				<h1 class="page-header">Tables</h1>
+			</div>
+		</div>
+		<!--/.row-->
+		<div id="main" class="container-fluid">
+			<div id="top" class="row">
+				<div class="col-md-4">
+					<h2>Itens</h2>
+				</div>
+
+				<div class="col-md-6">
+					<div class="input-group h2">
+						<input name="data[search]" class="form-control" id="search"
+							type="text" placeholder="Pesquisar Itens"> <span
+							class="input-group-btn">
+							<button class="btn btn-primary" type="submit">
+								<span class="glyphicon glyphicon-search"></span>
+							</button>
+						</span>
+					</div>
+				</div>
+
+				<div class="col-md-4">
+					<a href="add.html" class="btn btn-primary pull-right h2">Novo
+						Item</a>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="panel panel-default">
+						<div class="panel-heading">Advanced Table</div>
+						<div class="panel-body">
+							<div id="list" class="row">
+
+								<h1>Employees Table</h1>
+								<table id="employeesTable" class="display" data-url="x">
+
+									<!-- Header Table -->
+									<thead>
+										<tr>
+											<th>Id</th>
+											<th>Name</th>
+											<th>Last Name</th>
+											<th>Email</th>
+											<th>Phone</th>
+											<th>Activate</th>
+											<th><a>Ações</a></th>
+
+										</tr>
+									</thead>
+								</table>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</body>
+</html>
+view rawindex.html hosted with ❤ by GitHub

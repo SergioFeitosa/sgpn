@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<link href="/saga//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"	rel="stylesheet"></link>
+
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Processos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<div class="form-group col-md-7">	
+				<ol class="breadcrumb">
+					<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+					<li class="active">Treinamento</li>
+					<li class="active">Inclusão</li>
+				</ol>
+			</div>
+				<div class="form-group col-md-3">	
+					<ol class="breadcrumb">
+						<li class="active">Usuário: </li>
+						<li th:text="${usuarioNome}"></li>
+						<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>  
+					</ol>
+				</div>
+			<div class="form-group col-md-2">	
+					<a href="/saga/treinamentoHome" style="float: right" class="btn btn-primary btn-xs margin">Voltar</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/treinamentoRelMenu" style="float: right" class="btn btn-primary btn-xs margin">Relatório</a>
+			</div>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form action="treinamentoCreate" th:object="${treinamentoForm}"
+					th:action="@{/treinamentoCreate}" method="POST">
+
+					<div class="alert alert-success" th:text="${mensagem}"
+						th:if="${not #strings.isEmpty(mensagem)}"></div>
+
+					<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+
+						<div th:each="detailedError : ${#fields.detailedErrors()}">
+							<span th:text="${detailedError.message}"></span>
+						</div>
+
+					</div>
+
+					<input type="hidden" class="form-control" id="treinamentoPK"
+						th:field="*{treinamentoPK}" th:value="${treinamentoPK}">
+
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('treinamentoNome')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoNome">Nome</label> <input type="text"
+								class="form-control" id="treinamentoNome"
+								th:field="*{treinamentoNome}" th:value="${treinamentoNome}"
+								placeholder="Informe o nome do Treinamento" autofocus="autofocus">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('treinamentoDescricao')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoDescricao">Descrição</label> <input
+								type="text" class="form-control" id="treinamentoDescricao"
+								th:field="*{treinamentoDescricao}"
+								th:value="${treinamentoDescricao}"
+								placeholder="Informe a descrição do Treinamento">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-3"
+							th:classappend="${#fields.hasErrors('treinamentoGestor')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoGestor">Gestor</label> <select
+								class="form-control" th:field="*{treinamentoGestor}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Gestor</option>
+							</select>
+
+
+						</div>
+						<div class="form-group col-md-3"
+							th:classappend="${#fields.hasErrors('treinamentoDono')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoDono">Dono</label> <select
+								class="form-control" th:field="*{treinamentoDono}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Dono</option>
+							</select>
+
+
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('treinamentoAprovacao')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoAprovacao">Aprovação</label>
+							<div>
+								<span th:each="ty : ${treinamentoAprovacaoValues}"> <input
+									type="radio" th:field="*{treinamentoAprovacao}" th:value="${ty}" />
+									<label th:for="${#ids.prev('treinamentoAprovacao')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+						
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('treinamentoDataPrevistaInicio')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoDataPrevistaInicio">Data Prevista de Início</label> <input
+								type="date" class="form-control" id="treinamentoDataPrevistaInicio"
+								th:field="*{treinamentoDataPrevistaInicio}"
+								th:value="${treinamentoDataPrevistaInicio}"
+								placeholder="Informe a Data Prevista de Início do Treinamento">
+						</div>
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('treinamentoDataPrevistaTermino')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoDataPrevistaTermino">Data Prevista de Término</label> <input
+								type="date" class="form-control" id="treinamentoDataPrevistaTermino"
+								th:field="*{treinamentoDataPrevistaTermino}"
+								th:value="${treinamentoDataPrevistaTermino}"
+								placeholder="Informe a Data Prevista de Término do Treinamento">
+						</div>
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('treinamentoDataRealInicio')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoDataRealInicio">Data Real de Início</label> <input
+								type="date" class="form-control" id="treinamentoDataRealInicio"
+								th:field="*{treinamentoDataRealInicio}"
+								th:value="${treinamentoDataRealInicio}"
+								placeholder="Informe a Data Real de Início do Treinamento">
+						</div>
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('treinamentoDataRealTermino')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoDataRealTermino">Data Real de Término</label> <input
+								type="date" class="form-control" id="treinamentoDataRealTermino"
+								th:field="*{treinamentoDataRealTermino}"
+								th:value="${treinamentoDataRealTermino}"
+								placeholder="Informe a Data Real de Término do Treinamento">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('treinamentoPrazoStatus')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoPrazoStatus">Status do Prazo</label>
+							<div>
+								<span th:each="ty : ${treinamentoPrazoStatusValues}"> <input
+									type="radio" th:field="*{treinamentoPrazoStatus}" th:value="${ty}" />
+									<label th:for="${#ids.prev('treinamentoPrazoStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('treinamentoCustoPrevisto')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoCustoPrevisto">Custo Previsto</label> <input
+								type="text" class="form-control" id="treinamentoCustoPrevisto"
+								th:field="*{treinamentoCustoPrevisto}"
+								th:value="${treinamentoCustoPrevisto}"
+								placeholder="Informe o Custo Previsto do Treinamento">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('treinamentoCustoFinal')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoCustoFinal">Custo Final</label> <input
+								type="text" class="form-control" id="treinamentoCustoFinal"
+								th:field="*{treinamentoCustoFinal}"
+								th:value="${treinamentoCustoFinal}"
+								placeholder="Informe o Custo Final do Treinamento">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('treinamentoCustoStatus')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoCustoStatus">Status do Custo</label>
+							<div>
+								<span th:each="ty : ${treinamentoCustoStatusValues}"> <input
+									type="radio" th:field="*{treinamentoCustoStatus}" th:value="${ty}" />
+									<label th:for="${#ids.prev('treinamentoCustoStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('treinamentoMotivoOperacao')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoMotivoOperacao">Motivo da Operação</label> <input
+								type="text" class="form-control" id="treinamentoMotivoOperacao"
+								th:field="*{treinamentoMotivoOperacao}"
+								th:value="${treinamentoMotivoOperacao}"
+								placeholder="Informe o Motivo da Operação do Treinamento">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('treinamentoResponsavel')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoResponsavel">Responsável</label> <select
+								class="form-control" th:field="*{treinamentoResponsavel}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}"></option>
+							</select>
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('treinamentoStatus')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoStatus">Status</label>
+							<div>
+								<span th:each="ty : ${treinamentoStatusValues}"> <input
+									type="radio" th:field="*{treinamentoStatus}" th:value="${ty}" />
+									<label th:for="${#ids.prev('treinamentoStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div id="actions" class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary btn-xs">Salvar</button>
+							<a href="/saga/treinamentoHome" class="btn btn-default btn-xs">Cancelar</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

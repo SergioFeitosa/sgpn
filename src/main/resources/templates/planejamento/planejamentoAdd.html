@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<link href="/saga//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"	rel="stylesheet"></link>
+
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Processos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<div class="form-group col-md-7">	
+				<ol class="breadcrumb">
+					<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+					<li class="active">Planejamento</li>
+					<li class="active">Inclusão</li>
+				</ol>
+			</div>
+				<div class="form-group col-md-3">	
+					<ol class="breadcrumb">
+						<li class="active">Usuário: </li>
+						<li th:text="${usuarioNome}"></li>
+						<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>  
+					</ol>
+				</div>
+			<div class="form-group col-md-2">	
+					<a href="/saga/planejamentoHome" style="float: right" class="btn btn-primary btn-xs margin">Voltar</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/planejamentoRelMenu" style="float: right" class="btn btn-primary btn-xs margin">Relatório</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/planejamentoAdd" style="float: right" class="btn btn-primary btn-xs margin">Novo</a>
+			</div>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form action="planejamentoCreate" th:object="${planejamentoForm}"
+					th:action="@{/planejamentoCreate}" method="POST">
+
+					<div class="alert alert-success" th:text="${mensagem}"
+						th:if="${not #strings.isEmpty(mensagem)}"></div>
+
+					<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+
+						<div th:each="detailedError : ${#fields.detailedErrors()}">
+							<span th:text="${detailedError.message}"></span>
+						</div>
+
+					</div>
+
+					<input type="hidden" class="form-control" id="planejamentoPK"
+						th:field="*{planejamentoPK}" th:value="${planejamentoPK}">
+
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('planejamentoNome')} ? has-error"
+							style="color: white;">
+							<label for="planejamentoNome">Nome</label> <input type="text"
+								class="form-control" id="planejamentoNome"
+								th:field="*{planejamentoNome}" th:value="${planejamentoNome}"
+								placeholder="Informe o nome do Planejamento" autofocus="autofocus">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('planejamentoDescricao')} ? has-error"
+							style="color: white;">
+							<label for="planejamentoDescricao">Descrição</label> <input
+								type="text" class="form-control" id="planejamentoDescricao"
+								th:field="*{planejamentoDescricao}"
+								th:value="${planejamentoDescricao}"
+								placeholder="Informe a descrição do Planejamento">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('planejamentoGestor')} ? has-error"
+							style="color: white;">
+							<label for="planejamentoGestor">Gestor</label> <select
+								class="form-control" th:field="*{planejamentoGestor}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Gestor</option>
+							</select>
+
+
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('planejamentoDono')} ? has-error"
+							style="color: white;">
+							<label for="planejamentoDono">Dono</label> <select
+								class="form-control" th:field="*{planejamentoDono}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Dono</option>
+							</select>
+
+
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('planejamentoAprovacao')} ? has-error"
+							style="color: white;">
+							<label for="planejamentoAprovacao">Aprovação</label>
+							<div>
+								<span th:each="ty : ${planejamentoAprovacaoValues}"> <input
+									type="radio" th:field="*{planejamentoAprovacao}" th:value="${ty}" />
+									<label th:for="${#ids.prev('planejamentoAprovacao')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('planejamentoDataPrevistaInicio')} ? has-error"
+							style="color: white;">
+							<label for="planejamentoDataPrevistaInicio">Data Prevista de Início</label> <input
+								type="date" class="form-control" id="planejamentoDataPrevistaInicio"
+								th:field="*{planejamentoDataPrevistaInicio}"
+								th:value="${planejamentoDataPrevistaInicio}"
+								placeholder="Informe a Data Prevista de Início do Planejamento">
+						</div>
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('planejamentoDataPrevistaTermino')} ? has-error"
+							style="color: white;">
+							<label for="planejamentoDataPrevistaTermino">Data Prevista de Término</label> <input
+								type="date" class="form-control" id="planejamentoDataPrevistaTermino"
+								th:field="*{planejamentoDataPrevistaTermino}"
+								th:value="${planejamentoDataPrevistaTermino}"
+								placeholder="Informe a Data Prevista de Término do Planejamento">
+						</div>
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('planejamentoDataRealInicio')} ? has-error"
+							style="color: white;">
+							<label for="planejamentoDataRealInicio">Data Real de Início</label> <input
+								type="date" class="form-control" id="planejamentoDataRealInicio"
+								th:field="*{planejamentoDataRealInicio}"
+								th:value="${planejamentoDataRealInicio}"
+								placeholder="Informe a Data Real de Início do Planejamento">
+						</div>
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('planejamentoDataRealTermino')} ? has-error"
+							style="color: white;">
+							<label for="planejamentoDataRealTermino">Data Real de Término</label> <input
+								type="date" class="form-control" id="planejamentoDataRealTermino"
+								th:field="*{planejamentoDataRealTermino}"
+								th:value="${planejamentoDataRealTermino}"
+								placeholder="Informe a Data Real de Término do Planejamento">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('planejamentoPrazoStatus')} ? has-error"
+							style="color: white;">
+							<label for="planejamentoPrazoStatus">Status do Prazo</label>
+							<div>
+								<span th:each="ty : ${planejamentoPrazoStatusValues}"> <input
+									type="radio" th:field="*{planejamentoPrazoStatus}" th:value="${ty}" />
+									<label th:for="${#ids.prev('planejamentoPrazoStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('planejamentoCustoPrevisto')} ? has-error"
+							style="color: white;">
+							<label for="planejamentoCustoPrevisto">Custo Previsto</label> <input
+								type="text" class="form-control" id="planejamentoCustoPrevisto"
+								th:field="*{planejamentoCustoPrevisto}"
+								th:value="${planejamentoCustoPrevisto}"
+								placeholder="Informe o Custo Previsto do Planejamento">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('planejamentoCustoFinal')} ? has-error"
+							style="color: white;">
+							<label for="planejamentoCustoFinal">Custo Final</label> <input
+								type="text" class="form-control" id="planejamentoCustoFinal"
+								th:field="*{planejamentoCustoFinal}"
+								th:value="${planejamentoCustoFinal}"
+								placeholder="Informe o Custo Final do Planejamento">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('planejamentoCustoStatus')} ? has-error"
+							style="color: white;">
+							<label for="planejamentoCustoStatus">Status do Custo</label>
+							<div>
+								<span th:each="ty : ${planejamentoCustoStatusValues}"> <input
+									type="radio" th:field="*{planejamentoCustoStatus}" th:value="${ty}" />
+									<label th:for="${#ids.prev('planejamentoCustoStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('planejamentoMotivoOperacao')} ? has-error"
+							style="color: white;">
+							<label for="planejamentoMotivoOperacao">Motivo da Operação</label> <input
+								type="text" class="form-control" id="planejamentoMotivoOperacao"
+								th:field="*{planejamentoMotivoOperacao}"
+								th:value="${planejamentoMotivoOperacao}"
+								placeholder="Informe o Motivo da Operação do Planejamento">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('planejamentoResponsavel')} ? has-error"
+							style="color: white;">
+							<label for="planejamentoResponsavel">Responsável</label> <select
+								class="form-control" th:field="*{planejamentoResponsavel}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}"></option>
+							</select>
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('planejamentoStatus')} ? has-error"
+							style="color: white;">
+							<label for="planejamentoStatus">Status</label>
+							<div>
+								<span th:each="ty : ${planejamentoStatusValues}"> <input
+									type="radio" th:field="*{planejamentoStatus}" th:value="${ty}" />
+									<label th:for="${#ids.prev('planejamentoStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div id="actions" class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary btn-xs">Salvar</button>
+							<a href="/saga/planejamentoHome" class="btn btn-default btn-xs">Cancelar</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

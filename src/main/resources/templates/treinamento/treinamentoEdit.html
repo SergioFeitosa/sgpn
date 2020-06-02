@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"
+	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link
+	href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'
+	rel='stylesheet' type='text/css'></link>
+<link
+	href="/saga//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+	rel="stylesheet"></link>
+
+<script src="/js/jquery-3.2.1.min.js"
+	th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+<script>
+	$(document).ready(function() {
+		/* Get iframe src attribute value i.e. YouTube video url
+		and store it in a variable */
+		var url1 = $("#myVideo01").attr('src');
+		var url2 = $("#myVideo02").attr('src');
+		var url3 = $("#myVideo03").attr('src');
+		var url4 = $("#myVideo04").attr('src');
+		var url5 = $("#myVideo05").attr('src');
+
+		/* Assign empty url value to the iframe src attribute when
+		modal hide, which stop the video playing */
+		$("#myModalVideo01").on('hide.bs.modal', function() {
+			$("#myVideo01").attr('src', '');
+		});
+
+		$("#myModalVideo02").on('hide.bs.modal', function() {
+			$("#myVideo02").attr('src', '');
+		});
+
+		$("#myModalVideo03").on('hide.bs.modal', function() {
+			$("#myVideo03").attr('src', '');
+		});
+
+		$("#myModalVideo04").on('hide.bs.modal', function() {
+			$("#myVideo04").attr('src', '');
+		});
+
+		$("#myModalVideo05").on('hide.bs.modal', function() {
+			$("#myVideo05").attr('src', '');
+		});
+
+		/* Assign the initially stored url back to the iframe src
+		attribute when modal is displayed again */
+		$("#myModalVideo01").on('show.bs.modal', function() {
+			$("#myVideo01").attr('src', url1);
+		});
+		$("#myModalVideo02").on('show.bs.modal', function() {
+			$("#myVideo02").attr('src', url2);
+		});
+		$("#myModalVideo03").on('show.bs.modal', function() {
+			$("#myVideo03").attr('src', url3);
+		});
+		$("#myModalVideo04").on('show.bs.modal', function() {
+			$("#myVideo04").attr('src', url4);
+		});
+		$("#myModalVideo05").on('show.bs.modal', function() {
+			$("#myVideo05").attr('src', url5);
+		});
+	});
+</script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e
+						Aperfeiçoamento de Processos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<div class="form-group col-md-7">
+				<ol class="breadcrumb">
+					<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+					<li class="active">Treinamento</li>
+					<li class="active">Edição</li>
+				</ol>
+			</div>
+			<div class="form-group col-md-3">
+				<ol class="breadcrumb">
+					<li class="active">Usuário:</li>
+					<li th:text="${usuarioNome}"></li>
+					<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>
+				</ol>
+			</div>
+			<div class="form-group col-md-2">
+				<a href="/saga/treinamentoHome" style="float: right"
+					class="btn btn-primary btn-xs margin">Voltar</a>
+				<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+				<a href="/saga/treinamentoRelMenu" style="float: right"
+					class="btn btn-primary btn-xs margin">Relatório</a>
+				<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+				<a href="/saga/treinamentoAdd" style="float: right"
+					class="btn btn-primary btn-xs margin">Novo</a>
+			</div>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form action="treinamentoSave" th:object="${treinamentoForm}"
+					th:action="@{/treinamentoSave}" method="POST">
+
+					<div class="alert alert-success" th:text="${mensagem}"
+						th:if="${not #strings.isEmpty(mensagem)}"></div>
+
+					<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+
+						<div th:each="detailedError : ${#fields.detailedErrors()}">
+							<span th:text="${detailedError.message}"></span>
+						</div>
+
+					</div>
+
+					<input type="hidden" class="form-control" id="treinamentoPK"
+						th:field="*{treinamentoPK}" th:value="${treinamentoPK}">
+
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('treinamentoNome')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoNome">Nome</label> <input type="text"
+								class="form-control" id="treinamentoNome"
+								th:field="*{treinamentoNome}" th:value="${treinamentoNome}"
+								placeholder="Informe o nome do Treinamento"
+								autofocus="autofocus"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('treinamentoDescricao')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoDescricao">Descrição</label> <input
+								type="text" class="form-control" id="treinamentoDescricao"
+								th:field="*{treinamentoDescricao}"
+								th:value="${treinamentoDescricao}"
+								placeholder="Informe a descrição do Treinamento"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-3"
+							th:classappend="${#fields.hasErrors('treinamentoGestor')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoGestor">Gestor</label> <select
+								class="form-control" th:field="*{treinamentoGestor}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}"
+									style="color: black;" th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Gestor</option>
+							</select>
+
+
+						</div>
+						<div class="form-group col-md-3"
+							th:classappend="${#fields.hasErrors('treinamentoDono')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoDono">Dono</label> <select
+								class="form-control" th:field="*{treinamentoDono}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}"
+									style="color: black;" th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Dono</option>
+							</select>
+
+
+						</div>
+						<div class="form-group col-md-6"
+							th:classappend="${#fields.hasErrors('treinamentoAprovacao')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoAprovacao">Aprovação</label>
+							<div>
+								<span th:each="ty : ${treinamentoAprovacaoValues}"> <input
+									type="radio" th:field="*{treinamentoAprovacao}"
+									th:value="${ty}" /> <label
+									th:for="${#ids.prev('treinamentoAprovacao')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('treinamentoDataPrevistaInicio')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoDataPrevistaInicio">Data Prevista
+								de Início</label> <input type="date" class="form-control"
+								id="treinamentoDataPrevistaInicio"
+								th:field="*{treinamentoDataPrevistaInicio}"
+								th:value="${treinamentoDataPrevistaInicio}"
+								placeholder="Informe a Data Prevista de Início do Treinamento">
+						</div>
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('treinamentoDataPrevistaTermino')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoDataPrevistaTermino">Data Prevista
+								de Término</label> <input type="date" class="form-control"
+								id="treinamentoDataPrevistaTermino"
+								th:field="*{treinamentoDataPrevistaTermino}"
+								th:value="${treinamentoDataPrevistaTermino}"
+								placeholder="Informe a Data Prevista de Término do Treinamento">
+						</div>
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('treinamentoDataRealInicio')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoDataRealInicio">Data Real de
+								Início</label> <input type="date" class="form-control"
+								id="treinamentoDataRealInicio"
+								th:field="*{treinamentoDataRealInicio}"
+								th:value="${treinamentoDataRealInicio}"
+								placeholder="Informe a Data Real de Início do Treinamento">
+						</div>
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('treinamentoDataRealTermino')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoDataRealTermino">Data Real de
+								Término</label> <input type="date" class="form-control"
+								id="treinamentoDataRealTermino"
+								th:field="*{treinamentoDataRealTermino}"
+								th:value="${treinamentoDataRealTermino}"
+								placeholder="Informe a Data Real de Término do Treinamento">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('treinamentoPrazoStatus')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoPrazoStatus">Status do Prazo</label>
+							<div class="active">
+								<span th:each="ty : ${treinamentoPrazoStatusValues}"> 
+								<input	type="radio" th:field="*{treinamentoPrazoStatus}" th:value="${ty}"/> 
+								<label	th:for="${#ids.prev('treinamentoPrazoStatus')}" th:text="${ty}"> </label>
+								&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('treinamentoCustoPrevisto')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoCustoPrevisto">Custo Previsto</label> <input
+								type="text" class="form-control" id="treinamentoCustoPrevisto"
+								th:field="*{treinamentoCustoPrevisto}"
+								th:value="${treinamentoCustoPrevisto}"
+								placeholder="Informe o Custo Previsto do Treinamento">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('treinamentoCustoFinal')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoCustoFinal">Custo Final</label> <input
+								type="text" class="form-control" id="treinamentoCustoFinal"
+								th:field="*{treinamentoCustoFinal}"
+								th:value="${treinamentoCustoFinal}"
+								placeholder="Informe o Custo Final do Treinamento">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('treinamentoCustoStatus')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoCustoStatus">Status do Custo</label>
+							<div>
+								<span th:each="ty : ${treinamentoCustoStatusValues}"> <input
+									type="radio" th:field="*{treinamentoCustoStatus}"
+									th:value="${ty}" /> <label
+									th:for="${#ids.prev('treinamentoCustoStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('treinamentoMotivoOperacao')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoMotivoOperacao">Motivo da Operação</label>
+							<input type="text" class="form-control"
+								id="treinamentoMotivoOperacao"
+								th:field="*{treinamentoMotivoOperacao}"
+								th:value="${treinamentoMotivoOperacao}"
+								placeholder="Informe o Motivo da Operação do Treinamento"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('treinamentoResponsavel')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoResponsavel">Responsável</label> <select
+								class="form-control" th:field="*{treinamentoResponsavel}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}"
+									style="color: black;" th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Responsável</option>
+							</select>
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('treinamentoStatus')} ? has-error"
+							style="color: white;">
+							<label for="treinamentoStatus">Status</label>
+							<div>
+								<span th:each="ty : ${treinamentoStatusValues}"> <input
+									type="radio" th:field="*{treinamentoStatus}" th:value="${ty}"
+									onKeyPress="if(window.event.keyCode==13){enviar();return false;}return " />
+									<label th:for="${#ids.prev('treinamentoStatus')}"
+									th:text="${ty}"></label> &nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<!-- Button trigger modal -->
+						<label for="myButton">Vídeos</label>
+						<div>
+							<table>
+								<tr>
+									<td
+										th:each="treinamentoVideo,iterStat : ${treinamentoVideoList}">
+										<div>
+											<button type="button" class="btn btn-primary btn-lg"
+												id="myButton" data-toggle="modal"
+												th:attr="data-target='#myModalVideo0'+${iterStat.index+1}"
+												th:text="${treinamentoVideo.video.videoNomeBotao}">Vídeo xx</button>
+											&nbsp; &nbsp;
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<hr />
+					<div class="modal fade" id="myModalVideo01" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/treinamentoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Vídeo Treinamento 01</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="treinamentoVideo,iterStat : ${treinamentoVideoList}">
+											<div th:if="${iterStat.index} == 0">
+												<video id="myVideo01" width="853" height="480" controls
+													th:src="${treinamentoVideoList[__${iterStat.index}__].video.videoURL}"
+													th:text="${treinamentoVideoList[__${iterStat.index}__].video.videoURL}"></video>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalVideo02" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/treinamentoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Vídeo Treinamento 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="treinamentoVideo,iterStat : ${treinamentoVideoList}">
+											<div th:if="${iterStat.index} == 1">
+												<video id="myVideo02" width="853" height="480" controls
+													th:src="${treinamentoVideoList[__${iterStat.index}__].video.videoURL}"
+													th:text="${treinamentoVideoList[__${iterStat.index}__].video.videoURL}"></video>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalVideo03" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/treinamentoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Vídeo Treinamento 03</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="treinamentoVideo,iterStat : ${treinamentoVideoList}">
+											<div th:if="${iterStat.index} == 2">
+												<video id="myVideo03" width="853" height="480" controls
+													th:src="${treinamentoVideoList[__${iterStat.index}__].video.videoURL}"
+													th:text="${treinamentoVideoList[__${iterStat.index}__].video.videoURL}"></video>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalVideo04" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/treinamentoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Vídeo Treinamento 04</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="treinamentoVideo,iterStat : ${treinamentoVideoList}">
+											<div th:if="${iterStat.index} == 3">
+												<video id="myVideo04" width="853" height="480" controls
+													th:src="${treinamentoVideoList[__${iterStat.index}__].video.videoURL}"
+													th:text="${treinamentoVideoList[__${iterStat.index}__].video.videoURL}"></video>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalVideo05" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/treinamentoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Vídeo Treinamento 05</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="treinamentoVideo,iterStat : ${treinamentoVideoList}">
+											<div th:if="${iterStat.index} == 4">
+												<video id="myVideo05" width="853" height="480" controls
+													th:src="${treinamentoVideoList[__${iterStat.index}__].video.videoURL}"
+													th:text="${treinamentoVideoList[__${iterStat.index}__].video.videoURL}"></video>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<!-- Button trigger modal -->
+						<label for="myButton">Textos</label>
+						<div>
+							<table>
+								<tr>
+									<td
+										th:each="treinamentoTexto,iterStat : ${treinamentoTextoList}">
+										<div>
+											<button type="button" class="btn btn-primary btn-lg"
+												id="myButton" data-toggle="modal"
+												th:attr="data-target='#myModalTexto0'+${iterStat.index+1}"
+												th:text="${treinamentoTexto.texto.textoNomeBotao}">Texto xx</button>
+											&nbsp; &nbsp;
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<hr />
+					<div class="modal fade" id="myModalTexto01" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/treinamentoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Texto Treinamento 01</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="treinamentoTexto,iterStat : ${treinamentoTextoList}">
+											<div th:if="${iterStat.index} == 0">
+												<embed id="myTexto01" width="853" height="480"
+													th:src="${treinamentoTextoList[__${iterStat.index}__].texto.textoURL}"></embed>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalTexto02" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/treinamentoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Texto Treinamento 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="treinamentoTexto,iterStat : ${treinamentoTextoList}">
+											<div th:if="${iterStat.index} == 1">
+												<embed id="myTexto02" width="853" height="480"
+													th:src="${treinamentoTextoList[__${iterStat.index}__].texto.textoURL}"></embed>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalTexto03" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/treinamentoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Texto Treinamento 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="treinamentoTexto,iterStat : ${treinamentoTextoList}">
+											<div th:if="${iterStat.index} == 2">
+												<embed id="myTexto03" width="853" height="480"
+													th:src="${treinamentoTextoList[__${iterStat.index}__].texto.textoURL}"></embed>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalTexto04" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/treinamentoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Texto Treinamento 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="treinamentoTexto,iterStat : ${treinamentoTextoList}">
+											<div th:if="${iterStat.index} == 3">
+												<embed id="myTexto04" width="853" height="480"
+													th:src="${treinamentoTextoList[__${iterStat.index}__].texto.textoURL}"></embed>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalTexto05" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/treinamentoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Texto Treinamento 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="treinamentoTexto,iterStat : ${treinamentoTextoList}">
+											<div th:if="${iterStat.index} == 4">
+												<embed id="myTexto05" width="853" height="480"
+													th:src="${treinamentoTextoList[__${iterStat.index}__].texto.textoURL}"></embed>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<!-- Button trigger modal -->
+						<label for="myButton">Imagems</label>
+						<div>
+							<table>
+								<tr>
+									<td
+										th:each="treinamentoImagem,iterStat : ${treinamentoImagemList}">
+										<div>
+											<button type="button" class="btn btn-primary btn-lg"
+												id="myButton" data-toggle="modal"
+												th:attr="data-target='#myModalImagem0'+${iterStat.index+1}"
+												th:text="${treinamentoImagem.imagem.imagemNomeBotao}">Imagem xx</button>
+											&nbsp; &nbsp;
+										</div>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</div>
+					<hr />
+					<div class="modal fade" id="myModalImagem01" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/treinamentoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Imagem Treinamento 01</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="treinamentoImagem,iterStat : ${treinamentoImagemList}">
+											<div th:if="${iterStat.index} == 0">
+												<img id="myImagem01" width="853" height="480"
+													th:src="${treinamentoImagemList[__${iterStat.index}__].imagem.imagemURL}"
+													th:text="${treinamentoImagemList[__${iterStat.index}__].imagem.imagemURL}"></img>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalImagem02" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/treinamentoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Imagem Treinamento 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="treinamentoImagem,iterStat : ${treinamentoImagemList}">
+											<div th:if="${iterStat.index} == 1">
+												<img id="myImagem02" width="853" height="480"
+													th:src="${treinamentoImagemList[__${iterStat.index}__].imagem.imagemURL}"
+													th:text="${treinamentoImagemList[__${iterStat.index}__].imagem.imagemURL}"></img>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalImagem03" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/treinamentoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Imagem Treinamento 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="treinamentoImagem,iterStat : ${treinamentoImagemList}">
+											<div th:if="${iterStat.index} == 2">
+												<img id="myImagem03" width="853" height="480"
+													th:src="${treinamentoImagemList[__${iterStat.index}__].imagem.imagemURL}"
+													th:text="${treinamentoImagemList[__${iterStat.index}__].imagem.imagemURL}"></img>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalImagem04" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/treinamentoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Imagem Treinamento 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="treinamentoImagem,iterStat : ${treinamentoImagemList}">
+											<div th:if="${iterStat.index} == 3">
+												<img id="myImagem04" width="853" height="480"
+													th:src="${treinamentoImagemList[__${iterStat.index}__].imagem.imagemURL}"
+													th:text="${treinamentoImagemList[__${iterStat.index}__].imagem.imagemURL}"></img>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="modal fade" id="myModalImagem05" tabindex="-1"
+						role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog modal-lg" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Atividades : <a href="/saga/treinamentoHome" style="float: right"
+											class="btn btn-info btn-xs margin">Imagem Treinamento 02</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<div
+											th:each="treinamentoImagem,iterStat : ${treinamentoImagemList}">
+											<div th:if="${iterStat.index} == 4">
+												<img id="myImagem05" width="853" height="480"
+													th:src="${treinamentoImagemList[__${iterStat.index}__].imagem.imagemURL}"
+													th:text="${treinamentoImagemList[__${iterStat.index}__].imagem.imagemURL}"></img>
+											</div>
+										</div>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="actions" class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary btn-xs">Salvar</button>
+							<a href="/saga/treinamentoHome" class="btn btn-default btn-xs">Cancelar</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

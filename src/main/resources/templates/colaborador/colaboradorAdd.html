@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
+
+<script>
+
+$().ready(function() {
+	  $("#colaboradorCPF").keydown(function(){
+		    try {
+		    	$("#colaboradorCPF").unmask();
+		    } catch (e) {}
+		    
+	        $("#colaboradorCPF").mask("999.999.999-99");
+		    
+		    // ajustando foco
+		    var elem = this;
+		    setTimeout(function(){
+		    	// mudo a posição do seletor
+		    	elem.selectionStart = elem.selectionEnd = 10000;
+		    }, 0);
+		    // reaplico o valor para mudar o foco
+		    var currentValue = $(this).val();
+		    $(this).val('');
+		    $(this).val(currentValue);
+	  });
+	  $("#enderecoCEP").keydown(function(){
+		    try {
+		    	$("#enderecoCEP").unmask();
+		    } catch (e) {}
+		    
+	        $("#enderecoCEP").mask("99999-999");
+		    
+		    // ajustando foco
+		    var elem = this;
+		    setTimeout(function(){
+		    	// mudo a posição do seletor
+		    	elem.selectionStart = elem.selectionEnd = 10000;
+		    }, 0);
+		    // reaplico o valor para mudar o foco
+		    var currentValue = $(this).val();
+		    $(this).val('');
+		    $(this).val(currentValue);
+	  });
+	  $("#telefoneNumero").keydown(function(){
+		    try {
+		    	$("#telefoneNumero").unmask();
+		    } catch (e) {}
+		    
+	        $("#telefoneNumero").mask("(99) 999999999");
+		    
+		    // ajustando foco
+		    var elem = this;
+		    setTimeout(function(){
+		    	// mudo a posição do seletor
+		    	elem.selectionStart = elem.selectionEnd = 10000;
+		    }, 0);
+		    // reaplico o valor para mudar o foco
+		    var currentValue = $(this).val();
+		    $(this).val('');
+		    $(this).val(currentValue);
+	  });
+	  
+});
+</script>
+<style>
+.blockbkg {
+	background-color: black;
+	opacity: 80%;
+	filter: alpha(opacity =                           50);
+	background-color: rgba(0, 0, 0, 0.90);
+	width: 736px;
+	min-height: 650px;
+	overflow: hidden;
+	float: absolute;
+	position: absolute;
+	color: white;
+}
+
+.cont {
+	background-color: none;
+	color: none;
+	font-size: 16px;
+	border: none;
+	padding: 20px;
+	display: block;
+	position: absolute;
+	top: 80px;
+	left: 110px;
+	width: 495px;
+	height: 600px;
+	overflow-y: hidden;
+}
+
+.contTelefone {
+	background-color: none;
+	color: none;
+	font-size: 16px;
+	border: none;
+	padding: 20px;
+	display: block;
+	position: absolute;
+	top: 80px;
+	left: 110px;
+	width: 495px;
+	height: 600px;
+	overflow-y: hidden;
+}
+
+.contEndereco {
+	background-color: none;
+	color: none;
+	font-size: 16px;
+	border: none;
+	padding: 20px;
+	display: block;
+	position: absolute;
+	top: 10px;
+	left: 30px;
+	width: 650px;
+	height: 600px;
+	overflow-y: hidden;
+}
+
+.contRedeSocial {
+	background-color: none;
+	color: none;
+	font-size: 16px;
+	border: none;
+	padding: 20px;
+	display: block;
+	position: absolute;
+	top: 10px;
+	left: 30px;
+	width: 650px;
+	height: 600px;
+	overflow-y: hidden;
+}
+
+.closebtn {
+	width: 20px;
+	height: 20px;
+	padding: 5px;
+	margin: 2px;
+	float: right;
+	top: 0;
+	background-image: url(x.png);
+	background-repeat: no-repeat;
+	background-position: center;
+	background-color: lightgray;
+	display: block;
+}
+
+.closebtn:hover {
+	cursor: pointer;
+}
+
+.normal {
+	background-color: lightblue;
+	width: 900px;
+	min-height: 200px;
+	padding: 20px;
+}
+
+/* chunk styles */
+.chunk {
+	background: #8db6cd;
+	border: 0.2em solid #99c;
+	border-top-left-radius: none;
+	border-top-right-radius: none;
+	display: block;
+	margin-bottom: 2em;
+	overflow: hidden;
+	position: relative;
+}
+
+.chunk fieldset {
+	border: none;
+	margin: 0;
+	padding: 0;
+}
+
+.chunk legend {
+	border: none;
+	margin: 0;
+	padding: 0;
+}
+
+.chunk .hd {
+	display: block;
+	padding: 0.5em 0 0.3em;
+	width: 100%; /* For IE8 */
+}
+
+.chunk .hd .text {
+	color: #003;
+	font-family: helvetica, arial;
+	font-size: 138.5%;
+	font-weight: normal;
+	margin: 0 0.5em;
+	white-space: normal;
+	display: block;
+	zoom: 1; /* For IE7 */
+}
+
+.chunk .bd {
+	background: #eef;
+	border-top: none;
+	padding: 1em 0.5em;
+}
+
+.chunk ol {
+	margin: 0;
+	padding: 0;
+}
+
+.chunk .fields li {
+	list-style-type: none;
+	margin-bottom: 1em;
+	overflow: hidden;
+	position: relative;
+}
+
+.chunk .fields .label {
+	float: left;
+	font-size: 108%;
+	width: 10%;
+	color: #336;
+}
+
+.chunk .fields .field {
+	font-size: 108%;
+	margin-left: 3%;
+	padding-right: 7px;
+	position: relative;
+}
+
+.chunk .fields .field input[type=text] {
+	width: 17em;
+}
+
+.chunk .fields .field.tiny input[type=text] {
+	width: 5em;
+}
+
+.chunk .fields .field.date input[type=text] {
+	width: 7em;
+}
+
+.chunk .fields .field.small input[type=text] {
+	max-width: 17em;
+}
+
+.chunk .fields .field textarea {
+	height: 6em;
+	width: 100%;
+}
+
+.chunk .list li {
+	background: #eef;
+	color: #336;
+	padding: 0em 0.5em 0em 0.5em;
+	list-style-type: none;
+	margin-bottom: 1em;
+	overflow: hidden;
+	position: relative;
+}
+
+.chunk .list li:nth-child(2n) {
+	background: #C0D9D9;
+	padding: 0em 0.5em 0em 0.5em;
+	list-style-type: none;
+	margin-bottom: 1em;
+	overflow: hidden;
+	position: relative;
+}
+
+.chunk .list .field {
+	font-size: 108%;
+	margin-left: 3%;
+	padding-right: 7px;
+	position: relative;
+}
+
+.chunk .list .field input[type=text] {
+	width: 5em;
+}
+
+.chunk .list .field teste {
+	width: 5em;
+}
+
+.chunk .list .field.tiny .label {
+	float: left;
+	font-size: 108%;
+	width: 10em;
+}
+
+.chunk .list .field.tiny input[type=text] {
+	width: 5em;
+}
+
+.chunk .list .field.date .label {
+	float: left;
+	font-size: 108%;
+	width: 10em;
+}
+
+.chunk .list .field.date {
+	font-size: 108%;
+	margin-left: 3%;
+	padding-right: 7px;
+	position: relative;
+}
+
+.chunk .list .field.date input[type=text] {
+	width: 7em;
+}
+
+.chunk .list .field.small input[type=text] {
+	max-width: 10em;
+}
+
+.chunk .list .field textarea {
+	height: 6em;
+	width: 100%;
+}
+
+#label {
+	float: left;
+	font-size: 108%;
+	width: 10em;
+	display: inline;
+}
+
+.chunk .listPop li {
+	background: #eef;
+	padding: 0.2em 0em 0.2em 0em;
+}
+
+.chunk .listPop li:nth-child(2n) {
+	background: #C0D9D9;
+	padding: 0.2em 0em 0.2em 0em;
+}
+
+.chunk .listPop .field {
+	font-size: 108%;
+	margin-left: 3%;
+	padding-right: 7px;
+	position: relative;
+}
+
+.chunk .listPop .field input[type=text] {
+	width: 5em;
+}
+
+.chunk .listPop .field teste {
+	width: 5em;
+}
+
+.chunk .listPop .field.tiny .label {
+	float: left;
+	font-size: 108%;
+	width: 10em;
+}
+
+.chunk .listPop .field.tiny input[type=text] {
+	width: 5em;
+}
+
+.chunk .listPop .field.date .label {
+	float: left;
+	font-size: 108%;
+	width: 10em;
+}
+
+.chunk .listPop .field.date {
+	font-size: 108%;
+	margin-left: 3%;
+	padding-right: 7px;
+	position: relative;
+}
+
+.chunk .listPop .field.date input[type=text] {
+	width: 7em;
+}
+
+.chunk .listPop .field.small input[type=text] {
+	max-width: 10em;
+}
+
+.chunk .listPop .field textarea {
+	height: 6em;
+	width: 100%;
+}
+
+table.classname td {
+	float: left;
+	font-size: 108%;
+	width: 10em;
+}
+
+table.classname td label {
+	float: left;
+	font-size: 108%;
+	width: 10em;
+	margin-right: 20px;
+}
+
+.radioGroupBelow label {
+	display: inline-block;
+	text-align: center;
+	margin: 0 0.2em;
+}
+
+.radioGroupBelow label input[type="radio"] {
+	display: block;
+	margin: 0.5em auto;
+}
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Processos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-12 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<div class="form-group col-md-7">	
+				<ol class="breadcrumb">
+					<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+					<li class="active">Colaborador</li>
+					<li class="active">Inclusão</li>
+				</ol>
+			</div>
+				<div class="form-group col-md-3">	
+					<ol class="breadcrumb">
+						<li class="active">Usuário: </li>
+						<li th:text="${usuarioNome}"></li>
+						<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>  
+					</ol>
+				</div>
+			<div class="form-group col-md-2">	
+					<a href="/saga/colaboradorHome" style="float: right" class="btn btn-primary btn-xs margin">Voltar</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/colaboradorRelMenu" style="float: right" class="btn btn-primary btn-xs margin">Relatório</a>
+			</div>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form action="colaboradorCreate" th:object="${colaboradorForm}"  th:action="@{/colaboradorCreate}" method="POST">
+
+					<div class="alert alert-success" th:text="${mensagem}"
+						th:if="${not #strings.isEmpty(mensagem)}"></div>
+
+					<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+
+						<div th:each="detailedError : ${#fields.detailedErrors()}">
+							<span th:text="${detailedError.message}"></span>
+						</div>
+
+					</div>
+
+					<input type="hidden" class="form-control" id="colaboradorPK"
+						th:field="*{colaboradorPK}" th:value="${colaboradorPK}">
+
+					<div class="panel-body tabs">
+						<ul class="nav nav-tabs">
+							<li class="active">
+							    <a href="#tab1" data-toggle="tab">Dados do Cadastro</a></li>
+							<li><a href="#tab2" data-toggle="tab">Documentos</a></li>
+							<li><a href="#tab3" data-toggle="tab">Endereço</a></li>
+							<li><a href="#tab4" data-toggle="tab">Telefone</a></li>
+							<li><a href="#tab5" data-toggle="tab">Email</a></li>
+							<li><a href="#tab6" data-toggle="tab">Rede Social</a></li>
+						</ul> 
+
+						<div class="tab-content">
+							<div class="tab-pane fade in active" id="tab1">
+								<div class=" main">
+									<div class="row">
+										<div class="col-md-11">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													<fieldset>
+														<div class="row">
+															<div class="form-group col-md-8"
+																th:classappend="${#fields.hasErrors('colaboradorNome')} ? has-error"
+																style="color: white;">
+																<label for="colaboradorNome">Nome</label> <input type="text"
+																	class="form-control" id="colaboradorNome"
+																	th:field="*{colaboradorNome}" th:value="${colaboradorNome}"
+																	placeholder="Informe o nome do Colaborador" autofocus="autofocus">
+															</div>
+														</div>
+														<div class="row">
+															<div class="form-group col-md-8"
+																th:classappend="${#fields.hasErrors('colaboradorApelido')} ? has-error"
+																style="color: white;">
+																<label for="colaboradorApelido">Apelido</label> <input type="text"
+																	class="form-control" id="colaboradorApelido"
+																	th:field="*{colaboradorApelido}" th:value="${colaboradorApelido}"
+																	placeholder="Informe o apelido do Colaborador" autofocus="autofocus">
+															</div>
+														</div>
+														<hr />
+														
+														<div class="row">
+															<div class="form-group col-md-4"
+																th:classappend="${#fields.hasErrors('colaboradorMotivoOperacao')} ? has-error"
+																style="color: white;">
+																<label for="colaboradorMotivoOperacao">Motivo da Operação</label> <input
+																	type="text" class="form-control" id="colaboradorMotivoOperacao"
+																	th:field="*{colaboradorMotivoOperacao}"
+																	th:value="${colaboradorMotivoOperacao}"
+																	placeholder="Informe o Motivo da Operação do Colaborador">
+															</div>
+															<div class="form-group col-md-4"
+																th:classappend="${#fields.hasErrors('colaboradorResponsavel')} ? has-error"
+																style="color: white;">
+																<label for="colaboradorResponsavel">Responsável</label> 
+																<select
+																	class="form-control" th:field="*{colaboradorResponsavel}"
+																	th:remove="all-but-first">
+																	<option class="form-control"
+																		th:each="colaborador : ${colaboradorPage}" style="color: black;"
+																		th:value="${colaborador.pessoaPK}"
+																		th:text="${colaborador.pessoaNome}"></option>
+																</select>
+															</div>
+															<div class="form-group col-md-4"
+																th:classappend="${#fields.hasErrors('colaboradorStatus')} ? has-error"
+																style="color: white;">
+																<label for="colaboradorStatus">Status</label>
+																<div>
+																	<span th:each="ty : ${colaboradorStatusValues}"> 
+																	<input
+																		type="radio" th:field="*{colaboradorStatus}" th:value="${ty}"
+																		onKeyPress="if(window.event.keyCode==13){enviar();return false;}return " />
+																		<label th:for="${#ids.prev('colaboradorStatus')}" th:text="${ty}"></label>
+																		&nbsp;&nbsp;&nbsp;
+																	</span>
+																</div>
+															</div>
+														</div>
+													</fieldset>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+
+
+							<div class="tab-pane fade" id="tab2">
+								<div class="main">
+									<div class="row">
+										<div class="col-md-11">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													<fieldset>
+														<div class="form-group col-md-3"
+															th:classappend="${#fields.hasErrors('colaboradorCPF')} ? has-error"
+															style="color: white;">
+															<label for="colaboradorCPF">CPF</label> <input
+																type="text" class="form-control" id="colaboradorCPF" name="colaboradorCPF"
+																th:field="*{colaboradorCPF}"
+																th:value="${colaboradorCPF}"
+																placeholder="Informe o CPF do Colaborador">
+														</div>
+													</fieldset>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="tab3">
+								<div class=" main">
+									<div class="row">
+										<div class="col-md-11">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													<fieldset>
+														<div class="row">
+															<div class="form-group col-md-3"
+																th:classappend="${#fields.hasErrors('enderecoCEP')} ? has-error"
+																style="color: white;">
+																<label for="enderecoCEP">CEP</label> <input
+																	type="text" class="form-control" id="enderecoCEP"
+																	th:field="*{enderecoCEP}"
+																	th:value="${enderecoCEP}"
+																	placeholder="Informe o CEP">
+															</div>
+														</div>
+														<div class="row">
+															<div class="form-group col-md-4"
+																th:classappend="${#fields.hasErrors('enderecoLogradouro')} ? has-error"
+																style="color: white;">
+																<label for="enderecoLogradouro">Logradouro com número</label> <input type="text"
+																	class="form-control" id="enderecoLogradouro"
+																	th:field="*{enderecoLogradouro}" th:value="${enderecoLogradouro}"
+																	placeholder="Informe o Logradouro com Número" autofocus="autofocus">
+															</div>
+														</div>
+														<div class="row">
+															<div class="form-group col-md-4"
+																th:classappend="${#fields.hasErrors('enderecoBairro')} ? has-error"
+																style="color: white;">
+																<label for="enderecoBairro">Bairro</label> <input type="text"
+																	class="form-control" id="enderecoBairro"
+																	th:field="*{enderecoBairro}" th:value="${enderecoBairro}"
+																	placeholder="Informe o Bairro" autofocus="autofocus">
+															</div>
+														</div>
+														<div class="row">
+															<div class="form-group col-md-3"
+																th:classappend="${#fields.hasErrors('enderecoMunicipio')} ? has-error"
+																style="color: white;">
+																<label for="enderecoMunicipio">Município</label> <input
+																	type="text" class="form-control" id="enderecoMunicipio"
+																	th:field="*{enderecoMunicipio}"
+																	th:value="${enderecoMunicipio}"
+																	placeholder="Informe o Município">
+															</div>
+														</div>
+														<div class="row">
+															<div class="form-group col-md-3"
+																th:classappend="${#fields.hasErrors('enderecoUF')} ? has-error"
+																style="color: white;">
+																<label for="enderecoUF">UF</label> <input
+																	type="text" class="form-control" id="enderecoUF"
+																	th:field="*{enderecoUF}"
+																	th:value="${enderecoUF}"
+																	placeholder="Informe o Estado">
+															</div>
+														</div>
+													</fieldset>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="tab4">
+								<div class=" main">
+									<div class="row">
+										<div class="col-md-11">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													<fieldset>
+														<div class="row">
+															<div class="form-group col-md-4"
+																th:classappend="${#fields.hasErrors('telefoneNumero')} ? has-error"
+																style="color: white;">
+																<label for="telefoneNumero">Número</label> <input type="text"
+																	class="form-control" id="telefoneNumero"
+																	th:field="*{telefoneNumero}" th:value="${telefoneNumero}"
+																	placeholder="Informe o número do telefone do Colaborador" autofocus="autofocus">
+															</div>
+														</div>
+														<div class="row">
+															<div class="form-group col-md-4"
+																th:classappend="${#fields.hasErrors('telefoneOperadora')} ? has-error"
+																style="color: white;">
+																<label for="telefoneOperadora">Operadora</label> <input type="text"
+																	class="form-control" id="telefoneOperadora"
+																	th:field="*{telefoneOperadora}" th:value="${telefoneOperadora}"
+																	placeholder="Informe a Operadora do telefone do Colaborador" autofocus="autofocus">
+															</div>
+														</div>
+													</fieldset>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="tab5">
+								<div class=" main">
+									<div class="row">
+										<div class="col-md-11">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													<fieldset>
+														<div class="row">
+															<div class="form-group col-md-4"
+																th:classappend="${#fields.hasErrors('emailNome')} ? has-error"
+																style="color: white;">
+																<label for="emailNome">Email</label> <input type="text"
+																	class="form-control" id="emailNome"
+																	th:field="*{emailNome}" th:value="${emailNome}"
+																	placeholder="Informe o nome do email" autofocus="autofocus">
+															</div>
+														</div>
+													</fieldset>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="tab6">
+								<div class=" main">
+									<div class="row">
+										<div class="col-md-11">
+											<div class="panel panel-default">
+												<div class="panel-body">
+													<fieldset>
+														<div class="row">
+															<div class="form-group col-md-4"
+																th:classappend="${#fields.hasErrors('redeSocialNome')} ? has-error"
+																style="color: white;">
+																<label for="redeSocialNome">Nome</label> <input type="text"
+																	class="form-control" id="redeSocialNome"
+																	th:field="*{redeSocialNome}" th:value="${redeSocialNome}"
+																	placeholder="Informe o nome da Rede Social" autofocus="autofocus">
+															</div>
+															<div class="form-group col-md-4"
+																th:classappend="${#fields.hasErrors('redeSocialIdentificacao')} ? has-error"
+																style="color: white;">
+																<label for="redeSocialIdentificacao">Identificação</label> <input type="text"
+																	class="form-control" id="redeSocialIdentificacao"
+																	th:field="*{redeSocialIdentificacao}" th:value="${redeSocialIdentificacao}"
+																	placeholder="Informe a identificação na Rede Social" autofocus="autofocus">
+															</div>
+														</div>
+													</fieldset>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div id="actions" class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary btn-xs">Salvar</button>
+							<a href="/saga/colaboradorHome" class="btn btn-default btn-xs">Cancelar</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

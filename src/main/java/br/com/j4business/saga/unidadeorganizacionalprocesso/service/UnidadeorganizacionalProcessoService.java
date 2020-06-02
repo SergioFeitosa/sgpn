@@ -1,0 +1,39 @@
+package br.com.j4business.saga.unidadeorganizacionalprocesso.service;
+
+import java.util.List;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import br.com.j4business.saga.processo.model.Processo;
+import br.com.j4business.saga.unidadeorganizacional.model.Unidadeorganizacional;
+import br.com.j4business.saga.unidadeorganizacionalprocesso.model.UnidadeorganizacionalProcesso;
+import br.com.j4business.saga.unidadeorganizacionalprocesso.model.UnidadeorganizacionalProcessoForm;
+
+@Service
+public interface UnidadeorganizacionalProcessoService {
+	
+	public List<UnidadeorganizacionalProcesso> getUnidadeorganizacionalProcessoAll(Pageable pageable);
+	public UnidadeorganizacionalProcesso getUnidadeorganizacionalProcessoByUnidadeorganizacionalProcessoPK(long unidadeorganizacionalProcessoPK);
+	public UnidadeorganizacionalProcesso save(UnidadeorganizacionalProcessoForm unidadeorganizacionalProcessoForm);
+	public void delete(Long unidadeorganizacionalProcessoPK);
+	public void deleteByProcesso(Processo processo);
+	public UnidadeorganizacionalProcesso create(UnidadeorganizacionalProcessoForm unidadeorganizacionalProcessoForm);
+	public UnidadeorganizacionalProcesso getByUnidadeorganizacionalAndProcesso(Unidadeorganizacional unidadeorganizacional, Processo processo);
+
+	public UnidadeorganizacionalProcesso converteUnidadeorganizacionalProcessoForm(UnidadeorganizacionalProcessoForm unidadeorganizacionalProcessoForm);
+	public UnidadeorganizacionalProcessoForm converteUnidadeorganizacionalProcesso(UnidadeorganizacionalProcesso unidadeorganizacionalProcesso);
+	public UnidadeorganizacionalProcessoForm converteUnidadeorganizacionalProcessoView(UnidadeorganizacionalProcesso unidadeorganizacionalProcesso);
+
+	public UnidadeorganizacionalProcessoForm unidadeorganizacionalProcessoParametros(UnidadeorganizacionalProcessoForm unidadeorganizacionalProcessoForm);
+
+	public List<UnidadeorganizacionalProcesso> getByUnidadeorganizacionalPK(long unidadeorganizacionalPK,Pageable pageable);
+	public List<UnidadeorganizacionalProcesso> getByProcessoPK(long processoPK);
+	public List<UnidadeorganizacionalProcesso> getByProcessoPK(long processoPK,Pageable pageable);
+
+	public List<UnidadeorganizacionalProcesso> getByProcessoNome(String processoNome,Pageable pageable);
+	public List<UnidadeorganizacionalProcesso> getByUnidadeorganizacionalNome(String unidadeorganizacionalNome,Pageable pageable);
+	public List<UnidadeorganizacionalProcesso> getByProcessoNome(String processoNome);
+	public List<UnidadeorganizacionalProcesso> getByUnidadeorganizacionalNome(String unidadeorganizacionalNome);
+	
+}

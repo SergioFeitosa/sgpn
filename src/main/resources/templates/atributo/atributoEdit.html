@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+<script>
+function enviar() {
+	document.form1.action.value="/atributoEdit";
+	document.form1.submit();
+}
+
+function pular(nomeCampo) {
+	switch(nomeCampo){
+	case "atributoNome":
+		document.form1.atributoDescricao.focus();
+		break;
+	} 
+}
+
+</script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Processos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<ol class="breadcrumb">
+				<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+				<li class="active">Atributo</li>
+			</ol>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+
+			<div class="panel-heading">
+				ATRIBUTO: EDIÇÃO <a href="/saga/atributoHome" style="float: right"
+					class="btn btn-info btn-xs margin">Voltar</a>
+				<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+				<a href="/saga/atributoRelMenu" style="float: right"
+					class="btn btn-info btn-xs margin">Relatório</a>
+				<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+				<a href="/saga/atributoAdd" style="float: right"
+					class="btn btn-info btn-xs margin">Novo</a>
+			</div>
+			<div class="panel-body">
+				<form action="atributoSave" th:object="${atributoForm}"
+					th:action="@{/atributoSave}" method="POST">
+
+					<div class="alert alert-success" th:text="${mensagem}"
+						th:if="${not #strings.isEmpty(mensagem)}"></div>
+
+					<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+
+						<div th:each="detailedError : ${#fields.detailedErrors()}">
+							<span th:text="${detailedError.message}"></span>
+						</div>
+
+					</div>
+
+					<input type="hidden" class="form-control" id="atributoPK"
+						th:field="*{atributoPK}" th:value="${atributoPK}">
+
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('atributoNome')} ? has-error"
+							style="color: white;">
+							<label for="atributoNome">Nome</label> <input type="text"
+								class="form-control" id="atributoNome"
+								th:field="*{atributoNome}" th:value="${atributoNome}"
+								placeholder="Informe o nome do Atributo" autofocus="autofocus"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('atributoDescricao')} ? has-error"
+							style="color: white;">
+							<label for="atributoDescricao">Descrição</label> <input
+								type="text" class="form-control" id="atributoDescricao"
+								th:field="*{atributoDescricao}" th:value="${atributoDescricao}"
+								placeholder="Informe a descrição do Atributo"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-3"
+							th:classappend="${#fields.hasErrors('atributoMotivoOperacao')} ? has-error"
+							style="color: white;">
+							<label for="atributoMotivoOperacao">Motivo da Operação</label> <input
+								type="date" class="form-control" id="atributoMotivoOperacao"
+								th:field="*{atributoMotivoOperacao}"
+								th:value="${atributoMotivoOperacao}"
+								placeholder="Informe a Data de Criação do Atributo"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+						<div class="form-group col-md-3"
+							th:classappend="${#fields.hasErrors('atributoStatus')} ? has-error"
+							style="color: white;">
+							<label for="atributoStatus">Status</label>
+							<div>
+								<span th:each="ty : ${atributoStatusValues}"> <input
+									type="radio" th:field="*{atributoStatus}" th:value="${ty}"
+									onKeyPress="if(window.event.keyCode==13){enviar();return false;}return " />
+									<label th:for="${#ids.prev('atributoStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+
+						<div class="form-group col-md-3"
+							th:classappend="${#fields.hasErrors('atributoResponsavel')} ? has-error"
+							style="color: white;">
+							<label for="atributoResponsavel">Responsável</label> <select
+								class="form-control" th:field="*{atributoResponsavel}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Responsável</option>
+							</select>
+
+
+						</div>
+						<div class="form-group col-md-3"
+							th:classappend="${#fields.hasErrors('atributoMotivoOperacao')} ? has-error"
+							style="color: white;">
+							<label for="atributoMotivoOperacao">Motivo da Operação</label> <input
+								type="text" class="form-control" id="atributoMotivoOperacao"
+								th:field="*{atributoMotivoOperacao}"
+								th:value="${atributoMotivoOperacao}"
+								placeholder="Informe o Motivo da Operação do Atributo"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+
+						</div>
+					</div>
+					<hr />
+					<div id="actions" class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary btn-xs">Salvar</button>
+							<a href="/saga/atributoHome" class="btn btn-default btn-xs">Cancelar</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

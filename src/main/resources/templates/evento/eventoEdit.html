@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
+
+<script>
+function enviar() {
+	document.form1.action.value="/eventoEditt";
+	document.form1.submit();
+}
+</script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Processos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<div class="form-group col-md-7">	
+				<ol class="breadcrumb">
+					<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+					<li class="active">Evento</li>
+					<li class="active">Edição</li>
+				</ol>
+			</div>
+				<div class="form-group col-md-3">	
+					<ol class="breadcrumb">
+						<li class="active">Usuário: </li>
+						<li th:text="${usuarioNome}"></li>
+						<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>  
+					</ol>
+				</div>
+			<div class="form-group col-md-2">	
+					<a href="/saga/eventoHome" style="float: right" class="btn btn-primary btn-xs margin">Voltar</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/eventoRelMenu" style="float: right" class="btn btn-primary btn-xs margin">Relatório</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/eventoAdd" style="float: right" class="btn btn-primary btn-xs margin">Novo</a>
+			</div>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form action="eventoSave" th:object="${eventoForm}"
+					th:action="@{/eventoSave}" method="POST">
+
+					<div class="alert alert-success" th:text="${mensagem}"
+						th:if="${not #strings.isEmpty(mensagem)}"></div>
+
+					<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+
+						<div th:each="detailedError : ${#fields.detailedErrors()}">
+							<span th:text="${detailedError.message}"></span>
+						</div>
+
+					</div>
+
+					<input type="hidden" class="form-control" id="eventoPK"
+						name="eventoPK" th:field="*{eventoPK}"
+						th:value="${eventoPK}">
+
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('eventoNome')} ? has-error"
+							style="color: white;">
+							<label for="eventoNome">Nome</label> <input type="text"
+								class="form-control" id="eventoNome"
+								th:field="*{eventoNome}" th:value="${eventoNome}"
+								placeholder="Informe o nome do Evento" autofocus="autofocus"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('eventoDescricao')} ? has-error"
+							style="color: white;">
+							<label for="eventoDescricao">Descrição</label> <input
+								type="text" class="form-control" id="eventoDescricao"
+								th:field="*{eventoDescricao}" th:value="${eventoDescricao}"
+								placeholder="Informe a descrição do Evento">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-3"
+							th:classappend="${#fields.hasErrors('eventoDataInicio')} ? has-error"
+							style="color: white;">
+							<label for="eventoDataInicio">Data de Início</label> <input
+								type="date" class="form-control" id="eventoDataInicio"
+								th:field="*{eventoDataInicio}"
+								th:value="${eventoDataInicio}"
+								placeholder="Informe a Data de Início do Evento">
+						</div>
+						<div class="form-group col-md-3"
+							th:classappend="${#fields.hasErrors('eventoDataTermino')} ? has-error"
+							style="color: white;">
+							<label for="eventoDataTermino">Data de Término</label> <input
+								type="date" class="form-control" id="eventoDataTermino"
+								th:field="*{eventoDataTermino}"
+								th:value="${eventoDataTermino}"
+								placeholder="Informe a Data de Término do Evento">
+						</div>
+						<div class="form-group col-md-3"
+							th:classappend="${#fields.hasErrors('eventoFonte')} ? has-error"
+							style="color: white;">
+							<label for="eventoFonte">Fonte</label> <input
+								type="text" class="form-control" id="eventoFonte"
+								th:field="*{eventoFonte}"
+								th:value="${eventoFonte}"
+								placeholder="Informe a fonte de origem do Evento">
+						</div>
+						<div class="form-group col-md-3"
+							th:classappend="${#fields.hasErrors('eventoPrioridade')} ? has-error"
+							style="color: white;">
+							<label for="eventoStatus">Prioridade</label>
+							<div>
+								<span th:each="ty : ${eventoPrioridadeValues}"> <input
+									type="radio" th:field="*{eventoPrioridade}" th:value="${ty}" />
+									<label th:for="${#ids.prev('eventoPrioridade')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('eventoMotivoOperacao')} ? has-error"
+							style="color: white;">
+							<label for="eventoMotivoOperacao">Motivo da Operação</label> <input
+								type="text" class="form-control" id="eventoMotivoOperacao"
+								th:field="*{eventoMotivoOperacao}"
+								th:value="${eventoMotivoOperacao}"
+								placeholder="Informe o Motivo da Operação do Evento"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('eventoResponsavel')} ? has-error"
+							style="color: white;">
+							<label for="eventoResponsavel">Responsável</label> <select
+								class="form-control" th:field="*{eventoResponsavel}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Responsável</option>
+							</select>
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('eventoStatus')} ? has-error"
+							style="color: white;">
+							<label for="eventoStatus">Status</label>
+							<div>
+								<span th:each="ty : ${eventoStatusValues}"> <input
+									type="radio" th:field="*{eventoStatus}" th:value="${ty}"
+									onKeyPress="if(window.event.keyCode==13){enviar();return false;}return " />
+									<label th:for="${#ids.prev('eventoStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4">
+							<label for="myButton">Relacionamentos</label>
+							<div>
+								<button type="button" class="btn btn-primary btn-lg"
+									id="myButton" data-toggle="modal" data-target="#myModal">Processo</button>
+							</div>
+						</div>
+					</div>
+
+					<!-- Modal -->
+					<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+						aria-labelledby="myModalLabel">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Processos : <a href="/saga/eventoProcessoHome"
+											style="float: right" class="btn btn-info btn-xs margin">Evento/Processo</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<input type="hidden" id="eventoPK" name="eventoPK"
+											value="${eventoPK}" />
+
+										<table class="table table-hover">
+											<thead>
+												<tr>
+													<th class="col-lg-5" data-field="nome" data-sortable="true">Nome</th>
+													<th class="col-lg-4" data-field="descrição"	data-sortable="true">Descricao</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="eventoProcesso : ${eventoProcessoPage}">
+													<td
+														th:text="${eventoProcesso.getEvento().eventoNome}"></td>
+													<td
+														th:text="${eventoProcesso.getProcesso().processoNome}"></td>
+												</tr>
+
+											</tbody>
+										</table>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div id="actions" class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary btn-xs">Salvar</button>
+							<a href="/saga/eventoHome" class="btn btn-default btn-xs">Cancelar</a>
+						</div>
+					</div>
+				</form>
+				<hr />
+			</div>
+		</div>
+	</div>
+</body>
+</html>

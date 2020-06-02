@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+	
+<script>
+function enviar() {
+	document.form1.action.value="/textoEdit";
+	document.form1.submit();
+}
+
+function pular(nomeCampo) {
+	switch(nomeCampo){
+	case "textoNome":
+		document.form1.textoDescricao.focus();
+		break;
+	} 
+}
+
+</script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.texto {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Processos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<div class="form-group col-md-7">	
+				<ol class="breadcrumb">
+					<li><a href="#"><span class="glyphicon glyphicon-home"></span></a></li>
+					<li class="active">Texto</li>
+					<li class="active">Edição</li>
+				</ol>
+			</div>
+				<div class="form-group col-md-3">	
+					<ol class="breadcrumb">
+						<li class="active">Usuário: </li>
+						<li th:text="${usuarioNome}"></li>
+						<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>  
+					</ol>
+				</div>
+			<div class="form-group col-md-2">	
+					<a href="/saga/textoHome" style="float: right" class="btn btn-primary btn-xs margin">Voltar</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/textoRelMenu" style="float: right" class="btn btn-primary btn-xs margin">Relatório</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/textoAdd" style="float: right" class="btn btn-primary btn-xs margin">Novo</a>
+			</div>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form action="textoSave" th:object="${textoForm}"
+					th:action="@{/textoSave}" method="POST">
+
+					<div class="alert alert-success" th:text="${mensagem}"
+						th:if="${not #strings.isEmpty(mensagem)}"></div>
+
+					<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+
+						<div th:each="detailedError : ${#fields.detailedErrors()}">
+							<span th:text="${detailedError.message}"></span>
+						</div>
+
+					</div>
+
+					<input type="hidden" class="form-control" id="textoPK"
+						th:field="*{textoPK}" th:value="${textoPK}">
+
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('textoNome')} ? has-error"
+							style="color: white;">
+							<label for="textoNome">Nome</label> <input type="text"
+								class="form-control" id="textoNome" th:field="*{textoNome}"
+								th:value="${textoNome}"
+								placeholder="Informe o nome da Texto" autofocus="autofocus"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('textoDescricao')} ? has-error"
+							style="color: white;">
+							<label for="textoDescricao">Descrição</label> <input
+								type="text" class="form-control" id="textoDescricao"
+								th:field="*{textoDescricao}" th:value="${textoDescricao}"
+								placeholder="Informe a descrição da Texto"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('textoNomeBotao')} ? has-error"
+							style="color: white;">
+							<label for="textoNomeBotao">Nome do Botão</label> <input
+								type="text" class="form-control" id="textoNomeBotao"
+								th:field="*{textoNomeBotao}" th:value="${textoNomeBotao}"
+								placeholder="Informe a Nome do Botão do Texto"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('textoURL')} ? has-error"
+							style="color: white;">
+							<label for="textoURL">URL</label> <input
+								type="text" class="form-control" id="textoURL"
+								th:field="*{textoURL}" th:value="${textoURL}"
+								placeholder="Informe a URL do Texto"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('textoMotivoOperacao')} ? has-error"
+							style="color: white;">
+							<label for="textoMotivoOperacao">Motivo da Operação</label> <input
+								type="text" class="form-control" id="textoMotivoOperacao"
+								th:field="*{textoMotivoOperacao}"
+								th:value="${textoMotivoOperacao}"
+								placeholder="Informe o Motivo da Operação do Texto"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('textoResponsavel')} ? has-error"
+							style="color: white;">
+							<label for="textoResponsavel">Responsável</label> <select
+								class="form-control" th:field="*{textoResponsavel}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Responsável</option>
+							</select>
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('textoStatus')} ? has-error"
+							style="color: white;">
+							<label for="textoStatus">Status</label>
+							<div>
+								<span th:each="ty : ${textoStatusValues}"> <input
+									type="radio" th:field="*{textoStatus}" th:value="${ty}"
+									onKeyPress="if(window.event.keyCode==13){enviar();return false;}return " />
+									<label th:for="${#ids.prev('textoStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div id="actions" class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary btn-xs">Salvar</button>
+							<a href="/saga/textoHome" class="btn btn-default btn-xs">Cancelar</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

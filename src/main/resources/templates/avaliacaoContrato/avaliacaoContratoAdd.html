@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Contratos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+				<div class="form-group col-md-7">	
+					<ol class="breadcrumb">
+						<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+						<li class="active">Avaliação - Contrato</li>
+						<li class="active">Inclusão</li>
+					</ol>
+				</div>
+				<div class="form-group col-md-3">	
+					<ol class="breadcrumb">
+						<li class="active">Usuário: </li>
+						<li th:text="${usuarioNome}"></li>
+						<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>  
+					</ol>
+				</div>
+				<div class="form-group col-md-2">	
+						<a href="/saga/avaliacaoContratoHome" style="float: right" class="btn btn-primary btn-xs margin">Voltar</a>
+						<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+						<a href="/saga/avaliacaoContratoRelMenu" style="float: right" class="btn btn-primary btn-xs margin">Relatório</a>
+				</div>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form action="avaliacaoContratoCreate"
+					th:object="${avaliacaoContratoForm}"
+					th:action="@{/avaliacaoContratoCreate}" method="POST">
+
+					<div class="alert alert-success" th:text="${mensagem}"
+						th:if="${not #strings.isEmpty(mensagem)}"></div>
+
+					<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+
+						<div th:each="detailedError : ${#fields.detailedErrors()}">
+							<span th:text="${detailedError.message}"></span>
+						</div>
+
+					</div>
+
+					<input type="hidden" class="form-control" id="avaliacaoPK"
+						name="avaliacaoPK" th:field="*{avaliacaoPK}" th:value="${avaliacaoPK}">
+					<input type="hidden" class="form-control" id="contratoPK"
+						name="contratoPK" th:field="*{contratoPK}"
+						th:value="${contratoPK}"> 
+					<input type="hidden"
+						class="form-control" id="avaliacaoContratoPK"
+						name="avaliacaoContratoPK" th:field="*{avaliacaoContratoPK}"
+						th:value="${avaliacaoContratoPK}">
+					<input
+						type="hidden" class="form-control" id="estruturafisicaPK"
+						name="estruturafisicaPK" th:field="*{estruturafisicaPK}"
+						th:value="${estruturafisicaPK}"> 
+					<input
+						type="hidden" class="form-control" id="unidadeorganizacionalPK"
+						name="unidadeorganizacionalPK" th:field="*{unidadeorganizacionalPK}"
+						th:value="${unidadeorganizacionalPK}"> 
+
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('avaliacaoNome')} ? has-error"
+							style="color: white;">
+							<label for="avaliacaoNome">Avaliação</label> <select
+								class="form-control" th:field="*{avaliacaoNome}"
+								th:remove="all-but-first">
+								<option class="form-control" th:each="avaliacao : ${avaliacaoPage}"
+									style="color: black;" th:value="${avaliacao.avaliacaoPK}"
+									th:text="${avaliacao.avaliacaoNome}">Avaliação</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('contratoNome')} ? has-error"
+							style="color: white;">
+							<label for="contratoNome">Contrato</label> <select
+								class="form-control" th:field="*{contratoNome}"
+								th:remove="all-but-first">
+								<option class="form-control" th:each="contrato : ${contratoPage}"
+									style="color: black;" th:value="${contrato.contratoPK}"
+									th:text="${contrato.contratoNome}">Contrato</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('questionarioNome')} ? has-error"
+							style="color: white;">
+							<label for="questionarioNome">Questionário</label> <select
+								class="form-control" th:field="*{questionarioNome}"
+								th:remove="all-but-first">
+								<option class="form-control" th:each="questionario : ${questionarioPage}"
+									style="color: black;" th:value="${questionario.questionarioPK}"
+									th:text="${questionario.questionarioNome}">Questionário</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('estruturafisicaNome')} ? has-error"
+							style="color: white;">
+							<label for="estruturafisicaNome">Estrutura Física</label> <select
+								class="form-control" th:field="*{estruturafisicaNome}"
+								th:remove="all-but-first">
+								<option class="form-control" th:each="estruturafisicaUnidadeorganizacional : ${estruturafisicaUnidadeorganizacionalPage}"
+									style="color: black;" th:value="${estruturafisicaUnidadeorganizacional.estruturafisica.estruturafisicaPK}"
+									th:text="${estruturafisicaUnidadeorganizacional.estruturafisica.estruturafisicaNome}">Estrutura Física</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('unidadeorganizacionalNome')} ? has-error"
+							style="color: white;">
+							<label for="unidadeorganizacionalNome">Unidade Organizacional</label> <select
+								class="form-control" th:field="*{unidadeorganizacionalNome}"
+								th:remove="all-but-first">
+								<option class="form-control" th:each="unidadeorganizacionalContrato : ${unidadeorganizacionalContratoPage}"
+									style="color: black;" th:value="${unidadeorganizacionalContrato.unidadeorganizacional.unidadeorganizacionalPK}"
+									th:text="${unidadeorganizacionalContrato.unidadeorganizacional.unidadeorganizacionalNome}">Unidade Organizacional</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('avaliacaoContratoPeriodo')} ? has-error"
+							style="color: white;">
+							<label for="avaliacaoContratoPeriodo">Período</label> 
+							<input
+								type="date" 
+								class="form-control" 
+								id="avaliacaoContratoPeriodo"
+								th:field="*{avaliacaoContratoPeriodo}"
+								th:value="${avaliacaoContratoPeriodo}"
+								placeholder="Informe o Período da Avaliacao/Contrato">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('avaliacaoContratoMotivoOperacao')} ? has-error"
+							style="color: white;">
+							<label for="avaliacaoContratoMotivoOperacao">Motivo da
+								Operação</label> <input type="text" class="form-control"
+								id="avaliacaoContratoMotivoOperacao"
+								th:field="*{avaliacaoContratoMotivoOperacao}"
+								th:value="${avaliacaoContratoMotivoOperacao}"
+								placeholder="Informe o Motivo da Operação do Avaliação - Contrato">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('avaliacaoContratoResponsavel')} ? has-error"
+							style="color: white;">
+							<label for="avaliacaoContratoResponsavel">Responsável</label> <select
+								class="form-control" th:field="*{avaliacaoContratoResponsavel}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Responsável</option>
+							</select>
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('avaliacaoContratoStatus')} ? has-error"
+							style="color: white;">
+							<label for="avaliacaoContratoStatus">Status</label>
+							<div>
+								<span th:each="ty : ${avaliacaoContratoStatusValues}"> <input
+									type="radio" th:field="*{avaliacaoContratoStatus}"
+									th:value="${ty}" /> <label
+									th:for="${#ids.prev('avaliacaoContratoStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div id="actions" class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary btn-xs">Salvar</button>
+							<a href="/saga/avaliacaoContratoHome" class="btn btn-default btn-xs">Cancelar</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

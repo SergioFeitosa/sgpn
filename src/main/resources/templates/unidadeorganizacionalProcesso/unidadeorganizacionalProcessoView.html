@@ -1,0 +1,231 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Processos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<div class="form-group col-md-7">	
+				<ol class="breadcrumb">
+					<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+					<li class="active">Unidade Organizacional - Processo</li>
+					<li class="active">View</li>
+				</ol>
+			</div>
+				<div class="form-group col-md-3">	
+					<ol class="breadcrumb">
+						<li class="active">Usuário: </li>
+						<li th:text="${usuarioNome}"></li>
+						<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>  
+					</ol>
+				</div>
+			<div class="form-group col-md-2">	
+					<a href="/saga/unidadeorganizacionalProcessoHome" style="float: right" class="btn btn-primary btn-xs margin">Voltar</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/unidadeorganizacionalProcessoRelMenu" style="float: right" class="btn btn-primary btn-xs margin">Relatório</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/unidadeorganizacionalProcessoAdd" style="float: right" class="btn btn-primary btn-xs margin">Novo</a>
+			</div>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<fieldset>
+					<ol class="breadcrumb">
+						<li class="active">Unidade Organizacional - Processo</li>
+					</ol>
+					<div class="panel-body" th:object="${unidadeorganizacionalProcessoForm}">
+						<fieldset>
+							<fieldset>
+								<div class="col-md-4">
+									<label for="unidadeorganizacionalProcessoPK">Id................................:&nbsp;&nbsp;</label>
+									<span id="unidadeorganizacionalPK" th:text="${unidadeorganizacionalProcessoForm.unidadeorganizacionalProcessoPK}"></span>
+								</div>
+				
+								<div class="col-md-12">
+									<label for="unidadeorganizacionalNome">Unidade Organizacional.....................:&nbsp;&nbsp;</label> <span
+										id="unidadeorganizacionalNome" th:text="${unidadeorganizacionalProcessoForm.unidadeorganizacionalNome}"></span>
+								</div>
+				
+								<div class="col-md-12">
+									<label for="processoNome">Processo.................:&nbsp;&nbsp;</label> <span
+										id="processoNome"
+										th:text="${unidadeorganizacionalProcessoForm.processoNome}"></span>
+								</div>
+							</fieldset>
+							<fieldset>
+								<ol class="breadcrumb">
+								</ol>
+								<br>
+								<div class="col-md-4">
+									<label for="unidadeorganizacionalProcessoMotivoOperacao">Motivo da Operação.:&nbsp;&nbsp;</label> <span
+										id="unidadeorganizacionalProcessoMotivoOperacao" th:text="${unidadeorganizacionalProcessoForm.unidadeorganizacionalProcessoMotivoOperacao }"></span>
+								</div>
+								<div class="col-md-4">
+									<label for="unidadeorganizacionalProcessoResponsavel">Responsável..........:&nbsp;&nbsp;</label> <span
+										id="unidadeorganizacionalProcessoResponsavel" th:text="${unidadeorganizacionalProcessoForm.unidadeorganizacionalProcessoResponsavel }"></span>
+								</div>
+								<div class="col-md-4">
+									<label for="unidadeorganizacionalProcessoStatus">Status.......................:&nbsp;&nbsp;</label> <span
+										id="unidadeorganizacionalProcessoStatus" th:text="${unidadeorganizacionalProcessoForm.unidadeorganizacionalProcessoStatus }"></span>
+								</div>
+							</fieldset>
+						</fieldset>
+					</div>
+				</fieldset>
+					<hr/>
+					<ol class="breadcrumb">
+						<li class="active">Unidade Organizacional</li>
+					</ol>
+					<div class="panel-body" th:object="${unidadeorganizacionalForm}">
+						<fieldset>
+							<div class="col-md-4">
+								<label for="unidadeorganizacionalPK">Id.............................:&nbsp;&nbsp;</label>
+								<span id="unidadeorganizacionalPK" th:text="${unidadeorganizacionalForm.unidadeorganizacionalPK}"></span>
+							</div>
+			
+							<div class="col-md-12">
+								<label for="unidadeorganizacionalNome">Nome....................:&nbsp;&nbsp;</label> <span
+									id="unidadeorganizacionalNome" th:text="${unidadeorganizacionalForm.unidadeorganizacionalNome}"></span>
+							</div>
+			
+							<div class="col-md-12">
+								<label for="unidadeorganizacionalDescricao">Descrição............:&nbsp;&nbsp;</label> <span
+									id="unidadeorganizacionalDescricao" th:text="${unidadeorganizacionalForm.unidadeorganizacionalDescricao}"></span>
+							</div>
+						</fieldset>
+						<fieldset>
+							<ol class="breadcrumb">
+							</ol>
+							<br>
+							<div class="col-md-4">
+								<label for="unidadeorganizacionalMotivoOperacao">Motivo da Operação.:&nbsp;&nbsp;</label> 
+								<span id="unidadeorganizacionalMotivoOperacao" th:text="${unidadeorganizacionalForm.unidadeorganizacionalMotivoOperacao }"></span>
+							</div>
+							<div class="col-md-4">
+								<label for="unidadeorganizacionalResponsavel">Responsável.......:&nbsp;&nbsp;</label>
+								<span id="unidadeorganizacionalResponsavel"
+									th:text="${unidadeorganizacionalForm.unidadeorganizacionalResponsavel }"></span>
+							</div>
+							<div class="col-md-4">
+								<label for="unidadeorganizacionalStatus">Status....................:&nbsp;&nbsp;</label>
+								<span id="unidadeorganizacionalStatus" th:text="${unidadeorganizacionalForm.unidadeorganizacionalStatus }"></span>
+							</div>
+						</fieldset>
+					</div>
+					<hr />
+				
+				<fieldset>
+					<ol class="breadcrumb">
+						<li class="active">Processo</li>
+					</ol>
+					<div class="panel-body" th:object="${processoForm}">
+						<fieldset>
+							<div class="col-md-4">
+								<label for="processoPK">Id.............................:&nbsp;&nbsp;</label>
+								<span id="processoPK" th:text="${processoForm.processoPK}"></span>
+							</div>
+			
+							<div class="col-md-12">
+								<label for="processoNome">Nome....................:&nbsp;&nbsp;</label> <span
+									id="processoNome" th:text="${processoForm.processoNome}"></span>
+							</div>
+			
+							<div class="col-md-12">
+								<label for="processoDescricao">Descrição............:&nbsp;&nbsp;</label> <span
+									id="processoDescricao" th:text="${processoForm.processoDescricao}"></span>
+							</div>
+						</fieldset>
+						<fieldset>
+							<ol class="breadcrumb">
+							</ol>
+							<br>
+							<div class="col-md-4">
+								<label for="processoMotivoOperacao">Motivo da Operação.:&nbsp;&nbsp;</label> <span
+									id="processoMotivoOperacao" th:text="${processoForm.processoMotivoOperacao }"></span>
+							</div>
+							<div class="col-md-4">
+								<label for="processoResponsavel">Responsável.......:&nbsp;&nbsp;</label> <span
+									id="processoResponsavel" th:text="${processoForm.processoResponsavel }"></span>
+							</div>
+							<div class="col-md-4">
+								<label for="processoStatus">Status....................:&nbsp;&nbsp;</label> <span
+									id="processoStatus" th:text="${processoForm.processoStatus }"></span>
+							</div>
+						</fieldset>
+						<hr />
+						
+					</div>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

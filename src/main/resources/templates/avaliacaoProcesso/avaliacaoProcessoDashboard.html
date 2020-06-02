@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Processos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">			
+		<div class="row">
+				<div class="form-group col-md-7">	
+					<ol class="breadcrumb">
+						<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+						<li class="active">Avaliação - Processo</li>
+						<li class="active">Dashboard</li>
+					</ol>
+				</div>
+				<div class="form-group col-md-3">	
+					<ol class="breadcrumb">
+						<li class="active">Usuário: </li>
+						<li th:text="${usuarioNome}"></li>
+						<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>  
+					</ol>
+				</div>
+				<div class="form-group col-md-2">	
+						<a href="/saga/avaliacaoProcessoHome" style="float: right" class="btn btn-primary btn-xs margin">Voltar</a>
+				</div>
+		</div>
+		
+		<div class="row col-no-gutter-container" th:object="${avaliacaoProcessoDashboard}" style="background-color:lightgray">
+
+			<input type="hidden" name="elementoMediaJanAtual" id="elementoMediaJanAtual" th:value="${avaliacaoProcessoDashboard.getElementoMediaJanAtual()}"> 
+			<input type="hidden" name="elementoMediaFevAtual" id="elementoMediaFevAtual" th:value="${avaliacaoProcessoDashboard.getElementoMediaFevAtual()}"> 
+			<input type="hidden" name="elementoMediaMarAtual" id="elementoMediaMarAtual" th:value="${avaliacaoProcessoDashboard.getElementoMediaMarAtual()}"> 
+			<input type="hidden" name="elementoMediaAbrAtual" id="elementoMediaAbrAtual" th:value="${avaliacaoProcessoDashboard.getElementoMediaAbrAtual()}"> 
+			<input type="hidden" name="elementoMediaMaiAtual" id="elementoMediaMaiAtual" th:value="${avaliacaoProcessoDashboard.getElementoMediaMaiAtual()}"> 
+			<input type="hidden" name="elementoMediaJunAtual" id="elementoMediaJunAtual" th:value="${avaliacaoProcessoDashboard.getElementoMediaJunAtual()}"> 
+			<input type="hidden" name="elementoMediaJulAtual" id="elementoMediaJulAtual" th:value="${avaliacaoProcessoDashboard.getElementoMediaJulAtual()}"> 
+			<input type="hidden" name="elementoMediaAgoAtual" id="elementoMediaAgoAtual" th:value="${avaliacaoProcessoDashboard.getElementoMediaAgoAtual()}"> 
+			<input type="hidden" name="elementoMediaSetAtual" id="elementoMediaSetAtual" th:value="${avaliacaoProcessoDashboard.getElementoMediaSetAtual()}"> 
+			<input type="hidden" name="elementoMediaOutAtual" id="elementoMediaOutAtual" th:value="${avaliacaoProcessoDashboard.getElementoMediaOutAtual()}"> 
+			<input type="hidden" name="elementoMediaNovAtual" id="elementoMediaNovAtual" th:value="${avaliacaoProcessoDashboard.getElementoMediaNovAtual()}"> 
+			<input type="hidden" name="elementoMediaDezAtual" id="elementoMediaDezAtual" th:value="${avaliacaoProcessoDashboard.getElementoMediaDezAtual()}"> 
+
+			<input type="hidden" name="elementoMediaJanAnterior" id="elementoMediaJanAnterior" th:value="${avaliacaoProcessoDashboard.getElementoMediaJanAnterior()}"> 
+			<input type="hidden" name="elementoMediaFevAnterior" id="elementoMediaFevAnterior" th:value="${avaliacaoProcessoDashboard.getElementoMediaFevAnterior()}"> 
+			<input type="hidden" name="elementoMediaMarAnterior" id="elementoMediaMarAnterior" th:value="${avaliacaoProcessoDashboard.getElementoMediaMarAnterior()}"> 
+			<input type="hidden" name="elementoMediaAbrAnterior" id="elementoMediaAbrAnterior" th:value="${avaliacaoProcessoDashboard.getElementoMediaAbrAnterior()}"> 
+			<input type="hidden" name="elementoMediaMaiAnterior" id="elementoMediaMaiAnterior" th:value="${avaliacaoProcessoDashboard.getElementoMediaMaiAnterior()}"> 
+			<input type="hidden" name="elementoMediaJunAnterior" id="elementoMediaJunAnterior" th:value="${avaliacaoProcessoDashboard.getElementoMediaJunAnterior()}"> 
+			<input type="hidden" name="elementoMediaJulAnterior" id="elementoMediaJulAnterior" th:value="${avaliacaoProcessoDashboard.getElementoMediaJulAnterior()}"> 
+			<input type="hidden" name="elementoMediaAgoAnterior" id="elementoMediaAgoAnterior" th:value="${avaliacaoProcessoDashboard.getElementoMediaAgoAnterior()}"> 
+			<input type="hidden" name="elementoMediaSetAnterior" id="elementoMediaSetAnterior" th:value="${avaliacaoProcessoDashboard.getElementoMediaSetAnterior()}"> 
+			<input type="hidden" name="elementoMediaOutAnterior" id="elementoMediaOutAnterior" th:value="${avaliacaoProcessoDashboard.getElementoMediaOutAnterior()}"> 
+			<input type="hidden" name="elementoMediaNovAnterior" id="elementoMediaNovAnterior" th:value="${avaliacaoProcessoDashboard.getElementoMediaNovAnterior()}"> 
+			<input type="hidden" name="elementoMediaDezAnterior" id="elementoMediaDezAnterior" th:value="${avaliacaoProcessoDashboard.getElementoMediaDezAnterior()}"> 
+
+
+			<div class="col-xs-12 col-md-6 col-lg-3 col-no-gutter">
+				<div class="panel panel-blue panel-widget">
+					<div class="row no-padding" style="background-color:rgba(60,102,135)">
+						<div class="col-sm-3 col-lg-5 widget-left">
+							<em class="glyphicon glyphicon-cog glyphicon-l"></em>
+						</div>
+						<div class="col-sm-9 col-lg-7 widget-right">
+							<div class="large" th:text="${avaliacaoProcessoDashboard.getQuantidadeProcessos()}"></div>
+							<div class="text-muted">Processos</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-6 col-lg-3 col-no-gutter">
+				<div class="panel panel-orange panel-widget">
+					<div class="row no-padding" style="background-color:rgba(60,102,135)">
+						<div class="col-sm-3 col-lg-5 widget-left">
+							<em class="glyphicon glyphicon-user glyphicon-l"></em>
+						</div>
+						<div class="col-sm-9 col-lg-7 widget-right">
+							<div class="large" th:text="${avaliacaoProcessoDashboard.getQuantidadeColaboradores()}"></div>
+							<div class="text-muted">Colaboradores</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-6 col-lg-3 col-no-gutter">
+				<div class="panel panel-teal panel-widget">
+					<div class="row no-padding" style="background-color:rgba(60,102,135)">
+						<div class="col-sm-3 col-lg-5 widget-left">
+							<em class="glyphicon glyphicon-list-alt glyphicon-l"></em>
+						</div>
+						<div class="col-sm-9 col-lg-7 widget-right">
+							<div class="large" th:text="${avaliacaoProcessoDashboard.getQuantidadeQuestionarios()}"></div>
+							<div class="text-muted">Questionários</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-6 col-lg-3 col-no-gutter">
+				<div class="panel panel-red panel-widget">
+					<div class="row no-padding" style="background-color:rgba(60,102,135)">
+						<div class="col-sm-3 col-lg-5 widget-left">
+							<em class="glyphicon glyphicon-question-sign glyphicon-l"></em>
+						</div>
+						<div class="col-sm-9 col-lg-7 widget-right">
+							<div class="large" th:text="${avaliacaoProcessoDashboard.getQuantidadeQuestoes()}"></div>
+							<div class="text-muted">Questões</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div><!--/.row-->
+		
+		<div class="row row-no-gutter col-no-gutter-container row-margin-top">
+			<div class="col-md-12 col-no-gutter">
+				<div class="panel panel-default">
+					<div class="panel-heading">Processos</div>
+					<div class="panel-body">
+						<div class="canvas-wrapper">
+							<canvas class="chart" id="bar-chart"  height="200" width="600"></canvas>
+						</div>
+					</div>
+				</div>
+			</div><!--/.col-->
+			
+		</div><!--/.row-->
+	</div>	<!--/.main-->
+
+	<script src="/js/chart.min.js"></script>
+	<script>
+	var elementoMediaJanAtual = document.getElementById('elementoMediaJanAtual').value;
+	var elementoMediaFevAtual = document.getElementById('elementoMediaFevAtual').value;
+	var elementoMediaMarAtual = document.getElementById('elementoMediaMarAtual').value;
+	var elementoMediaAbrAtual = document.getElementById('elementoMediaAbrAtual').value;
+	var elementoMediaMaiAtual = document.getElementById('elementoMediaMaiAtual').value;
+	var elementoMediaJunAtual = document.getElementById('elementoMediaJunAtual').value;
+	var elementoMediaJulAtual = document.getElementById('elementoMediaJulAtual').value;
+	var elementoMediaAgoAtual = document.getElementById('elementoMediaAgoAtual').value;
+	var elementoMediaSetAtual = document.getElementById('elementoMediaSetAtual').value;
+	var elementoMediaOutAtual = document.getElementById('elementoMediaOutAtual').value;
+	var elementoMediaNovAtual = document.getElementById('elementoMediaNovAtual').value;
+	var elementoMediaDezAtual = document.getElementById('elementoMediaDezAtual').value;
+	
+	var elementoMediaJanAnterior = document.getElementById('elementoMediaJanAnterior').value;
+	var elementoMediaFevAnterior = document.getElementById('elementoMediaFevAnterior').value;
+	var elementoMediaMarAnterior = document.getElementById('elementoMediaMarAnterior').value;
+	var elementoMediaAbrAnterior = document.getElementById('elementoMediaAbrAnterior').value;
+	var elementoMediaMaiAnterior = document.getElementById('elementoMediaMaiAnterior').value;
+	var elementoMediaJunAnterior = document.getElementById('elementoMediaJunAnterior').value;
+	var elementoMediaJulAnterior = document.getElementById('elementoMediaJulAnterior').value;
+	var elementoMediaAgoAnterior = document.getElementById('elementoMediaAgoAnterior').value;
+	var elementoMediaSetAnterior = document.getElementById('elementoMediaSetAnterior').value;
+	var elementoMediaOutAnterior = document.getElementById('elementoMediaOutAnterior').value;
+	var elementoMediaNovAnterior = document.getElementById('elementoMediaNovAnterior').value;
+	var elementoMediaDezAnterior = document.getElementById('elementoMediaDezAnterior').value;
+	
+	window.onload = function(){ 
+		var chart2 = document.getElementById("bar-chart").getContext("2d");
+		window.myBar = new Chart(chart2).Bar(barChartData, {
+			responsive : true,  
+			scaleLineColor: "rgba(255,255,255,.2)", 
+			scaleGridLineColor: "rgba(255,255,255,.05)", 
+			scaleFontColor: "#ffffff"
+		});
+	};
+	var barChartData = {
+			labels : ["Janeiro","Fevereiro","Março","Abril","Maio","Junho","Julho","Agosto","Setembro","Outubro","Novembro","Dezembro"],
+			datasets : [
+				{
+					fillColor : "rgba(220,220,220,0.5)",
+					strokeColor : "rgba(220,220,220,0.8)",
+					highlightFill: "rgba(220,220,220,0.75)",
+					highlightStroke: "rgba(220,220,220,1)",
+					data : [elementoMediaJanAnterior,
+							elementoMediaFevAnterior,
+							elementoMediaMarAnterior,
+							elementoMediaAbrAnterior,
+							elementoMediaMaiAnterior,
+							elementoMediaJunAnterior,
+							elementoMediaJulAnterior,
+							elementoMediaAgoAnterior,
+							elementoMediaSetAnterior,
+							elementoMediaOutAnterior,
+							elementoMediaNovAnterior,
+							elementoMediaDezAnterior]
+				},
+				{
+					fillColor : "rgba(48, 164, 255, 0.2)",
+					strokeColor : "rgba(48, 164, 255, 0.8)",
+					highlightFill : "rgba(48, 164, 255, 0.75)",
+					highlightStroke : "rgba(48, 164, 255, 1)",
+					data : [elementoMediaJanAtual,
+							elementoMediaFevAtual,
+							elementoMediaMarAtual,
+							elementoMediaAbrAtual,
+							elementoMediaMaiAtual,
+							elementoMediaJunAtual,
+							elementoMediaJulAtual,
+							elementoMediaAgoAtual,
+							elementoMediaSetAtual,
+							elementoMediaOutAtual,
+							elementoMediaNovAtual,
+							elementoMediaDezAtual]
+				}
+			]
+	
+		}
+
+	</script>
+</body>
+
+</html>

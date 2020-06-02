@@ -1,0 +1,39 @@
+package br.com.j4business.saga.unidadeorganizacionalcontrato.service;
+
+import java.util.List;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
+import br.com.j4business.saga.contrato.model.Contrato;
+import br.com.j4business.saga.unidadeorganizacional.model.Unidadeorganizacional;
+import br.com.j4business.saga.unidadeorganizacionalcontrato.model.UnidadeorganizacionalContrato;
+import br.com.j4business.saga.unidadeorganizacionalcontrato.model.UnidadeorganizacionalContratoForm;
+
+@Service
+public interface UnidadeorganizacionalContratoService {
+	
+	public List<UnidadeorganizacionalContrato> getUnidadeorganizacionalContratoAll(Pageable pageable);
+	public UnidadeorganizacionalContrato getUnidadeorganizacionalContratoByUnidadeorganizacionalContratoPK(long unidadeorganizacionalContratoPK);
+	public UnidadeorganizacionalContrato save(UnidadeorganizacionalContratoForm unidadeorganizacionalContratoForm);
+	public void delete(Long unidadeorganizacionalContratoPK);
+	public void deleteByContrato(Contrato contrato);
+	public UnidadeorganizacionalContrato create(UnidadeorganizacionalContratoForm unidadeorganizacionalContratoForm);
+	public UnidadeorganizacionalContrato getByUnidadeorganizacionalAndContrato(Unidadeorganizacional unidadeorganizacional, Contrato contrato);
+
+	public UnidadeorganizacionalContrato converteUnidadeorganizacionalContratoForm(UnidadeorganizacionalContratoForm unidadeorganizacionalContratoForm);
+	public UnidadeorganizacionalContratoForm converteUnidadeorganizacionalContrato(UnidadeorganizacionalContrato unidadeorganizacionalContrato);
+	public UnidadeorganizacionalContratoForm converteUnidadeorganizacionalContratoView(UnidadeorganizacionalContrato unidadeorganizacionalContrato);
+
+	public UnidadeorganizacionalContratoForm unidadeorganizacionalContratoParametros(UnidadeorganizacionalContratoForm unidadeorganizacionalContratoForm);
+
+	public List<UnidadeorganizacionalContrato> getByUnidadeorganizacionalPK(long unidadeorganizacionalPK,Pageable pageable);
+	public List<UnidadeorganizacionalContrato> getByContratoPK(long contratoPK);
+	public List<UnidadeorganizacionalContrato> getByContratoPK(long contratoPK,Pageable pageable);
+
+	public List<UnidadeorganizacionalContrato> getByContratoNome(String contratoNome,Pageable pageable);
+	public List<UnidadeorganizacionalContrato> getByUnidadeorganizacionalNome(String unidadeorganizacionalNome,Pageable pageable);
+	public List<UnidadeorganizacionalContrato> getByContratoNome(String contratoNome);
+	public List<UnidadeorganizacionalContrato> getByUnidadeorganizacionalNome(String unidadeorganizacionalNome);
+	
+}

@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+	
+<script type="text/javascript">
+
+function doPopupRel001() {
+	top.popupNivel1 = window.open('detalheRel001','popupNivel2','width=800,height=600,scrollbars=yes') ;
+}
+
+function doPopupRel002() {
+	top.popupNivel1 = window.open('detalheRel002','popupNivel2','width=800,height=600,scrollbars=yes') ;
+}
+
+</script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Processos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<ol class="breadcrumb">
+				<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+				<li class="active">Detalhe</li>
+			</ol>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+			<div class="panel-heading">
+				DETALHE: MENU DE RELATÓRIOS <a href="detalheHome"
+					style="float: right" class="btn btn-info btn-xs margin">Voltar</a>
+				<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+			</div>
+
+
+			<div class="panel-body" th:object="${detalhe}"
+				th:action="@{/detalheCreate}">
+				<div class="col-md-12">
+					<p>
+						<strong> <a href="javascript:doPopupRel001();"> 1.
+								Relatório de Detalhes</a></strong>
+					</p>
+				</div>
+				<div class="col-md-12">
+					<p>
+						<strong> <a href="javascript:doPopupRel002();"> 2.
+								Relatório de Detalhes Atrasados</a></strong>
+					</p>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</body>
+</html>

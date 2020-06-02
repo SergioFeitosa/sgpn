@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+	
+<script>
+function enviar() {
+	document.form1.action.value="/cenarioEdit";
+	document.form1.submit();
+}
+
+function pular(nomeCampo) {
+	switch(nomeCampo){
+	case "cenarioNome":
+		document.form1.cenarioDescricao.focus();
+		break;
+	} 
+}
+
+</script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.cenario {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Elementos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<div class="form-group col-md-7">	
+				<ol class="breadcrumb">
+					<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+					<li class="active">Cenário</li>
+					<li class="active">Edição</li>
+				</ol>
+			</div>
+				<div class="form-group col-md-3">	
+					<ol class="breadcrumb">
+						<li class="active">Usuário: </li>
+						<li th:text="${usuarioNome}"></li>
+						<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>  
+					</ol>
+				</div>
+			<div class="form-group col-md-2">	
+					<a href="/saga/cenarioHome" style="float: right" class="btn btn-primary btn-xs margin">Voltar</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/cenarioRelMenu" style="float: right" class="btn btn-primary btn-xs margin">Relatório</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/cenarioAdd" style="float: right" class="btn btn-primary btn-xs margin">Novo</a>
+			</div>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form action="cenarioSave" th:object="${cenarioForm}"
+					th:action="@{/cenarioSave}" method="POST">
+
+					<div class="alert alert-success" th:text="${mensagem}"
+						th:if="${not #strings.isEmpty(mensagem)}"></div>
+
+					<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+
+						<div th:each="detailedError : ${#fields.detailedErrors()}">
+							<span th:text="${detailedError.message}"></span>
+						</div>
+
+					</div>
+
+					<input type="hidden" class="form-control" id="cenarioPK"
+						th:field="*{cenarioPK}" th:value="${cenarioPK}">
+
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('cenarioNome')} ? has-error"
+							style="color: white;">
+							<label for="cenarioNome">Nome</label> <input type="text"
+								class="form-control" id="cenarioNome" th:field="*{cenarioNome}"
+								th:value="${cenarioNome}"
+								placeholder="Informe o nome do Cenário" autofocus="autofocus"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('cenarioDescricao')} ? has-error"
+							style="color: white;">
+							<label for="cenarioDescricao">Descrição</label> <input
+								type="text" class="form-control" id="cenarioDescricao"
+								th:field="*{cenarioDescricao}" th:value="${cenarioDescricao}"
+								placeholder="Informe a descrição do Cenário"
+								onKeyPress="if(window.event.keyCode==13){enviar();return false;}return ">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('cenarioMotivoOperacao')} ? has-error"
+							style="color: white;">
+							<label for="cenarioMotivoOperacao">Motivo da Operação</label> <input
+								type="text" class="form-control" id="cenarioMotivoOperacao"
+								th:field="*{cenarioMotivoOperacao}"
+								th:value="${cenarioMotivoOperacao}"
+								placeholder="Informe o Motivo da Operação do Cenário">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('cenarioResponsavel')} ? has-error"
+							style="color: white;">
+							<label for="cenarioResponsavel">Responsável</label> <select
+								class="form-control" th:field="*{cenarioResponsavel}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}"></option>
+							</select>
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('cenarioStatus')} ? has-error"
+							style="color: white;">
+							<label for="cenarioStatus">Status</label>
+							<div>
+								<span th:each="ty : ${cenarioStatusValues}"> <input
+									type="radio" th:field="*{cenarioStatus}" th:value="${ty}" /> <label
+									th:for="${#ids.prev('cenarioStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4">
+							<label for="myButton">Relacionamentos</label>
+							<div>
+								<button type="button" class="btn btn-primary btn-lg"
+									id="myButton" data-toggle="modal" data-target="#myModal">Elemento</button>
+							</div>
+						</div>
+					</div>
+
+					<!-- Modal -->
+					<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+						aria-labelledby="myModalLabel">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="panel panel-default">
+									<div class="panel-heading">
+										Elemento : <a href="/saga/cenarioElementoHome"
+											style="float: right" class="btn btn-info btn-xs margin">Cenário/Elemento</a>
+										<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+
+									</div>
+									<div class="panel-body">
+										<input type="hidden" id="cenarioPK" name="cenarioPK"
+											value="${cenarioPK}" />
+
+										<table class="table table-hover">
+											<thead>
+												<tr>
+													<th class="col-lg-5" data-field="nome" data-sortable="true">Cenário</th>
+													<th class="col-lg-4" data-field="descrição"	data-sortable="true">Elemento</th>
+												</tr>
+											</thead>
+											<tbody>
+												<tr th:each="cenarioElemento : ${cenarioElementoPage}">
+													<td
+														th:text="${cenarioElemento.getCenario().cenarioNome}"></td>
+													<td
+														th:text="${cenarioElemento.getElemento().elementoNome}"></td>
+												</tr>
+
+											</tbody>
+										</table>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-danger  btn-xs"
+											data-dismiss="modal">Fechar</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div id="actions" class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary btn-xs">Salvar</button>
+							<a href="/saga/cenarioHome" class="btn btn-default btn-xs">Cancelar</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

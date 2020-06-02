@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"
+	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link
+	href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'
+	rel='stylesheet' type='text/css'></link>
+<link
+	href="/saga//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"
+	rel="stylesheet"></link>
+
+<script src="/js/jquery-3.2.1.min.js"
+	th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+<script>
+	
+	function impSemBtn() {
+		ocultarImp.style.visibility = "hidden";
+		ocultarImp2.style.visibility = "hidden";
+		window.print();
+		ocultarImp.style.visibility = "visible";
+		ocultarImp2.style.visibility = "visible";
+	}
+
+</script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<div class="row">
+		<div class="form-group col-md-7">	
+			<ol class="breadcrumb">
+				<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+				<li class="active">Relatório</li>
+				<li class="active">Processo - Vídeo</li>
+				<li class="active">RELATÓRIO GERAL</li>
+			</ol>
+		</div>
+				<div class="form-group col-md-3">	
+					<ol class="breadcrumb">
+						<li class="active">Usuário: </li>
+						<li th:text="${usuarioNome}"></li>
+						<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>  
+					</ol>
+				</div>
+		<div class="form-group col-md-2" id="ocultarImp2">	
+				<a style="float: right" class="btn btn-primary btn-xs margin" onClick="window.close()">
+					<span class="glyphicon glyphicon-remove-sign"></span>&nbsp;Fechar
+				</a>
+				<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+				<a style="float: right" class="btn btn-primary btn-xs margin" onclick="javascript:{impSemBtn();return false;}return">
+					<span class="glyphicon glyphicon-print"></span>&nbsp;Imprimir
+				</a>
+		</div>
+	</div>
+	<!--/.row-->
+	<div class="row col-no-gutter-container row-margin-top">
+		<div class="col-lg-12 col-no-gutter">
+			<div class="panel panel-default">
+				<div class="panel-body">
+					<form id="processoImagemForm">
+						<input type="hidden" id="processoImagemPK" name="processoImagemPK" value="${processoImagemPK}" />
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th class="col-lg-4" data-field="processoImagemProcessoNome" data-sortable="true">Processo</th>
+									<th class="col-lg-4" data-field="processoImagemImagemNome"	data-sortable="true">Imagem</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="processoImagem : ${processoImagemPage}">
+									<td th:text="${processoImagem.processo.processoNome}"></td>
+									<td th:text="${processoImagem.imagem.imagemNome}"></td>
+								</tr>
+							</tbody>
+						</table>
+					</form>
+				</div>
+			</div>
+		</div>
+		<div id="ocultarImp" align="center">
+			<a class="btn btn-primary btn-xs margin"
+				onclick="javascript:{impSemBtn();return false;}return"> <span
+				class="glyphicon glyphicon-print"> </span> &nbsp;Imprimir
+			</a> &nbsp; <a class="btn btn-primary btn-xs margin"
+				onClick="window.close()"> <span
+				class="glyphicon glyphicon-remove-sign"> </span> &nbsp;Fechar
+			</a>
+		</div>
+	</div>
+</body>
+</html>

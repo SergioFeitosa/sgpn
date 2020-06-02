@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Processos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<div class="form-group col-md-7">	
+				<ol class="breadcrumb">
+					<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+					<li class="active">Processo - Curso</li>
+					<li class="active">Inclusão</li>
+				</ol>
+			</div>
+				<div class="form-group col-md-3">	
+					<ol class="breadcrumb">
+						<li class="active">Usuário: </li>
+						<li th:text="${usuarioNome}"></li>
+						<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>  
+					</ol>
+				</div>
+			<div class="form-group col-md-2">	
+					<a href="/saga/processoCursoHome" style="float: right" class="btn btn-primary btn-xs margin">Voltar</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/processoCursoRelMenu" style="float: right" class="btn btn-primary btn-xs margin">Relatório</a>
+			</div>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form action="processoCursoCreate"
+					th:object="${processoCursoForm}"
+					th:action="@{/processoCursoCreate}" method="POST">
+
+					<div class="alert alert-success" th:text="${mensagem}"
+						th:if="${not #strings.isEmpty(mensagem)}"></div>
+
+					<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+
+						<div th:each="detailedError : ${#fields.detailedErrors()}">
+							<span th:text="${detailedError.message}"></span>
+						</div>
+
+					</div>
+
+					<input type="hidden" class="form-control" id="processoPK"
+						name="processoPK" th:field="*{processoPK}" th:value="${processoPK}">
+					<input type="hidden" class="form-control" id="cursoPK"
+						name="cursoPK" th:field="*{cursoPK}"
+						th:value="${cursoPK}"> <input type="hidden"
+						class="form-control" id="processoCursoPK"
+						name="processoCursoPK" th:field="*{processoCursoPK}"
+						th:value="${processoCursoPK}">
+
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('processoNome')} ? has-error"
+							style="color: white;">
+							<label for="processoNome">Processo</label> <select
+								class="form-control" th:field="*{processoNome}"
+								th:remove="all-but-first">
+								<option class="form-control" th:each="processo : ${processoPage}"
+									style="color: black;" th:value="${processo.processoPK}"
+									th:text="${processo.processoNome}">Processo</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('cursoNome')} ? has-error"
+							style="color: white;">
+							<label for="cursoNome">Curso</label> <select
+								class="form-control" th:field="*{cursoNome}"
+								th:remove="all-but-first">
+								<option class="form-control" th:each="curso : ${cursoPage}"
+									style="color: black;" th:value="${curso.cursoPK}"
+									th:text="${curso.cursoNome}">Curso</option>
+							</select>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('processoCursoMotivoOperacao')} ? has-error"
+							style="color: white;">
+							<label for="processoCursoMotivoOperacao">Motivo da
+								Operação</label> <input type="text" class="form-control"
+								id="processoCursoMotivoOperacao"
+								th:field="*{processoCursoMotivoOperacao}"
+								th:value="${processoCursoMotivoOperacao}"
+								placeholder="Informe o Motivo da Operação do Processo/Curso">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('processoCursoResponsavel')} ? has-error"
+							style="color: white;">
+							<label for="processoCursoResponsavel">Responsável</label> <select
+								class="form-control" th:field="*{processoCursoResponsavel}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Responsável</option>
+							</select>
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('processoCursoStatus')} ? has-error"
+							style="color: white;">
+							<label for="processoCursoStatus">Status</label>
+							<div>
+								<span th:each="ty : ${processoCursoStatusValues}"> <input
+									type="radio" th:field="*{processoCursoStatus}"
+									th:value="${ty}" /> <label
+									th:for="${#ids.prev('processoCursoStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div id="actions" class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary btn-xs">Salvar</button>
+							<a href="/saga/processoCursoHome" class="btn btn-default btn-xs">Cancelar</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>

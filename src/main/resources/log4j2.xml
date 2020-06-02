@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE Configuration>
+<Configuration monitorInterval="60">
+    <Appenders>
+        <Console name="Console-Appender" target="SYSTEM_OUT">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>>
+            </PatternLayout>
+        </Console>
+        <File name="Atividade-Appender" fileName="../atividade_${date:yyyy-MM-dd}_log.log">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </File>
+        <File name="Atributo-Appender" fileName="../atributo_${date:yyyy-MM-dd}_log.log">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </File>
+        <File name="Colaborador-Appender" fileName="../colaborador_${date:yyyy-MM-dd}_log.log">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </File>
+        <File name="ColaboradorAtributo-Appender" fileName="../colaboradoratributo_${date:yyyy-MM-dd}_log.log">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </File>
+        <File name="Evento-Appender" fileName="../evento_${date:yyyy-MM-dd}_log.log" >
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </File>
+        <File name="EventoAtributo-Appender" fileName="../eventoatributo_${date:yyyy-MM-dd}_log.log">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </File>
+        <File name="Processo-Appender" fileName="../processo_${date:yyyy-MM-dd}_log.log" >
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </File>
+        <File name="ProcessoAtividade-Appender" fileName="../processoatividade_${date:yyyy-MM-dd}_log.log">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </File>
+        <File name="ProcessoAtributo-Appender" fileName="../processoatributo_${date:yyyy-MM-dd}_log.log">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </File>
+        <File name="Servico-Appender" fileName="../servico_${date:yyyy-MM-dd}_log.log" >
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </File>
+        <File name="ServicoProcesso-Appender" fileName="../servicoprocesso_${date:yyyy-MM-dd}_log.log">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </File>
+        <File name="ServicoAtributo-Appender" fileName="../servicoatributo_${date:yyyy-MM-dd}_log.log">
+            <PatternLayout>
+                <pattern>
+                    [%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+                </pattern>
+            </PatternLayout>
+        </File>
+    </Appenders>
+    <Loggers>
+        <Logger name="br.com.j4business.saga.atividade.service.AtividadeService" level="info" additivity="false">
+            <AppenderRef ref="Atividade-Appender"/>
+        </Logger>
+        <Logger name="br.com.j4business.saga.atributo.service.AtributoService" level="info" additivity="false">
+            <AppenderRef ref="Atributo-Appender"/>
+        </Logger>
+        <Logger name="br.com.j4business.saga.colaborador.service.ColaboradorService" level="info" additivity="false">
+            <AppenderRef ref="Colaborador-Appender"/>
+        </Logger>
+        <Logger name="br.com.j4business.saga.colaboradoratributo.service.ColaboradorAtributoService" level="info" additivity="false">
+            <AppenderRef ref="ColaboradorAtributo-Appender"/>
+        </Logger>
+        <Logger name="br.com.j4business.saga.evento.service.EventoService" level="info" additivity="false">
+            <AppenderRef ref="Evento-Appender"/>
+         </Logger>
+        <Logger name="br.com.j4business.saga.eventoatributo.service.EventoAtributoService" level="info" additivity="false">
+            <AppenderRef ref="EventoAtributo-Appender"/>
+        </Logger>
+        <Logger name="br.com.j4business.saga.processo.service.ProcessoService" level="info" additivity="false">
+            <AppenderRef ref="Processo-Appender"/>
+        </Logger>
+        <Logger name="br.com.j4business.saga.processoAtividade.service.ProcessoAtividadeService" level="info" additivity="false">
+            <AppenderRef ref="ProcessoAtividade-Appender"/>
+        </Logger>
+        <Logger name="br.com.j4business.saga.processoAtributo.service.ProcessoAtributoService" level="info" additivity="false">
+            <AppenderRef ref="ProcessoAtributo-Appender"/>
+        </Logger>
+        <Logger name="br.com.j4business.saga.servico.service.ServicoService" level="info" additivity="false">
+            <AppenderRef ref="Servico-Appender"/>
+        </Logger>
+        <Root level="info">
+            <AppenderRef ref="Console-Appender"/>
+        </Root>
+    </Loggers>
+</Configuration>

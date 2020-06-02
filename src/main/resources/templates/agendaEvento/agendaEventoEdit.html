@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+
+.ui-autocomplete-loading {
+	background: white url("images/ui-anim_basic_16x16.gif") right center
+		no-repeat;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Processos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<div class="form-group col-md-7">	
+				<ol class="breadcrumb">
+					<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+					<li class="active">Agenda - Evento</li>
+					<li class="active">Edição</li>
+				</ol>
+			</div>
+				<div class="form-group col-md-3">	
+					<ol class="breadcrumb">
+						<li class="active">Usuário: </li>
+						<li th:text="${usuarioNome}"></li>
+						<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>  
+					</ol>
+				</div>
+			<div class="form-group col-md-2">	
+					<a href="/saga/agendaEventoHome" style="float: right" class="btn btn-primary btn-xs margin">Voltar</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/agendaEventoRelMenu" style="float: right" class="btn btn-primary btn-xs margin">Relatório</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/agendaEventoAdd" style="float: right" class="btn btn-primary btn-xs margin">Novo</a>
+			</div>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+
+			<div class="panel-body">
+				<form name="form1" action="agendaEventoEdit"
+					th:object="${agendaEventoForm}"
+					th:action="@{/agendaEventoSave}" method="POST">
+
+					<div class="alert alert-success" th:text="${mensagem}"
+						th:if="${not #strings.isEmpty(mensagem)}"></div>
+
+					<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+
+						<div th:each="detailedError : ${#fields.detailedErrors()}">
+							<span th:text="${detailedError.message}"></span>
+						</div>
+
+					</div>
+					<input type="hidden" class="form-control" id="agendaEventoPK"
+						name="agendaEventoPK" th:field="*{agendaEventoPK}"
+						th:value="${agendaEventoPK}"> <input type="hidden"
+						class="form-control" id="agendaPK" name="agendaPK"
+						th:field="*{agendaPK}" th:value="${agendaPK}"> <input
+						type="hidden" class="form-control" id="eventoPK"
+						name="eventoPK" th:field="*{eventoPK}"
+						th:value="${eventoPK}"> <input type="hidden"
+						name="action">
+
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('agendaNome')} ? has-error"
+							style="color: white;">
+							<label for="agendaNome">Agenda</label> <select
+								class="form-control" th:field="*{agendaNome}"
+								th:remove="all-but-first">
+								<option class="form-control" th:each="agenda : ${agendaPage}"
+									style="color: black;" th:value="${agenda.agendaPK}"
+									th:text="${agenda.agendaNome}">Agenda</option>
+							</select>
+						</div>
+					</div>
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('eventoNome')} ? has-error"
+							style="color: white;">
+							<label for="eventoNome">Evento</label> <select
+								class="form-control" th:field="*{eventoNome}"
+								th:remove="all-but-first">
+								<option class="form-control" th:each="evento : ${eventoPage}"
+									style="color: black;" th:value="${evento.eventoPK}"
+									th:text="${evento.eventoNome}">Evento</option>
+							</select>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('agendaEventoAlertaPrimeiroEnvio')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoAlertaPrimeiroEnvio">ALERTA : Primeiro Envio</label>
+							<div>
+								<span th:each="ty : ${agendaEventoEnvioValues}"> <input
+									type="radio" th:field="*{agendaEventoAlertaPrimeiroEnvio}" th:value="${ty}" />
+									<label th:for="${#ids.prev('agendaEventoAlertaPrimeiroEnvio')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+						<div class="form-group col-md-6"
+							th:classappend="${#fields.hasErrors('agendaEventoAlertaMensagemPrimeiroEnvio')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoAlertaMensagemPrimeiroEnvio">Texto Email</label> <input type="text" class="form-control"
+								id="agendaEventoAlertaMensagemPrimeiroEnvio"
+								th:field="*{agendaEventoAlertaMensagemPrimeiroEnvio}"
+								th:value="${agendaEventoAlertaMensagemPrimeiroEnvio}"
+								placeholder="Texto da Mensagem do Email do Primeiro Envio de alerta">
+						</div>
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('agendaEventoAlertaSuperiorPrimeiroEnvio')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoAlertaSuperiorPrimeiroEnvio">Envio para o Superior</label>
+							<div>
+								<span th:each="ty : ${agendaEventoEnvioValues}"> <input
+									type="radio" th:field="*{agendaEventoAlertaSuperiorPrimeiroEnvio}" th:value="${ty}" />
+									<label th:for="${#ids.prev('agendaEventoAlertaSuperiorPrimeiroEnvio')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+						<div class="form-group col-md-1"
+							th:classappend="${#fields.hasErrors('agendaEventoAlertaDiaPrimeiroEnvio')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoAlertaDiaPrimeiroEnvio">Nº dias Antes</label> <input type="text" class="form-control"
+								id="agendaEventoAlertaDiaPrimeiroEnvio"
+								th:field="*{agendaEventoAlertaDiaPrimeiroEnvio}"
+								th:value="${agendaEventoAlertaDiaPrimeiroEnvio}"
+								placeholder="Nº dias">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('agendaEventoAlertaSegundoEnvio')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoAlertaSegundoEnvio">ALERTA : Segundo Envio</label>
+							<div>
+								<span th:each="ty : ${agendaEventoEnvioValues}"> <input
+									type="radio" th:field="*{agendaEventoAlertaSegundoEnvio}" th:value="${ty}" />
+									<label th:for="${#ids.prev('agendaEventoAlertaSegundoEnvio')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+						<div class="form-group col-md-6"
+							th:classappend="${#fields.hasErrors('agendaEventoAlertaMensagemSegundoEnvio')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoAlertaMensagemSegundoEnvio">Texto Email</label> <input type="text" class="form-control"
+								id="agendaEventoAlertaMensagemSegundoEnvio"
+								th:field="*{agendaEventoAlertaMensagemSegundoEnvio}"
+								th:value="${agendaEventoAlertaMensagemSegundoEnvio}"
+								placeholder="Texto da Mensagem do Email do Segundo Envio de alerta">
+						</div>
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('agendaEventoAlertaSuperiorSegundoEnvio')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoAlertaSuperiorSegundoEnvio">Envio para o Superior</label>
+							<div>
+								<span th:each="ty : ${agendaEventoEnvioValues}"> <input
+									type="radio" th:field="*{agendaEventoAlertaSuperiorSegundoEnvio}" th:value="${ty}" />
+									<label th:for="${#ids.prev('agendaEventoAlertaSuperiorSegundoEnvio')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+						<div class="form-group col-md-1"
+							th:classappend="${#fields.hasErrors('agendaEventoAlertaDiaSegundoEnvio')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoAlertaDiaSegundoEnvio">Nº dias Antes</label> <input type="text" class="form-control"
+								id="agendaEventoAlertaDiaSegundoEnvio"
+								th:field="*{agendaEventoAlertaDiaSegundoEnvio}"
+								th:value="${agendaEventoAlertaDiaSegundoEnvio}"
+								placeholder="Nº dias">
+						</div>
+					</div>
+					<hr />
+						<div class="row">
+							<div class="form-group col-md-2"
+								th:classappend="${#fields.hasErrors('agendaEventoAlertaTerceiroEnvio')} ? has-error"
+								style="color: white;">
+								<label for="agendaEventoAlertaTerceiroEnvio">ALERTA : Terceiro Envio</label>
+								<div>
+									<span th:each="ty : ${agendaEventoEnvioValues}"> <input
+										type="radio" th:field="*{agendaEventoAlertaTerceiroEnvio}" th:value="${ty}" />
+										<label th:for="${#ids.prev('agendaEventoAlertaTerceiroEnvio')}" th:text="${ty}"></label>
+										&nbsp;&nbsp;&nbsp;
+									</span>
+								</div>
+							</div>
+							<div class="form-group col-md-6"
+								th:classappend="${#fields.hasErrors('agendaEventoAlertaMensagemTerceiroEnvio')} ? has-error"
+								style="color: white;">
+								<label for="agendaEventoAlertaMensagemTerceiroEnvio">Texto Email</label> <input type="text" class="form-control"
+									id="agendaEventoAlertaMensagemTerceiroEnvio"
+									th:field="*{agendaEventoAlertaMensagemTerceiroEnvio}"
+									th:value="${agendaEventoAlertaMensagemTerceiroEnvio}"
+									placeholder="Texto da Mensagem do Email do Terceiro Envio de alerta">
+							</div>
+							<div class="form-group col-md-2"
+								th:classappend="${#fields.hasErrors('agendaEventoAlertaSuperiorTerceiroEnvio')} ? has-error"
+								style="color: white;">
+								<label for="agendaEventoAlertaSuperiorTerceiroEnvio">Envio para o Superior</label>
+								<div>
+									<span th:each="ty : ${agendaEventoEnvioValues}"> <input
+										type="radio" th:field="*{agendaEventoAlertaSuperiorTerceiroEnvio}" th:value="${ty}" />
+										<label th:for="${#ids.prev('agendaEventoAlertaSuperiorTerceiroEnvio')}" th:text="${ty}"></label>
+										&nbsp;&nbsp;&nbsp;
+									</span>
+								</div>
+							</div>
+							<div class="form-group col-md-1"
+								th:classappend="${#fields.hasErrors('agendaEventoAlertaDiaTerceiroEnvio')} ? has-error"
+								style="color: white;">
+								<label for="agendaEventoAlertaDiaTerceiroEnvio">Nº dias Antes</label> <input type="text" class="form-control"
+									id="agendaEventoAlertaDiaTerceiroEnvio"
+									th:field="*{agendaEventoAlertaDiaTerceiroEnvio}"
+									th:value="${agendaEventoAlertaDiaTerceiroEnvio}"
+									placeholder="Nº dias">
+							</div>
+						</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('agendaEventoCobrancaPrimeiroEnvio')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoCobrancaPrimeiroEnvio">COBRANÇA : Primeiro Envio</label>
+							<div>
+								<span th:each="ty : ${agendaEventoEnvioValues}"> <input
+									type="radio" th:field="*{agendaEventoCobrancaPrimeiroEnvio}" th:value="${ty}" />
+									<label th:for="${#ids.prev('agendaEventoCobrancaPrimeiroEnvio')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+						<div class="form-group col-md-6"
+							th:classappend="${#fields.hasErrors('agendaEventoCobrancaMensagemPrimeiroEnvio')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoCobrancaMensagemPrimeiroEnvio">Texto Email</label> <input type="text" class="form-control"
+								id="agendaEventoCobrancaMensagemPrimeiroEnvio"
+								th:field="*{agendaEventoCobrancaMensagemPrimeiroEnvio}"
+								th:value="${agendaEventoCobrancaMensagemPrimeiroEnvio}"
+								placeholder="Texto da Mensagem do Email do Primeiro Envio de cobrança">
+						</div>
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('agendaEventoCobrancaSuperiorPrimeiroEnvio')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoCobrancaSuperiorPrimeiroEnvio">Envio para o Superior</label>
+							<div>
+								<span th:each="ty : ${agendaEventoEnvioValues}"> <input
+									type="radio" th:field="*{agendaEventoCobrancaSuperiorPrimeiroEnvio}" th:value="${ty}" />
+									<label th:for="${#ids.prev('agendaEventoCobrancaSuperiorPrimeiroEnvio')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+						<div class="form-group col-md-1"
+							th:classappend="${#fields.hasErrors('agendaEventoCobrancaDiaPrimeiroEnvio')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoCobrancaDiaPrimeiroEnvio">Nº dias Antes</label> <input type="text" class="form-control"
+								id="agendaEventoCobrancaDiaPrimeiroEnvio"
+								th:field="*{agendaEventoCobrancaDiaPrimeiroEnvio}"
+								th:value="${agendaEventoCobrancaDiaPrimeiroEnvio}"
+								placeholder="Nº dias">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('agendaEventoCobrancaSegundoEnvio')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoCobrancaSegundoEnvio">COBRANÇA : Segundo Envio</label>
+							<div>
+								<span th:each="ty : ${agendaEventoEnvioValues}"> <input
+									type="radio" th:field="*{agendaEventoCobrancaSegundoEnvio}" th:value="${ty}" />
+									<label th:for="${#ids.prev('agendaEventoCobrancaSegundoEnvio')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+						<div class="form-group col-md-6"
+							th:classappend="${#fields.hasErrors('agendaEventoCobrancaMensagemSegundoEnvio')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoCobrancaMensagemSegundoEnvio">Texto Email</label> <input type="text" class="form-control"
+								id="agendaEventoCobrancaMensagemSegundoEnvio"
+								th:field="*{agendaEventoCobrancaMensagemSegundoEnvio}"
+								th:value="${agendaEventoCobrancaMensagemSegundoEnvio}"
+								placeholder="Texto da Mensagem do Email do Segundo Envio de cobrança">
+						</div>
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('agendaEventoCobrancaSuperiorSegundoEnvio')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoCobrancaSuperiorSegundoEnvio">Envio para o Superior</label>
+							<div>
+								<span th:each="ty : ${agendaEventoEnvioValues}"> <input
+									type="radio" th:field="*{agendaEventoCobrancaSuperiorSegundoEnvio}" th:value="${ty}" />
+									<label th:for="${#ids.prev('agendaEventoCobrancaSuperiorSegundoEnvio')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+						<div class="form-group col-md-1"
+							th:classappend="${#fields.hasErrors('agendaEventoCobrancaDiaSegundoEnvio')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoCobrancaDiaSegundoEnvio">Nº dias Antes</label> <input type="text" class="form-control"
+								id="agendaEventoCobrancaDiaSegundoEnvio"
+								th:field="*{agendaEventoCobrancaDiaSegundoEnvio}"
+								th:value="${agendaEventoCobrancaDiaSegundoEnvio}"
+								placeholder="Nº dias">
+						</div>
+					</div>
+					<hr />
+						<div class="row">
+							<div class="form-group col-md-2"
+								th:classappend="${#fields.hasErrors('agendaEventoCobrancaTerceiroEnvio')} ? has-error"
+								style="color: white;">
+								<label for="agendaEventoCobrancaTerceiroEnvio">COBRANÇA : Terceiro Envio</label>
+								<div>
+									<span th:each="ty : ${agendaEventoEnvioValues}"> <input
+										type="radio" th:field="*{agendaEventoCobrancaTerceiroEnvio}" th:value="${ty}" />
+										<label th:for="${#ids.prev('agendaEventoCobrancaTerceiroEnvio')}" th:text="${ty}"></label>
+										&nbsp;&nbsp;&nbsp;
+									</span>
+								</div>
+							</div>
+							<div class="form-group col-md-6"
+								th:classappend="${#fields.hasErrors('agendaEventoCobrancaMensagemTerceiroEnvio')} ? has-error"
+								style="color: white;">
+								<label for="agendaEventoCobrancaMensagemTerceiroEnvio">Texto Email</label> <input type="text" class="form-control"
+									id="agendaEventoCobrancaMensagemTerceiroEnvio"
+									th:field="*{agendaEventoCobrancaMensagemTerceiroEnvio}"
+									th:value="${agendaEventoCobrancaMensagemTerceiroEnvio}"
+									placeholder="Texto da Mensagem do Email do Terceiro Envio de cobrança">
+							</div>
+							<div class="form-group col-md-2"
+								th:classappend="${#fields.hasErrors('agendaEventoCobrancaSuperiorTerceiroEnvio')} ? has-error"
+								style="color: white;">
+								<label for="agendaEventoCobrancaSuperiorTerceiroEnvio">Envio para o Superior</label>
+								<div>
+									<span th:each="ty : ${agendaEventoEnvioValues}"> <input
+										type="radio" th:field="*{agendaEventoCobrancaSuperiorTerceiroEnvio}" th:value="${ty}" />
+										<label th:for="${#ids.prev('agendaEventoCobrancaSuperiorTerceiroEnvio')}" th:text="${ty}"></label>
+										&nbsp;&nbsp;&nbsp;
+									</span>
+								</div>
+							</div>
+							<div class="form-group col-md-1"
+								th:classappend="${#fields.hasErrors('agendaEventoCobrancaDiaTerceiroEnvio')} ? has-error"
+								style="color: white;">
+								<label for="agendaEventoCobrancaDiaTerceiroEnvio">Nº dias Antes</label> <input type="text" class="form-control"
+									id="agendaEventoCobrancaDiaTerceiroEnvio"
+									th:field="*{agendaEventoCobrancaDiaTerceiroEnvio}"
+									th:value="${agendaEventoCobrancaDiaTerceiroEnvio}"
+									placeholder="Nº dias">
+							</div>
+						</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('agendaEventoMotivoOperacao')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoMotivoOperacao">Motivo da
+								Operação</label> <input type="text" class="form-control"
+								id="agendaEventoMotivoOperacao"
+								th:field="*{agendaEventoMotivoOperacao}"
+								th:value="${agendaEventoMotivoOperacao}"
+								placeholder="Informe o Motivo da Operação do Agenda/Evento">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('agendaEventoResponsavel')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoResponsavel">Responsável</label> <select
+								class="form-control" th:field="*{agendaEventoResponsavel}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Responsável</option>
+							</select>
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('agendaEventoStatus')} ? has-error"
+							style="color: white;">
+							<label for="agendaEventoStatus">Status</label>
+							<div>
+								<span th:each="ty : ${agendaEventoStatusValues}"> <input
+									type="radio" th:field="*{agendaEventoStatus}"
+									th:value="${ty}" /> <label
+									th:for="${#ids.prev('agendaEventoStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<!-- campo para teste de autocomplete
+							<div>
+								<label for="autocomplete">Select a programming language: </label>
+								<input  type="text"  id="autocomplete" size="50">							
+							</div>
+							<hr />
+							-->
+					<hr />
+					<div id="actions" class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary btn-xs">Salvar</button>
+							<a href="/saga/agendaEventoHome" class="btn btn-default btn-xs">Cancelar</a>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

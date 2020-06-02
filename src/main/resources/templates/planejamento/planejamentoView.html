@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<link href="/saga//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"	rel="stylesheet"></link>
+
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Processos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<div class="form-group col-md-7">	
+				<ol class="breadcrumb">
+					<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+					<li class="active">Planejamento</li>
+					<li class="active">View</li>
+				</ol>
+			</div>
+				<div class="form-group col-md-3">	
+					<ol class="breadcrumb">
+						<li class="active">Usuário: </li>
+						<li th:text="${usuarioNome}"></li>
+						<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>  
+					</ol>
+				</div>
+			<div class="form-group col-md-2">	
+					<a href="/saga/planejamentoHome" style="float: right" class="btn btn-primary btn-xs margin">Voltar</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/planejamentoRelMenu" style="float: right" class="btn btn-primary btn-xs margin">Relatório</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/planejamentoAdd" style="float: right" class="btn btn-primary btn-xs margin">Novo</a>
+			</div>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<fieldset>
+					<ol class="breadcrumb">
+						<li class="active">Planejamento</li>
+					</ol>
+					<div class="panel-body" th:object="${planejamentoForm}">
+						<fieldset>
+							<div class="col-md-4">
+								<label for="planejamentoPK">Id.............................:&nbsp;&nbsp;</label>
+								<span id="planejamentoPK" th:text="${planejamentoForm.planejamentoPK}"></span>
+							</div>
+			
+							<div class="col-md-12">
+								<label for="planejamentoNome">Nome....................:&nbsp;&nbsp;</label> <span
+									id="planejamentoNome" th:text="${planejamentoForm.planejamentoNome}"></span>
+							</div>
+			
+							<div class="col-md-12">
+								<label for="planejamentoDescricao">Descrição............:&nbsp;&nbsp;</label> <span
+									id="planejamentoDescricao" th:text="${planejamentoForm.planejamentoDescricao}"></span>
+							</div>
+						</fieldset>
+						<fieldset>
+							<ol class="breadcrumb">
+							</ol>
+							<br>
+							<div class="col-md-4">
+								<label for="planejamentoGestor">Gestor.......................:&nbsp;&nbsp;</label>
+								<span id="planejamentoGestor" th:text="${planejamentoForm.planejamentoGestor}"></span>
+							</div>
+							<div class="col-md-4">
+								<label for="planejamentoDono"  >Dono.........................:&nbsp;&nbsp;</label>
+								<span id="planejamentoDono" th:text="${planejamentoForm.planejamentoDono}"></span>
+							</div>
+							<div class="col-md-4">
+								<label for="planejamentoAprovacao">Aprovação.....................:&nbsp;&nbsp;</label>
+								<span id="planejamentoAprovacao" th:text="${planejamentoForm.planejamentoAprovacao}"></span>
+							</div>
+						</fieldset>
+						<fieldset>
+							<ol class="breadcrumb">
+							</ol>
+							<br>
+							<div class="col-md-2">
+								<label for="planejamentoDataPrevistaInicio">Data Prev. Início.:&nbsp;&nbsp;</label> 
+								<span id="planejamentoDataPrevistaInicio" th:text="${planejamentoForm.planejamentoDataPrevistaInicio }"></span>
+							</div>
+							<div class="col-md-2">
+								<label for="planejamentoDataPrevistaTermino">Data Prev. Término.:&nbsp;&nbsp;</label> 
+								<span id="planejamentoDataPrevistaTermino" th:text="${planejamentoForm.planejamentoDataPrevistaTermino}"></span>
+							</div>
+							<div class="col-md-2">
+								<label for="planejamentoDataRealInicio">Data Real Início.:&nbsp;&nbsp;</label> 
+								<span id="planejamentoDataRealInicio" th:text="${planejamentoForm.planejamentoDataRealInicio }"></span>
+							</div>
+							<div class="col-md-2">
+								<label for="planejamentoDataRealTermino">Data Real Término.:&nbsp;&nbsp;</label> 
+								<span id="planejamentoDataRealTermino" th:text="${planejamentoForm.planejamentoDataRealTermino}"></span>
+							</div>
+							<div class="col-md-4">
+								<label for="planejamentoPrazoStatus">Status Prazo..:&nbsp;&nbsp;</label> 
+								<span id="planejamentoPrazoStatus" th:text="${planejamentoForm.planejamentoPrazoStatus}"></span>
+							</div>
+						</fieldset>
+						<fieldset>
+							<ol class="breadcrumb">
+							</ol>
+							<br>
+							<div class="col-md-2">
+								<label for="planejamentoCustoPrevisto">Custo Previsto.:&nbsp;&nbsp;</label> 
+								<span id="planejamentoCustoPrevisto" th:text="${planejamentoForm.planejamentoCustoPrevisto}"></span>
+							</div>
+							<div class="col-md-2">
+								<label for="planejamentoCustoFinal">Custo Final....:&nbsp;&nbsp;</label> 
+								<span id="planejamentoCustoFinal" th:text="${planejamentoForm.planejamentoCustoFinal}"></span>
+							</div>
+							<div class="col-md-4">
+								<label for="planejamentoCustoStatus">Status Custo..:&nbsp;&nbsp;</label> 
+								<span id="planejamentoCustoStatus" th:text="${planejamentoForm.planejamentoCustoStatus}"></span>
+							</div>
+						</fieldset>
+						<fieldset>
+							<ol class="breadcrumb">
+							</ol>
+							<br>
+							<div class="col-md-4">
+								<label for="planejamentoMotivoOperacao">Motivo da Operação.:&nbsp;&nbsp;</label> 
+								<span id="planejamentoMotivoOperacao" th:text="${planejamentoForm.planejamentoMotivoOperacao }"></span>
+							</div>
+							<div class="col-md-4">
+								<label for="planejamentoResponsavel">Responsável.......:&nbsp;&nbsp;</label>
+								<span id="planejamentoResponsavel"
+									th:text="${planejamentoForm.planejamentoResponsavel }"></span>
+							</div>
+							<div class="col-md-4">
+								<label for="planejamentoStatus">Status....................:&nbsp;&nbsp;</label>
+								<span id="planejamentoStatus" th:text="${planejamentoForm.planejamentoStatus }"></span>
+							</div>
+			
+						</fieldset>
+					</div>
+				</fieldset>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

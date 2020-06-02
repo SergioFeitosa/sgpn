@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>J4Business</title>
+
+<link href="/saga/css/bootstrap.min.css" th:href="@{/css/bootstrap.min.css}"	rel="stylesheet"></link>
+<link href="/saga/css/styles.css" rel="stylesheet"></link>
+<link href='http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900,100italic,300italic,400italic,700italic,900italic'  rel='stylesheet' type='text/css'></link>
+<script src="/js/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.2.1.min.js}"></script>
+<script src="/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.0/jquery.mask.js"></script>
+
+<style>
+.glyphicon:hover {
+	color: black;
+}
+
+.detalhe {
+	color: #A9D9EC;
+}
+
+.edit {
+	color: orange;
+}
+
+.remove {
+	color: red;
+}
+
+.form-control {
+	color: #B7B7B7;
+}
+
+.form-control:hover, .form-control:focus {
+	color: #ffffff;
+	border-color: #A9D9EC;
+}
+</style>
+</head>
+
+<body>
+
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#sidebar-collapse">
+					<span class="sr-only">Toggle navigation</span> <span
+						class="icon-bar"></span> <span class="icon-bar"></span> <span
+						class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#"><span>Gestão e Aperfeiçoamento de Processos</span></a>
+			</div>
+		</div>
+		<!-- /.container-fluid -->
+	</nav>
+
+	<div id="sidebar-collapse" class="col-sm-3 col-lg-2 sidebar">
+		<form role="search">
+			<div class="form-group">
+				<div th:replace="@{./menu}"></div>
+			</div>
+		</form>
+
+
+	</div>
+	<!--/.sidebar-->
+
+	<div class="col-sm-9 col-sm-offset-2 col-lg-10 col-lg-offset-2 main">
+		<div class="row">
+			<div class="form-group col-md-7">	
+				<ol class="breadcrumb">
+					<li><a href="/saga/index"><span class="glyphicon glyphicon-home"></span></a></li>
+					<li class="active">Ocorrência - Atendimento</li>
+					<li class="active">Inclusão</li>
+				</ol>
+			</div>
+				<div class="form-group col-md-3">	
+					<ol class="breadcrumb">
+						<li class="active">Usuário: </li>
+						<li th:text="${usuarioNome}"></li>
+						<li th:text="${#dates.format(standardDate, 'dd-MM-yyyy HH:mm')}"></li>  
+					</ol>
+				</div>
+			<div class="form-group col-md-2">	
+					<a href="/saga/ocorrenciaAtendimentoHome" style="float: right" class="btn btn-primary btn-xs margin">Voltar</a>
+					<p style="float: right">&nbsp;&nbsp;&nbsp;</p>
+					<a href="/saga/ocorrenciaAtendimentoRelMenu" style="float: right" class="btn btn-primary btn-xs margin">Relatório</a>
+			</div>
+		</div>
+		<!--/.row-->
+
+		<div class="panel panel-default">
+			<div class="panel-body">
+				<form action="ocorrenciaAtendimentoCreate"
+					th:object="${ocorrenciaAtendimentoForm}"
+					th:action="@{/ocorrenciaAtendimentoCreate}" method="POST">
+
+					<div class="alert alert-success" th:text="${mensagem}"
+						th:if="${not #strings.isEmpty(mensagem)}"></div>
+
+					<div class="alert alert-danger" th:if="${#fields.hasAnyErrors()}">
+
+						<div th:each="detailedError : ${#fields.detailedErrors()}">
+							<span th:text="${detailedError.message}"></span>
+						</div>
+
+					</div>
+
+					<input type="hidden" class="form-control" id="ocorrenciaPK"
+						name="ocorrenciaPK" th:field="*{ocorrenciaPK}" th:value="${ocorrenciaPK}">
+					<input type="hidden" class="form-control" id="atendimentoPK"
+						name="atendimentoPK" th:field="*{atendimentoPK}"
+						th:value="${atendimentoPK}"> <input type="hidden"
+						class="form-control" id="ocorrenciaAtendimentoPK"
+						name="ocorrenciaAtendimentoPK" th:field="*{ocorrenciaAtendimentoPK}"
+						th:value="${ocorrenciaAtendimentoPK}">
+
+					<div class="row">
+						<div class="form-group col-md-3"
+							th:classappend="${#fields.hasErrors('ocorrenciaNome')} ? has-error"
+							style="color: white;">
+							<label for="ocorrenciaNome">Ocorrencia</label> <select
+								class="form-control" th:field="*{ocorrenciaNome}"
+								th:remove="all-but-first">
+								<option class="form-control" th:each="ocorrencia : ${ocorrenciaPage}"
+									style="color: black;" th:value="${ocorrencia.ocorrenciaPK}"
+									th:text="${ocorrencia.ocorrenciaNome}">Ocorrencia</option>
+							</select>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-8"
+							th:classappend="${#fields.hasErrors('atendimentoNome')} ? has-error"
+							style="color: white;">
+							<label for="atendimentoNome">Atendimento</label> <select
+								class="form-control" th:field="*{atendimentoNome}"
+								th:remove="all-but-first">
+								<option class="form-control" th:each="atendimento : ${atendimentoPage}"
+									style="color: black;" th:value="${atendimento.atendimentoPK}"
+									th:text="${atendimento.atendimentoNome}">Atendimento</option>
+							</select>
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-2"
+							th:classappend="${#fields.hasErrors('ocorrenciaAtendimentoSequencia')} ? has-error"
+							style="color: white;">
+							<label for="ocorrenciaAtendimentoSequencia">Sequência</label> <input
+								type="text" class="form-control" id="ocorrenciaAtendimentoSequencia"
+								th:field="*{ocorrenciaAtendimentoSequencia}"
+								th:value="${ocorrenciaAtendimentoSequencia}"
+								placeholder="Informe a sequência do Atendimento na Ocorrência">
+						</div>
+					</div>
+					<hr />
+					<div class="row">
+						<div class="form-group col-md-3"
+							th:classappend="${#fields.hasErrors('ocorrenciaAtendimentoMotivoOperacao')} ? has-error"
+							style="color: white;">
+							<label for="ocorrenciaAtendimentoMotivoOperacao">Motivo da
+								Operação</label> <input type="text" class="form-control"
+								id="ocorrenciaAtendimentoMotivoOperacao"
+								th:field="*{ocorrenciaAtendimentoMotivoOperacao}"
+								th:value="${ocorrenciaAtendimentoMotivoOperacao}"
+								placeholder="Informe o Motivo da Operação da Ocorrência - Atendimento">
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('ocorrenciaAtendimentoResponsavel')} ? has-error"
+							style="color: white;">
+							<label for="ocorrenciaAtendimentoResponsavel">Responsável</label> <select
+								class="form-control" th:field="*{ocorrenciaAtendimentoResponsavel}"
+								th:remove="all-but-first">
+								<option class="form-control"
+									th:each="colaborador : ${colaboradorPage}" style="color: black;"
+									th:value="${colaborador.pessoaPK}"
+									th:text="${colaborador.pessoaNome}">Responsável</option>
+							</select>
+						</div>
+						<div class="form-group col-md-4"
+							th:classappend="${#fields.hasErrors('ocorrenciaAtendimentoStatus')} ? has-error"
+							style="color: white;">
+							<label for="ocorrenciaAtendimentoStatus">Status</label>
+							<div>
+								<span th:each="ty : ${ocorrenciaAtendimentoStatusValues}"> <input
+									type="radio" th:field="*{ocorrenciaAtendimentoStatus}"
+									th:value="${ty}" /> <label
+									th:for="${#ids.prev('ocorrenciaAtendimentoStatus')}" th:text="${ty}"></label>
+									&nbsp;&nbsp;&nbsp;
+								</span>
+							</div>
+						</div>
+					</div>
+					<hr />
+					<div id="actions" class="row">
+						<div class="col-md-12">
+							<button type="submit" class="btn btn-primary btn-xs">Salvar</button>
+							<a href="/saga/ocorrenciaAtendimentoHome" class="btn btn-default btn-xs">Cancelar</a>
+						</div>
+					</div>
+					<hr />
+				</form>
+			</div>
+		</div>
+	</div>
+
+</body>
+</html>
