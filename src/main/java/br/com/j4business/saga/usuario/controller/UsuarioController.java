@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -38,7 +38,7 @@ public class UsuarioController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/usuarioAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/usuarioAdd")
 	public ModelAndView usuarioAdd(UsuarioForm usuarioForm) {
 
 		ModelAndView mv = new ModelAndView("usuario/usuarioAdd");
@@ -48,7 +48,7 @@ public class UsuarioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/usuarioCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/usuarioCreate")
 	public ModelAndView usuarioCreate(@Valid UsuarioForm usuarioForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -85,7 +85,7 @@ public class UsuarioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/usuarioDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/usuarioDelete/{id}")
 	public ModelAndView usuarioDelete(@PathVariable("id") String usuarioNome, @Valid UsuarioForm usuarioForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/usuarioHome");
@@ -105,7 +105,7 @@ public class UsuarioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/usuarioEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/usuarioEdit/{id}")
 	public ModelAndView usuarioEdit(@PathVariable("id") String usuarioNome, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("usuario/usuarioEdit");
@@ -118,7 +118,7 @@ public class UsuarioController {
 		return mv;
 	}
 
-	@RequestMapping("/usuarioHome")
+	@GetMapping("/usuarioHome")
 	public ModelAndView usuarioHome(@Valid UsuarioByUsuarioForm usuarioByUsuarioForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("usuario/usuarioHome");
@@ -136,7 +136,7 @@ public class UsuarioController {
 		}
 
 		if (usuarioByUsuarioForm.getUsuarioSortTipo().equalsIgnoreCase("UsuarioNome") || usuarioByUsuarioForm.getUsuarioSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "usuarioNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "usuarioNome");
 
 		}
 
@@ -152,7 +152,7 @@ public class UsuarioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/usuarioSave", method = RequestMethod.POST)
+	@PostMapping(path = "/usuarioSave")
 	public ModelAndView usuarioSave(@Valid UsuarioForm usuarioForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -175,7 +175,7 @@ public class UsuarioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/usuarioRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/usuarioRelMenu")
 	public ModelAndView usuarioRelMenu() {
 
 		ModelAndView mv = new ModelAndView("usuario/usuarioRelMenu");
@@ -185,18 +185,18 @@ public class UsuarioController {
 		
 	}
 
-	@RequestMapping("/usuarioRel001")
+	@GetMapping("/usuarioRel001")
 	public ModelAndView usuarioRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("usuario/usuarioRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "usuarioNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "usuarioNome");
 		mv.addObject("usuarioPage", usuarioService.getUsuarioAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/usuarioView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/usuarioView/{id}")
 	public ModelAndView usuarioView(@PathVariable("id") String usuarioNome) {
 
 		Usuario usuario = usuarioService.getByUsuarioNome(usuarioNome);

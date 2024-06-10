@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -55,7 +55,7 @@ public class AgendaContratoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/agendaContratoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaContratoAdd")
 	public ModelAndView agendaContratoAdd(AgendaContratoForm agendaContratoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("agendaContrato/agendaContratoAdd");
@@ -65,17 +65,17 @@ public class AgendaContratoController {
 		mv.addObject("agendaContratoEnvioValues", AgendaContratoEnvio.values());
 		mv.addObject("agendaContratoStatusValues", AtributoStatus.values());
 
-		Pageable agendaPageable = new PageRequest(0, 200, Direction.ASC, "agendaNome");
+		Pageable agendaPageable = PageRequest.of(0, 200, Direction.ASC, "agendaNome");
 		mv.addObject("agendaPage", agendaService.getAgendaAll(agendaPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable contratoPageable = new PageRequest(0, 200, Direction.ASC, "contratoNome");
+		Pageable contratoPageable = PageRequest.of(0, 200, Direction.ASC, "contratoNome");
 		mv.addObject("contratoPage", contratoService.getContratoAll(contratoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/agendaContratoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/agendaContratoCreate")
 	public ModelAndView agendaContratoCreate(@Valid AgendaContratoForm agendaContratoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -108,7 +108,7 @@ public class AgendaContratoController {
 	}
 
 
-	@RequestMapping(path = "/agendaContratoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaContratoDelete/{id}")
 	public ModelAndView agendaContratoDelete(@PathVariable("id") long agendaContratoId, @Valid ContratoForm contratoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/agendaContratoHome");
@@ -134,7 +134,7 @@ public class AgendaContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/agendaContratoEdit/{agendaContratoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaContratoEdit/{agendaContratoPK}")
 	public ModelAndView agendaContratoEdit(@PathVariable("agendaContratoPK") Long agendaContratoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("agendaContrato/agendaContratoEdit");
@@ -145,18 +145,18 @@ public class AgendaContratoController {
 		mv.addObject("agendaContratoEnvioValues", AgendaContratoEnvio.values());
 		mv.addObject("agendaContratoStatusValues", AtributoStatus.values());
 
-		Pageable agendaPageable = new PageRequest(0, 200, Direction.ASC, "agendaNome");
+		Pageable agendaPageable = PageRequest.of(0, 200, Direction.ASC, "agendaNome");
 		mv.addObject("agendaPage", agendaService.getAgendaAll(agendaPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable contratoPageable = new PageRequest(0, 200, Direction.ASC, "contratoNome");
+		Pageable contratoPageable = PageRequest.of(0, 200, Direction.ASC, "contratoNome");
 		mv.addObject("contratoPage", contratoService.getContratoAll(contratoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/agendaContratoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaContratoHome")
 	public ModelAndView agendaContratoHome(@Valid AgendaContratoByAgendaForm agendaContratoByAgendaForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("agendaContrato/agendaContratoHome");
@@ -176,10 +176,10 @@ public class AgendaContratoController {
 
 		if (agendaContratoByAgendaForm.getAgendaContratoSortTipo().equalsIgnoreCase("AgendaNome")
 				|| agendaContratoByAgendaForm.getAgendaContratoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"agenda.agendaNome","contrato.contratoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"agenda.agendaNome","contrato.contratoNome"); 
 		
 		} else if (agendaContratoByAgendaForm.getAgendaContratoSortTipo().equalsIgnoreCase("ContratoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"contrato.contratoNome","agenda.agendaNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"contrato.contratoNome","agenda.agendaNome"); 
 
 		}
 
@@ -202,7 +202,7 @@ public class AgendaContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/agendaContratoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/agendaContratoSave")
 	public ModelAndView agendaContratoSave(@Valid AgendaContratoForm agendaContratoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -226,7 +226,7 @@ public class AgendaContratoController {
 		
 	}
 
-	@RequestMapping(path = "/agendaContratoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaContratoRelMenu")
 	public ModelAndView agendaContratoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("agendaContrato/agendaContratoRelMenu");
@@ -236,17 +236,17 @@ public class AgendaContratoController {
 		
 	}
 
-	@RequestMapping("/agendaContratoRel001")
+	@GetMapping("/agendaContratoRel001")
 	public ModelAndView agendaContratoRel001() {
 
 		ModelAndView mv = new ModelAndView("agendaContrato/agendaContratoRel001");
-		Pageable agendaPageable = new PageRequest(0, 200, Direction.ASC, "agenda.agendaNome","contrato.contratoNome");
+		Pageable agendaPageable = PageRequest.of(0, 200, Direction.ASC, "agenda.agendaNome","contrato.contratoNome");
 		mv.addObject("agendaContratoPage", agendaContratoService.getAgendaContratoAll(agendaPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/agendaContratoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaContratoView/{id}")
 	public ModelAndView agendaContratoView(@PathVariable("id") Long agendaContratoId) {
 
 		AgendaContrato agendaContrato = agendaContratoService.getAgendaContratoByAgendaContratoPK(agendaContratoId);

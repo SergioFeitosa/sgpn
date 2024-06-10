@@ -1,26 +1,28 @@
 package br.com.j4business.saga.treinamentoimagem.service;
 
-import br.com.j4business.saga.UsuarioSeguranca;
-import br.com.j4business.saga.acao.model.Acao;
-import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
-import br.com.j4business.saga.colaborador.model.Colaborador;
-import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.treinamento.model.Treinamento;
-import br.com.j4business.saga.treinamento.service.TreinamentoService;
-import br.com.j4business.saga.treinamentoimagem.model.TreinamentoImagem;
-import br.com.j4business.saga.imagem.model.Imagem;
-import br.com.j4business.saga.imagem.service.ImagemService;
-import br.com.j4business.saga.treinamentoimagem.model.TreinamentoImagemForm;
-import br.com.j4business.saga.treinamentoimagem.repository.TreinamentoImagemRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
 import java.util.List;
-import org.apache.logging.log4j.Logger;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import br.com.j4business.saga.UsuarioSeguranca;
+import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
+import br.com.j4business.saga.colaborador.model.Colaborador;
+import br.com.j4business.saga.colaborador.service.ColaboradorService;
+import br.com.j4business.saga.imagem.model.Imagem;
+import br.com.j4business.saga.imagem.service.ImagemService;
+import br.com.j4business.saga.treinamento.model.Treinamento;
+import br.com.j4business.saga.treinamento.service.TreinamentoService;
+import br.com.j4business.saga.treinamentoimagem.model.TreinamentoImagem;
+import br.com.j4business.saga.treinamentoimagem.model.TreinamentoImagemForm;
+import br.com.j4business.saga.treinamentoimagem.repository.TreinamentoImagemRepository;
 
 @Service("treinamentoImagemService")
 public class TreinamentoImagemServiceImpl implements TreinamentoImagemService {
@@ -93,7 +95,8 @@ public class TreinamentoImagemServiceImpl implements TreinamentoImagemService {
 
 	@Override
 	public TreinamentoImagem getTreinamentoImagemByTreinamentoImagemPK(long treinamentoImagemPK) {
-		return treinamentoImagemRepository.findOne(treinamentoImagemPK);
+		Optional<TreinamentoImagem> treinamentoImagem = treinamentoImagemRepository.findById(treinamentoImagemPK);
+		return treinamentoImagem.get();
 	}
 
 	@Override
@@ -142,7 +145,7 @@ public class TreinamentoImagemServiceImpl implements TreinamentoImagemService {
 
 		TreinamentoImagem treinamentoImagemTemp = this.getTreinamentoImagemByTreinamentoImagemPK(treinamentoImagemPK);
 
-		treinamentoImagemRepository.delete(treinamentoImagemPK);
+		treinamentoImagemRepository.delete(treinamentoImagemTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("TreinamentoImagem Save " + "\n Usuário => " + username + 
@@ -156,7 +159,10 @@ public class TreinamentoImagemServiceImpl implements TreinamentoImagemService {
 		
 		List<TreinamentoImagem> treinamentoImagemList = treinamentoImagemRepository.findByImagem(imagem);
 
-		treinamentoImagemRepository.delete(treinamentoImagemList);
+		for (TreinamentoImagem treinamentoImagem2 : treinamentoImagemList) {
+			treinamentoImagemRepository.delete(treinamentoImagem2);	
+		}
+		
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

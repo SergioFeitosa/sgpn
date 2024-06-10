@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +17,20 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes; 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.j4business.saga.treinamento.model.TreinamentoForm;
-import br.com.j4business.saga.treinamento.service.TreinamentoService;
-import br.com.j4business.saga.treinamentoimagem.model.TreinamentoImagem;
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.texto.model.TextoForm;
 import br.com.j4business.saga.texto.service.TextoService;
+import br.com.j4business.saga.treinamento.model.TreinamentoForm;
+import br.com.j4business.saga.treinamento.service.TreinamentoService;
 import br.com.j4business.saga.treinamentotexto.model.TreinamentoTexto;
 import br.com.j4business.saga.treinamentotexto.model.TreinamentoTextoByTreinamentoForm;
 import br.com.j4business.saga.treinamentotexto.model.TreinamentoTextoForm;
@@ -55,7 +54,7 @@ public class TreinamentoTextoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/treinamentoTextoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoTextoAdd")
 	public ModelAndView treinamentoTextoAdd(TreinamentoTextoForm treinamentoTextoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("treinamentoTexto/treinamentoTextoAdd");
@@ -63,18 +62,18 @@ public class TreinamentoTextoController {
 		mv.addObject("treinamentoTextoForm", treinamentoTextoForm);
 		mv.addObject("treinamentoTextoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("treinamentoTextoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable textoPageable = new PageRequest(0, 200, Direction.ASC, "textoNome");
+		Pageable textoPageable = PageRequest.of(0, 200, Direction.ASC, "textoNome");
 		mv.addObject("textoPage", textoService.getTextoAll(textoPageable));
-		Pageable treinamentoPageable = new PageRequest(0, 200, Direction.ASC, "treinamentoNome");
+		Pageable treinamentoPageable = PageRequest.of(0, 200, Direction.ASC, "treinamentoNome");
 		mv.addObject("treinamentoPage", treinamentoService.getTreinamentoAll(treinamentoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/treinamentoTextoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/treinamentoTextoCreate")
 	public ModelAndView treinamentoTextoCreate(@Valid TreinamentoTextoForm treinamentoTextoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -121,7 +120,7 @@ public class TreinamentoTextoController {
 	}
 
 
-	@RequestMapping(path = "/treinamentoTextoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoTextoDelete/{id}")
 	public ModelAndView treinamentoTextoDelete(@PathVariable("id") long treinamentoTextoId, @Valid TextoForm textoForm, BindingResult result, RedirectAttributes attributes) {
 
 
@@ -147,7 +146,7 @@ public class TreinamentoTextoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/treinamentoTextoEdit/{treinamentoTextoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoTextoEdit/{treinamentoTextoPK}")
 	public ModelAndView treinamentoTextoEdit(@PathVariable("treinamentoTextoPK") Long treinamentoTextoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("treinamentoTexto/treinamentoTextoEdit");
@@ -156,18 +155,18 @@ public class TreinamentoTextoController {
 		mv.addObject("treinamentoTextoForm", treinamentoTextoForm);
 		mv.addObject("treinamentoTextoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("treinamentoTextoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable textoPageable = new PageRequest(0, 200, Direction.ASC, "textoNome");
+		Pageable textoPageable = PageRequest.of(0, 200, Direction.ASC, "textoNome");
 		mv.addObject("textoPage", textoService.getTextoAll(textoPageable));
-		Pageable treinamentoPageable = new PageRequest(0, 200, Direction.ASC, "treinamentoNome");
+		Pageable treinamentoPageable = PageRequest.of(0, 200, Direction.ASC, "treinamentoNome");
 		mv.addObject("treinamentoPage", treinamentoService.getTreinamentoAll(treinamentoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/treinamentoTextoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoTextoHome")
 	public ModelAndView treinamentoTextoHome(@Valid TreinamentoTextoByTreinamentoForm treinamentoTextoByTreinamentoForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("treinamentoTexto/treinamentoTextoHome");
@@ -187,10 +186,10 @@ public class TreinamentoTextoController {
 
 		if (treinamentoTextoByTreinamentoForm.getTreinamentoTextoSortTipo().equalsIgnoreCase("TreinamentoNome")
 				|| treinamentoTextoByTreinamentoForm.getTreinamentoTextoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"treinamento.treinamentoNome","texto.textoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"treinamento.treinamentoNome","texto.textoNome"); 
 		
 		} else if (treinamentoTextoByTreinamentoForm.getTreinamentoTextoSortTipo().equalsIgnoreCase("TextoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"texto.textoNome","treinamento.treinamentoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"texto.textoNome","treinamento.treinamentoNome"); 
 
 		}
 
@@ -213,7 +212,7 @@ public class TreinamentoTextoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/treinamentoTextoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/treinamentoTextoSave")
 	public ModelAndView treinamentoTextoSave(@Valid TreinamentoTextoForm treinamentoTextoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -245,7 +244,7 @@ public class TreinamentoTextoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/treinamentoTextoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoTextoRelMenu")
 	public ModelAndView treinamentoTextoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("treinamentoTexto/treinamentoTextoRelMenu");
@@ -255,18 +254,18 @@ public class TreinamentoTextoController {
 		
 	}
 
-	@RequestMapping("/treinamentoTextoRel001")
+	@GetMapping("/treinamentoTextoRel001")
 	public ModelAndView treinamentoTextoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("treinamentoTexto/treinamentoTextoRel001");
-		Pageable treinamentoTextoPageable = new PageRequest(0, 200, Direction.ASC, "treinamento.treinamentoNome","texto.textoNome");
+		Pageable treinamentoTextoPageable = PageRequest.of(0, 200, Direction.ASC, "treinamento.treinamentoNome","texto.textoNome");
 		mv.addObject("treinamentoTextoPage", treinamentoTextoService.getTreinamentoTextoAll(treinamentoTextoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/treinamentoTextoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoTextoView/{id}")
 	public ModelAndView treinamentoTextoView(@PathVariable("id") Long treinamentoTextoId) {
 
 		TreinamentoTexto treinamentoTexto = treinamentoTextoService.getTreinamentoTextoByTreinamentoTextoPK(treinamentoTextoId);

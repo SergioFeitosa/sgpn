@@ -3,8 +3,8 @@ package br.com.j4business.saga.fornecedorcontrato.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.fornecedor.model.Fornecedor;
 import br.com.j4business.saga.fornecedorcontrato.model.FornecedorContrato;
 
 @Repository("fornecedorContratoRepository")
-public interface FornecedorContratoRepository extends PagingAndSortingRepository<FornecedorContrato, Long>{
+public interface FornecedorContratoRepository extends JpaRepository<FornecedorContrato, Long>{
 
 /*	 @Query("SELECT ea FROM FornecedorContrato ea where ea.contrato.contratoPK = :id") 
 	    List<FornecedorContrato> findByContratoPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface FornecedorContratoRepository extends PagingAndSortingRepository
 	@Query("SELECT ep FROM FornecedorContrato ep INNER JOIN ep.contrato p WHERE p = :contrato")
 	public List<FornecedorContrato> findByContrato(@Param("contrato")Contrato contrato);
 
-	@Query("SELECT ep FROM FornecedorContrato ep INNER JOIN ep.contrato p INNER JOIN ep.fornecedor e WHERE p = :contrato AND s = :fornecedor")
+	@Query("SELECT fc FROM FornecedorContrato fc INNER JOIN fc.contrato c INNER JOIN fc.fornecedor f WHERE c = :contrato AND f = :fornecedor")
 	public FornecedorContrato findByFornecedorAndContrato( @Param("fornecedor") Fornecedor fornecedor, @Param("contrato")Contrato contrato);
 	
 	@Query("SELECT ep FROM FornecedorContrato ep")

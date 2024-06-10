@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,19 +17,19 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import br.com.j4business.saga.ocorrencia.model.OcorrenciaForm;
-import br.com.j4business.saga.ocorrencia.service.OcorrenciaService;
-import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
-import br.com.j4business.saga.colaborador.service.ColaboradorService;
+
 import br.com.j4business.saga.UsuarioSeguranca;
-import br.com.j4business.saga.agendaevento.model.AgendaEvento;
 import br.com.j4business.saga.atendimento.model.AtendimentoForm;
 import br.com.j4business.saga.atendimento.service.AtendimentoService;
+import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
+import br.com.j4business.saga.colaborador.service.ColaboradorService;
+import br.com.j4business.saga.ocorrencia.model.OcorrenciaForm;
+import br.com.j4business.saga.ocorrencia.service.OcorrenciaService;
 import br.com.j4business.saga.ocorrenciaatendimento.model.OcorrenciaAtendimento;
 import br.com.j4business.saga.ocorrenciaatendimento.model.OcorrenciaAtendimentoByOcorrenciaForm;
 import br.com.j4business.saga.ocorrenciaatendimento.model.OcorrenciaAtendimentoForm;
@@ -53,24 +53,24 @@ public class OcorrenciaAtendimentoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/ocorrenciaAtendimentoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/ocorrenciaAtendimentoAdd")
 	public ModelAndView ocorrenciaAtendimentoAdd(OcorrenciaAtendimentoForm ocorrenciaAtendimentoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("ocorrenciaAtendimento/ocorrenciaAtendimentoAdd");
 		ocorrenciaAtendimentoForm = ocorrenciaAtendimentoService.ocorrenciaAtendimentoParametros(ocorrenciaAtendimentoForm);
 		mv.addObject("ocorrenciaAtendimentoForm", ocorrenciaAtendimentoForm);
 		mv.addObject("ocorrenciaAtendimentoStatusValues", AtributoStatus.values());
-		Pageable atendimentoPageable = new PageRequest(0, 200, Direction.ASC, "atendimentoNome");
+		Pageable atendimentoPageable = PageRequest.of(0, 200, Direction.ASC, "atendimentoNome");
 		mv.addObject("atendimentoPage", atendimentoService.getAtendimentoAll(atendimentoPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable ocorrenciaPageable = new PageRequest(0, 200, Direction.ASC, "ocorrenciaNome");
+		Pageable ocorrenciaPageable = PageRequest.of(0, 200, Direction.ASC, "ocorrenciaNome");
 		mv.addObject("ocorrenciaPage", ocorrenciaService.getOcorrenciaAll(ocorrenciaPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/ocorrenciaAtendimentoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/ocorrenciaAtendimentoCreate")
 	public ModelAndView goOcorrenciaAtendimentoCreate(@Valid OcorrenciaAtendimentoForm ocorrenciaAtendimentoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -103,7 +103,7 @@ public class OcorrenciaAtendimentoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/ocorrenciaAtendimentoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/ocorrenciaAtendimentoDelete/{id}")
 	public ModelAndView goOcorrenciaAtendimentoDelete(@PathVariable("id") long ocorrenciaAtendimentoId, @Valid AtendimentoForm atendimentoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/ocorrenciaAtendimentoHome");
@@ -129,7 +129,7 @@ public class OcorrenciaAtendimentoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/ocorrenciaAtendimentoEdit/{ocorrenciaAtendimentoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/ocorrenciaAtendimentoEdit/{ocorrenciaAtendimentoPK}")
 	public ModelAndView goOcorrenciaAtendimentoEdit(@PathVariable("ocorrenciaAtendimentoPK") Long ocorrenciaAtendimentoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("ocorrenciaAtendimento/ocorrenciaAtendimentoEdit");
@@ -138,11 +138,11 @@ public class OcorrenciaAtendimentoController {
 		mv.addObject("ocorrenciaAtendimentoForm", ocorrenciaAtendimentoForm);
 		mv.addObject("ocorrenciaAtendimentoStatusValues", AtributoStatus.values());
 
-		Pageable atendimentoPageable = new PageRequest(0, 200, Direction.ASC, "atendimentoNome");
+		Pageable atendimentoPageable = PageRequest.of(0, 200, Direction.ASC, "atendimentoNome");
 		mv.addObject("atendimentoPage", atendimentoService.getAtendimentoAll(atendimentoPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable ocorrenciaPageable = new PageRequest(0, 200, Direction.ASC, "ocorrenciaNome");
+		Pageable ocorrenciaPageable = PageRequest.of(0, 200, Direction.ASC, "ocorrenciaNome");
 		mv.addObject("ocorrenciaPage", ocorrenciaService.getOcorrenciaAll(ocorrenciaPageable));
 		
 		ocorrenciaAtendimento.getOcorrenciaAtendimentoSequencia();
@@ -151,7 +151,7 @@ public class OcorrenciaAtendimentoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/ocorrenciaAtendimentoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/ocorrenciaAtendimentoHome")
 	public ModelAndView goOcorrenciaAtendimentoHome(@Valid OcorrenciaAtendimentoByOcorrenciaForm ocorrenciaAtendimentoByOcorrenciaForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("ocorrenciaAtendimento/ocorrenciaAtendimentoHome");
@@ -171,13 +171,13 @@ public class OcorrenciaAtendimentoController {
 
 		if (ocorrenciaAtendimentoByOcorrenciaForm.getOcorrenciaAtendimentoSortTipo().equalsIgnoreCase("OcorrenciaNome")
 				|| ocorrenciaAtendimentoByOcorrenciaForm.getOcorrenciaAtendimentoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"ocorrencia.ocorrenciaNome","ocorrenciaAtendimentoSequencia"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"ocorrencia.ocorrenciaNome","ocorrenciaAtendimentoSequencia"); 
 		
 		} else if (ocorrenciaAtendimentoByOcorrenciaForm.getOcorrenciaAtendimentoSortTipo().equalsIgnoreCase("AtendimentoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"atendimento.atendimentoNome","ocorrenciaAtendimentoSequencia"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"atendimento.atendimentoNome","ocorrenciaAtendimentoSequencia"); 
 
 		} else if (ocorrenciaAtendimentoByOcorrenciaForm.getOcorrenciaAtendimentoSortTipo().equalsIgnoreCase("Sequencia")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"ocorrenciaAtendimentoSequencia","ocorrencia.ocorrenciaNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"ocorrenciaAtendimentoSequencia","ocorrencia.ocorrenciaNome"); 
 
 		}
 
@@ -198,7 +198,7 @@ public class OcorrenciaAtendimentoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/ocorrenciaAtendimentoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/ocorrenciaAtendimentoSave")
 	public ModelAndView ocorrenciaAtendimentoSave(@Valid OcorrenciaAtendimentoForm ocorrenciaAtendimentoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -222,7 +222,7 @@ public class OcorrenciaAtendimentoController {
 		
 	}
 
-	@RequestMapping(path = "/ocorrenciaAtendimentoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/ocorrenciaAtendimentoRelMenu")
 	public ModelAndView goOcorrenciaAtendimentoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("ocorrenciaAtendimento/ocorrenciaAtendimentoRelMenu");
@@ -232,18 +232,18 @@ public class OcorrenciaAtendimentoController {
 		
 	}
 
-	@RequestMapping("/ocorrenciaAtendimentoRel001")
+	@GetMapping("/ocorrenciaAtendimentoRel001")
 	public ModelAndView goOcorrenciaAtendimentoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("ocorrenciaAtendimento/ocorrenciaAtendimentoRel001");
-		Pageable ocorrenciaAtendimentoPageable = new PageRequest(0, 200, Direction.ASC, "ocorrencia.ocorrenciaNome","atendimento.atendimentoNome");
+		Pageable ocorrenciaAtendimentoPageable = PageRequest.of(0, 200, Direction.ASC, "ocorrencia.ocorrenciaNome","atendimento.atendimentoNome");
 		mv.addObject("ocorrenciaAtendimentoPage", ocorrenciaAtendimentoService.getOcorrenciaAtendimentoAll(ocorrenciaAtendimentoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/ocorrenciaAtendimentoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/ocorrenciaAtendimentoView/{id}")
 	public ModelAndView goOcorrenciaAtendimentoView(@PathVariable("id") Long ocorrenciaAtendimentoId) {
 
 		OcorrenciaAtendimento ocorrenciaAtendimento = ocorrenciaAtendimentoService.getOcorrenciaAtendimentoByOcorrenciaAtendimentoPK(ocorrenciaAtendimentoId);

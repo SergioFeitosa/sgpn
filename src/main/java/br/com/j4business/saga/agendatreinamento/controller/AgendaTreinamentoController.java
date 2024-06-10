@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -55,7 +55,7 @@ public class AgendaTreinamentoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/agendaTreinamentoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaTreinamentoAdd")
 	public ModelAndView agendaTreinamentoAdd(AgendaTreinamentoForm agendaTreinamentoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("agendaTreinamento/agendaTreinamentoAdd");
@@ -65,17 +65,17 @@ public class AgendaTreinamentoController {
 		mv.addObject("agendaTreinamentoEnvioValues", AgendaTreinamentoEnvio.values());
 		mv.addObject("agendaTreinamentoStatusValues", AtributoStatus.values());
 
-		Pageable agendaPageable = new PageRequest(0, 200, Direction.ASC, "agendaNome");
+		Pageable agendaPageable = PageRequest.of(0, 200, Direction.ASC, "agendaNome");
 		mv.addObject("agendaPage", agendaService.getAgendaAll(agendaPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable treinamentoPageable = new PageRequest(0, 200, Direction.ASC, "treinamentoNome");
+		Pageable treinamentoPageable = PageRequest.of(0, 200, Direction.ASC, "treinamentoNome");
 		mv.addObject("treinamentoPage", treinamentoService.getTreinamentoAll(treinamentoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/agendaTreinamentoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/agendaTreinamentoCreate")
 	public ModelAndView agendaTreinamentoCreate(@Valid AgendaTreinamentoForm agendaTreinamentoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -108,7 +108,7 @@ public class AgendaTreinamentoController {
 	}
 
 
-	@RequestMapping(path = "/agendaTreinamentoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaTreinamentoDelete/{id}")
 	public ModelAndView agendaTreinamentoDelete(@PathVariable("id") long agendaTreinamentoId, @Valid TreinamentoForm treinamentoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/agendaTreinamentoHome");
@@ -134,7 +134,7 @@ public class AgendaTreinamentoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/agendaTreinamentoEdit/{agendaTreinamentoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaTreinamentoEdit/{agendaTreinamentoPK}")
 	public ModelAndView agendaTreinamentoEdit(@PathVariable("agendaTreinamentoPK") Long agendaTreinamentoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("agendaTreinamento/agendaTreinamentoEdit");
@@ -145,18 +145,18 @@ public class AgendaTreinamentoController {
 		mv.addObject("agendaTreinamentoEnvioValues", AgendaTreinamentoEnvio.values());
 		mv.addObject("agendaTreinamentoStatusValues", AtributoStatus.values());
 
-		Pageable agendaPageable = new PageRequest(0, 200, Direction.ASC, "agendaNome");
+		Pageable agendaPageable = PageRequest.of(0, 200, Direction.ASC, "agendaNome");
 		mv.addObject("agendaPage", agendaService.getAgendaAll(agendaPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable treinamentoPageable = new PageRequest(0, 200, Direction.ASC, "treinamentoNome");
+		Pageable treinamentoPageable = PageRequest.of(0, 200, Direction.ASC, "treinamentoNome");
 		mv.addObject("treinamentoPage", treinamentoService.getTreinamentoAll(treinamentoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/agendaTreinamentoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaTreinamentoHome")
 	public ModelAndView agendaTreinamentoHome(@Valid AgendaTreinamentoByAgendaForm agendaTreinamentoByAgendaForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("agendaTreinamento/agendaTreinamentoHome");
@@ -176,10 +176,10 @@ public class AgendaTreinamentoController {
 
 		if (agendaTreinamentoByAgendaForm.getAgendaTreinamentoSortTipo().equalsIgnoreCase("AgendaNome")
 				|| agendaTreinamentoByAgendaForm.getAgendaTreinamentoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"agenda.agendaNome","treinamento.treinamentoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"agenda.agendaNome","treinamento.treinamentoNome"); 
 		
 		} else if (agendaTreinamentoByAgendaForm.getAgendaTreinamentoSortTipo().equalsIgnoreCase("TreinamentoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"treinamento.treinamentoNome","agenda.agendaNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"treinamento.treinamentoNome","agenda.agendaNome"); 
 
 		}
 
@@ -202,7 +202,7 @@ public class AgendaTreinamentoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/agendaTreinamentoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/agendaTreinamentoSave")
 	public ModelAndView agendaTreinamentoSave(@Valid AgendaTreinamentoForm agendaTreinamentoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -226,7 +226,7 @@ public class AgendaTreinamentoController {
 		
 	}
 
-	@RequestMapping(path = "/agendaTreinamentoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaTreinamentoRelMenu")
 	public ModelAndView agendaTreinamentoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("agendaTreinamento/agendaTreinamentoRelMenu");
@@ -236,17 +236,17 @@ public class AgendaTreinamentoController {
 		
 	}
 
-	@RequestMapping("/agendaTreinamentoRel001")
+	@GetMapping("/agendaTreinamentoRel001")
 	public ModelAndView agendaTreinamentoRel001() {
 
 		ModelAndView mv = new ModelAndView("agendaTreinamento/agendaTreinamentoRel001");
-		Pageable agendaPageable = new PageRequest(0, 200, Direction.ASC, "agenda.agendaNome","treinamento.treinamentoNome");
+		Pageable agendaPageable = PageRequest.of(0, 200, Direction.ASC, "agenda.agendaNome","treinamento.treinamentoNome");
 		mv.addObject("agendaTreinamentoPage", agendaTreinamentoService.getAgendaTreinamentoAll(agendaPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/agendaTreinamentoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaTreinamentoView/{id}")
 	public ModelAndView agendaTreinamentoView(@PathVariable("id") Long agendaTreinamentoId) {
 
 		AgendaTreinamento agendaTreinamento = agendaTreinamentoService.getAgendaTreinamentoByAgendaTreinamentoPK(agendaTreinamentoId);

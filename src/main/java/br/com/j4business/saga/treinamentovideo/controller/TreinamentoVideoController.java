@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,25 +17,24 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes; 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.j4business.saga.treinamento.model.TreinamentoForm;
-import br.com.j4business.saga.treinamento.service.TreinamentoService;
-import br.com.j4business.saga.treinamentoimagem.model.TreinamentoImagem;
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.video.model.VideoForm;
-import br.com.j4business.saga.video.service.VideoService;
+import br.com.j4business.saga.treinamento.model.TreinamentoForm;
+import br.com.j4business.saga.treinamento.service.TreinamentoService;
 import br.com.j4business.saga.treinamentovideo.model.TreinamentoVideo;
 import br.com.j4business.saga.treinamentovideo.model.TreinamentoVideoByTreinamentoForm;
 import br.com.j4business.saga.treinamentovideo.model.TreinamentoVideoForm;
 import br.com.j4business.saga.treinamentovideo.service.TreinamentoVideoService;
+import br.com.j4business.saga.video.model.VideoForm;
+import br.com.j4business.saga.video.service.VideoService;
 
 @Controller
 public class TreinamentoVideoController {
@@ -55,7 +54,7 @@ public class TreinamentoVideoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/treinamentoVideoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoVideoAdd")
 	public ModelAndView treinamentoVideoAdd(TreinamentoVideoForm treinamentoVideoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("treinamentoVideo/treinamentoVideoAdd");
@@ -63,18 +62,18 @@ public class TreinamentoVideoController {
 		mv.addObject("treinamentoVideoForm", treinamentoVideoForm);
 		mv.addObject("treinamentoVideoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("treinamentoVideoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable videoPageable = new PageRequest(0, 200, Direction.ASC, "videoNome");
+		Pageable videoPageable = PageRequest.of(0, 200, Direction.ASC, "videoNome");
 		mv.addObject("videoPage", videoService.getVideoAll(videoPageable));
-		Pageable treinamentoPageable = new PageRequest(0, 200, Direction.ASC, "treinamentoNome");
+		Pageable treinamentoPageable = PageRequest.of(0, 200, Direction.ASC, "treinamentoNome");
 		mv.addObject("treinamentoPage", treinamentoService.getTreinamentoAll(treinamentoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/treinamentoVideoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/treinamentoVideoCreate")
 	public ModelAndView treinamentoVideoCreate(@Valid TreinamentoVideoForm treinamentoVideoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -121,7 +120,7 @@ public class TreinamentoVideoController {
 	}
 
 
-	@RequestMapping(path = "/treinamentoVideoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoVideoDelete/{id}")
 	public ModelAndView treinamentoVideoDelete(@PathVariable("id") long treinamentoVideoId, @Valid VideoForm videoForm, BindingResult result, RedirectAttributes attributes) {
 
 
@@ -147,7 +146,7 @@ public class TreinamentoVideoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/treinamentoVideoEdit/{treinamentoVideoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoVideoEdit/{treinamentoVideoPK}")
 	public ModelAndView treinamentoVideoEdit(@PathVariable("treinamentoVideoPK") Long treinamentoVideoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("treinamentoVideo/treinamentoVideoEdit");
@@ -156,18 +155,18 @@ public class TreinamentoVideoController {
 		mv.addObject("treinamentoVideoForm", treinamentoVideoForm);
 		mv.addObject("treinamentoVideoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("treinamentoVideoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable videoPageable = new PageRequest(0, 200, Direction.ASC, "videoNome");
+		Pageable videoPageable = PageRequest.of(0, 200, Direction.ASC, "videoNome");
 		mv.addObject("videoPage", videoService.getVideoAll(videoPageable));
-		Pageable treinamentoPageable = new PageRequest(0, 200, Direction.ASC, "treinamentoNome");
+		Pageable treinamentoPageable = PageRequest.of(0, 200, Direction.ASC, "treinamentoNome");
 		mv.addObject("treinamentoPage", treinamentoService.getTreinamentoAll(treinamentoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/treinamentoVideoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoVideoHome")
 	public ModelAndView treinamentoVideoHome(@Valid TreinamentoVideoByTreinamentoForm treinamentoVideoByTreinamentoForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("treinamentoVideo/treinamentoVideoHome");
@@ -187,10 +186,10 @@ public class TreinamentoVideoController {
 
 		if (treinamentoVideoByTreinamentoForm.getTreinamentoVideoSortTipo().equalsIgnoreCase("TreinamentoNome")
 				|| treinamentoVideoByTreinamentoForm.getTreinamentoVideoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"treinamento.treinamentoNome","video.videoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"treinamento.treinamentoNome","video.videoNome"); 
 		
 		} else if (treinamentoVideoByTreinamentoForm.getTreinamentoVideoSortTipo().equalsIgnoreCase("VideoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"video.videoNome","treinamento.treinamentoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"video.videoNome","treinamento.treinamentoNome"); 
 
 		}
 
@@ -213,7 +212,7 @@ public class TreinamentoVideoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/treinamentoVideoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/treinamentoVideoSave")
 	public ModelAndView treinamentoVideoSave(@Valid TreinamentoVideoForm treinamentoVideoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -245,7 +244,7 @@ public class TreinamentoVideoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/treinamentoVideoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoVideoRelMenu")
 	public ModelAndView treinamentoVideoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("treinamentoVideo/treinamentoVideoRelMenu");
@@ -255,18 +254,18 @@ public class TreinamentoVideoController {
 		
 	}
 
-	@RequestMapping("/treinamentoVideoRel001")
+	@GetMapping("/treinamentoVideoRel001")
 	public ModelAndView treinamentoVideoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("treinamentoVideo/treinamentoVideoRel001");
-		Pageable treinamentoVideoPageable = new PageRequest(0, 200, Direction.ASC, "treinamento.treinamentoNome","video.videoNome");
+		Pageable treinamentoVideoPageable = PageRequest.of(0, 200, Direction.ASC, "treinamento.treinamentoNome","video.videoNome");
 		mv.addObject("treinamentoVideoPage", treinamentoVideoService.getTreinamentoVideoAll(treinamentoVideoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/treinamentoVideoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoVideoView/{id}")
 	public ModelAndView treinamentoVideoView(@PathVariable("id") Long treinamentoVideoId) {
 
 		TreinamentoVideo treinamentoVideo = treinamentoVideoService.getTreinamentoVideoByTreinamentoVideoPK(treinamentoVideoId);

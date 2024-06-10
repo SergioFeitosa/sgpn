@@ -3,8 +3,8 @@ package br.com.j4business.saga.cenarioelemento.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.cenario.model.Cenario;
 import br.com.j4business.saga.cenarioelemento.model.CenarioElemento;
 
 @Repository("cenarioElementoRepository")
-public interface CenarioElementoRepository extends PagingAndSortingRepository<CenarioElemento, Long>{
+public interface CenarioElementoRepository extends JpaRepository<CenarioElemento, Long>{
 
 /*	 @Query("SELECT ea FROM CenarioElemento ea where ea.elemento.elementoPK = :id") 
 	    List<CenarioElemento> findByElementoPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface CenarioElementoRepository extends PagingAndSortingRepository<Ce
 	@Query("SELECT ep FROM CenarioElemento ep INNER JOIN ep.elemento p WHERE p = :elemento")
 	public List<CenarioElemento> findByElemento(@Param("elemento")Elemento elemento);
 
-	@Query("SELECT ep FROM CenarioElemento ep INNER JOIN ep.elemento p INNER JOIN ep.cenario e WHERE p = :elemento AND s = :cenario")
+	@Query("SELECT ce FROM CenarioElemento ce INNER JOIN ce.elemento e INNER JOIN ce.cenario c WHERE e = :elemento AND c = :cenario")
 	public CenarioElemento findByCenarioAndElemento( @Param("cenario") Cenario cenario, @Param("elemento")Elemento elemento);
 	
 	@Query("SELECT ep FROM CenarioElemento ep")

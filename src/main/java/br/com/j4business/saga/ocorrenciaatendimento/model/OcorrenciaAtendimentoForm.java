@@ -1,12 +1,12 @@
 package br.com.j4business.saga.ocorrenciaatendimento.model;
 
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
@@ -17,15 +17,15 @@ public class OcorrenciaAtendimentoForm {
 	private long atendimentoPK;
 	private long ocorrenciaPK;
 	
-    @NotEmpty(message = "Nome do atendimento é uma informação obrigatória.")
+    @NotBlank(message = "Nome do atendimento é uma informação obrigatória.")
 	@NotNull
 	private String atendimentoNome;
 	
-    @NotEmpty(message = "Nome da Ocorrencia é uma informação obrigatória.")
+    @NotBlank(message = "Nome da Ocorrencia é uma informação obrigatória.")
 	@NotNull
 	private String ocorrenciaNome;
 	
-    @NotEmpty(message = "Sequência é uma informação obrigatória.")
+    @NotBlank(message = "Sequência é uma informação obrigatória.")
 	private String ocorrenciaAtendimentoSequencia;
 	
     @DateTimeFormat(pattern = "dd/MM/yyyy")
@@ -35,11 +35,11 @@ public class OcorrenciaAtendimentoForm {
 	@Enumerated(EnumType.STRING)
 	private AtributoStatus ocorrenciaAtendimentoStatus;
 
-    @NotEmpty(message = "Responsável é uma informação obrigatória.")
+    @NotBlank(message = "Responsável é uma informação obrigatória.")
 	@NotNull
 	private String ocorrenciaAtendimentoResponsavel;
 
-    @NotEmpty(message = "Motivo da Operação é uma informação obrigatória.")
+    @NotBlank(message = "Motivo da Operação é uma informação obrigatória.")
 	@Size(min = 5,max = 200, message = "Motivo da Operação não pode ter menos que 5 e mais que 200 caracteres")
 	private String ocorrenciaAtendimentoMotivoOperacao;
 

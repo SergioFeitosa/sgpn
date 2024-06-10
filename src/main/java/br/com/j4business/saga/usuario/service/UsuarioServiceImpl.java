@@ -1,8 +1,8 @@
 package br.com.j4business.saga.usuario.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,7 +80,7 @@ public class UsuarioServiceImpl implements UsuarioService {
 
 		Usuario usuario = this.getByUsuarioNome(usuarioNome);
 		
-		usuarioRepository.delete(usuarioNome);
+		usuarioRepository.delete(usuario);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Usuario Delete " + "\n Usuário => " + username + 

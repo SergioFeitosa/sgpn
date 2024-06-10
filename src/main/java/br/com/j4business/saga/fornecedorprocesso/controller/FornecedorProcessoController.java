@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,25 +17,24 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.j4business.saga.fornecedor.model.FornecedorForm;
-import br.com.j4business.saga.fornecedor.service.FornecedorService;
-import br.com.j4business.saga.fornecedorcontrato.model.FornecedorContrato;
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.processo.model.ProcessoForm;
-import br.com.j4business.saga.processo.service.ProcessoService;
+import br.com.j4business.saga.fornecedor.model.FornecedorForm;
+import br.com.j4business.saga.fornecedor.service.FornecedorService;
 import br.com.j4business.saga.fornecedorprocesso.model.FornecedorProcesso;
 import br.com.j4business.saga.fornecedorprocesso.model.FornecedorProcessoByFornecedorForm;
 import br.com.j4business.saga.fornecedorprocesso.model.FornecedorProcessoForm;
 import br.com.j4business.saga.fornecedorprocesso.service.FornecedorProcessoService;
+import br.com.j4business.saga.processo.model.ProcessoForm;
+import br.com.j4business.saga.processo.service.ProcessoService;
 
 @Controller
 public class FornecedorProcessoController {
@@ -55,7 +54,7 @@ public class FornecedorProcessoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/fornecedorProcessoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/fornecedorProcessoAdd")
 	public ModelAndView fornecedorProcessoAdd(FornecedorProcessoForm fornecedorProcessoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("fornecedorProcesso/fornecedorProcessoAdd");
@@ -63,17 +62,17 @@ public class FornecedorProcessoController {
 		mv.addObject("fornecedorProcessoForm", fornecedorProcessoForm);
 		mv.addObject("fornecedorProcessoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("fornecedorProcessoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable fornecedorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable fornecedorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("fornecedorPage", fornecedorService.getFornecedorAll(fornecedorPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/fornecedorProcessoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/fornecedorProcessoCreate")
 	public ModelAndView fornecedorProcessoCreate(@Valid FornecedorProcessoForm fornecedorProcessoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -107,7 +106,7 @@ public class FornecedorProcessoController {
 	}
 
 
-	@RequestMapping(path = "/fornecedorProcessoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/fornecedorProcessoDelete/{id}")
 	public ModelAndView fornecedorProcessoDelete(@PathVariable("id") long fornecedorProcessoId, @Valid ProcessoForm processoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/fornecedorProcessoHome");
@@ -133,7 +132,7 @@ public class FornecedorProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/fornecedorProcessoEdit/{fornecedorProcessoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/fornecedorProcessoEdit/{fornecedorProcessoPK}")
 	public ModelAndView fornecedorProcessoEdit(@PathVariable("fornecedorProcessoPK") Long fornecedorProcessoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("fornecedorProcesso/fornecedorProcessoEdit");
@@ -143,18 +142,18 @@ public class FornecedorProcessoController {
 		mv.addObject("fornecedorProcessoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("fornecedorProcessoStatusValues", AtributoStatus.values());
 
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable fornecedorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable fornecedorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("fornecedorPage", fornecedorService.getFornecedorAll(fornecedorPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 	
-	@RequestMapping(path = "/fornecedorProcessoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/fornecedorProcessoHome")
 	public ModelAndView fornecedorProcessoHome(@Valid FornecedorProcessoByFornecedorForm fornecedorProcessoByFornecedorForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("fornecedorProcesso/fornecedorProcessoHome");
@@ -174,10 +173,10 @@ public class FornecedorProcessoController {
 
 		if (fornecedorProcessoByFornecedorForm.getFornecedorProcessoSortTipo().equalsIgnoreCase("FornecedorNome")
 				|| fornecedorProcessoByFornecedorForm.getFornecedorProcessoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"fornecedor.pessoaNome","processo.processoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"fornecedor.pessoaNome","processo.processoNome"); 
 		
 		} else if (fornecedorProcessoByFornecedorForm.getFornecedorProcessoSortTipo().equalsIgnoreCase("ProcessoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","fornecedor.pessoaNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","fornecedor.pessoaNome"); 
 
 		}
 
@@ -200,7 +199,7 @@ public class FornecedorProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/fornecedorProcessoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/fornecedorProcessoSave")
 	public ModelAndView fornecedorProcessoSave(@Valid FornecedorProcessoForm fornecedorProcessoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -223,7 +222,7 @@ public class FornecedorProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/fornecedorProcessoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/fornecedorProcessoRelMenu")
 	public ModelAndView fornecedorProcessoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("fornecedorProcesso/fornecedorProcessoRelMenu");
@@ -233,18 +232,18 @@ public class FornecedorProcessoController {
 
 	}
 
-	@RequestMapping("/fornecedorProcessoRel001")
+	@GetMapping("/fornecedorProcessoRel001")
 	public ModelAndView fornecedorProcessoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("fornecedorProcesso/fornecedorProcessoRel001");
-		Pageable fornecedorProcessoPageable = new PageRequest(0, 200, Direction.ASC, "fornecedor.pessoaNome","processo.processoNome");
+		Pageable fornecedorProcessoPageable = PageRequest.of(0, 200, Direction.ASC, "fornecedor.pessoaNome","processo.processoNome");
 		mv.addObject("fornecedorProcessoPage", fornecedorProcessoService.getFornecedorProcessoAll(fornecedorProcessoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/fornecedorProcessoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/fornecedorProcessoView/{id}")
 	public ModelAndView fornecedorProcessoView(@PathVariable("id") Long fornecedorProcessoId) {
 
 		FornecedorProcesso fornecedorProcesso = fornecedorProcessoService.getFornecedorProcessoByFornecedorProcessoPK(fornecedorProcessoId);

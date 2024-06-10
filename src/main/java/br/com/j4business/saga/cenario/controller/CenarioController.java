@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -47,20 +47,20 @@ public class CenarioController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/cenarioAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/cenarioAdd")
 	public ModelAndView cenarioAdd(CenarioForm cenarioForm) {
 
 		ModelAndView mv = new ModelAndView("cenario/cenarioAdd");
 		cenarioForm = cenarioService.cenarioParametros(cenarioForm);
 		mv.addObject("cenarioForm", cenarioForm);
 		mv.addObject("cenarioStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/cenarioCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/cenarioCreate")
 	public ModelAndView cenarioCreate(@Valid CenarioForm cenarioForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -92,7 +92,7 @@ public class CenarioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/cenarioDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/cenarioDelete/{id}")
 	public ModelAndView cenarioDelete(@PathVariable("id") long cenarioPK, @Valid CenarioForm cenarioForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/cenarioHome");
@@ -112,7 +112,7 @@ public class CenarioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/cenarioEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/cenarioEdit/{id}")
 	public ModelAndView cenarioEdit(@PathVariable("id") Long cenarioPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("cenario/cenarioEdit");
@@ -120,18 +120,18 @@ public class CenarioController {
 		CenarioForm cenarioForm = cenarioService.converteCenario(cenario);
 		mv.addObject("cenarioForm", cenarioForm);
 		mv.addObject("cenarioStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable cenarioPageable = new PageRequest(0, 200, Direction.ASC, "cenarioNome");
+		Pageable cenarioPageable = PageRequest.of(0, 200, Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(cenarioPageable));
-		Pageable cenarioElementoPageable = new PageRequest(0, 200, Direction.ASC, "elemento.elementoNome");
+		Pageable cenarioElementoPageable = PageRequest.of(0, 200, Direction.ASC, "elemento.elementoNome");
 		mv.addObject("cenarioElementoPage", cenarioElementoService.getByCenarioPK(cenarioPK, cenarioElementoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping("/cenarioHome")
+	@GetMapping("/cenarioHome")
 	public ModelAndView cenarioHome(@Valid CenarioByCenarioForm cenarioByCenarioForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("cenario/cenarioHome");
@@ -150,10 +150,10 @@ public class CenarioController {
 		}
 
 		if (cenarioByCenarioForm.getCenarioSortTipo().equalsIgnoreCase("CenarioNome") || cenarioByCenarioForm.getCenarioSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "cenarioNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "cenarioNome");
 
 		} else if (cenarioByCenarioForm.getCenarioSortTipo().equalsIgnoreCase("CenarioDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "cenarioDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "cenarioDescricao");
 
 		}
 
@@ -175,7 +175,7 @@ public class CenarioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/cenarioSave", method = RequestMethod.POST)
+	@PostMapping(path = "/cenarioSave")
 	public ModelAndView cenarioSave(@Valid CenarioForm cenarioForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -198,7 +198,7 @@ public class CenarioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/cenarioRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/cenarioRelMenu")
 	public ModelAndView cenarioRelMenu() {
 
 		ModelAndView mv = new ModelAndView("cenario/cenarioRelMenu");
@@ -208,29 +208,29 @@ public class CenarioController {
 		
 	}
 
-	@RequestMapping("/cenarioRel001")
+	@GetMapping("/cenarioRel001")
 	public ModelAndView cenarioRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("cenario/cenarioRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "cenarioNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping("/cenarioRel002")
+	@GetMapping("/cenarioRel002")
 	public ModelAndView cenarioRel002(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("cenario/cenarioRel002");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "cenarioNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/cenarioView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/cenarioView/{id}")
 	public ModelAndView cenarioView(@PathVariable("id") Long cenarioId) {
 
 		Cenario cenario = cenarioService.getCenarioByCenarioPK(cenarioId);

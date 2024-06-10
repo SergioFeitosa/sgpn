@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -47,20 +47,20 @@ public class AvaliacaoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/avaliacaoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoAdd")
 	public ModelAndView avaliacaoAdd(AvaliacaoForm avaliacaoForm) { 
 
 		ModelAndView mv = new ModelAndView("avaliacao/avaliacaoAdd");
 		avaliacaoForm = avaliacaoService.avaliacaoParametros(avaliacaoForm);
 		mv.addObject("avaliacaoForm", avaliacaoForm);
 		mv.addObject("avaliacaoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/avaliacaoCreate")
 	public ModelAndView avaliacaoCreate(@Valid AvaliacaoForm avaliacaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -93,7 +93,7 @@ public class AvaliacaoController {
 		
 	}
 
-	@RequestMapping(path = "/avaliacaoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoDelete/{id}")
 	public ModelAndView avaliacaoDelete(@PathVariable("id") long avaliacaoPK, @Valid AvaliacaoForm avaliacaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/avaliacaoHome");
@@ -114,7 +114,7 @@ public class AvaliacaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoEdit/{id}")
 	public ModelAndView avaliacaoEdit(@PathVariable("id") Long avaliacaoPK) {
 
 		ModelAndView mv = new ModelAndView("avaliacao/avaliacaoEdit");
@@ -122,16 +122,16 @@ public class AvaliacaoController {
 		AvaliacaoForm avaliacaoForm = avaliacaoService.converteAvaliacao(avaliacao);
 		mv.addObject("avaliacaoForm", avaliacaoForm);
 		mv.addObject("avaliacaoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable avaliacaoProcessoPageable = new PageRequest(0, 200, Direction.ASC, "processo.processoNome");
+		Pageable avaliacaoProcessoPageable = PageRequest.of(0, 200, Direction.ASC, "processo.processoNome");
 		mv.addObject("avaliacaoProcessoPage", avaliacaoProcessoService.getByAvaliacaoPK(avaliacaoPK, avaliacaoProcessoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoHome")
 	public ModelAndView avaliacaoHome(@Valid AvaliacaoByAvaliacaoForm avaliacaoByAvaliacaoForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("avaliacao/avaliacaoHome");
@@ -150,10 +150,10 @@ public class AvaliacaoController {
 		}
 
 		if (avaliacaoByAvaliacaoForm.getAvaliacaoSortTipo().equalsIgnoreCase("AvaliacaoNome") || avaliacaoByAvaliacaoForm.getAvaliacaoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "avaliacaoNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "avaliacaoNome");
 
 		} else if (avaliacaoByAvaliacaoForm.getAvaliacaoSortTipo().equalsIgnoreCase("AvaliacaoDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "avaliacaoDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "avaliacaoDescricao");
 
 		}
 
@@ -175,7 +175,7 @@ public class AvaliacaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoRelMenu")
 	public ModelAndView avaliacaoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("avaliacao/avaliacaoRelMenu");
@@ -185,29 +185,29 @@ public class AvaliacaoController {
 		
 	}
 
-	@RequestMapping(path = "/avaliacaoRel001", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoRel001")
 	public ModelAndView avaliacaoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("avaliacao/avaliacaoRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "avaliacaoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "avaliacaoNome");
 		mv.addObject("avaliacaoPage", avaliacaoService.getAvaliacaoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoRel002", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoRel002")
 	public ModelAndView avaliacaoRel002(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("avaliacao/avaliacaoRel002");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "avaliacaoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "avaliacaoNome");
 		mv.addObject("avaliacaoPage", avaliacaoService.getAvaliacaoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/avaliacaoSave")
 	public ModelAndView avaliacaoSave(@Valid AvaliacaoForm avaliacaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -230,7 +230,7 @@ public class AvaliacaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoView/{id}")
 	public ModelAndView avaliacaoView(@PathVariable("id") Long avaliacaoId) {
 
 		Avaliacao avaliacao = avaliacaoService.getAvaliacaoByAvaliacaoPK(avaliacaoId);

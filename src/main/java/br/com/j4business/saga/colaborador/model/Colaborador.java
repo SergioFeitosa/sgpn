@@ -1,17 +1,16 @@
 package br.com.j4business.saga.colaborador.model;
 
 
-import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import br.com.j4business.saga.pessoafisica.model.PessoaFisica;
 
 @Entity
 @Table(name="colaborador")
 
-public class Colaborador  extends PessoaFisica implements Serializable{
+public class Colaborador  extends PessoaFisica {
 
 	private static final long serialVersionUID = -192790905599861464L;
 

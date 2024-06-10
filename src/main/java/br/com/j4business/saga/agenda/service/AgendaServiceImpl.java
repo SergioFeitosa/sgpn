@@ -1,9 +1,10 @@
 package br.com.j4business.saga.agenda.service;
 
 import java.util.List;
+import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,7 +51,10 @@ public class AgendaServiceImpl implements AgendaService {
 	@Override
 	public Agenda getAgendaByAgendaPK(long agendaPK) {
 		
-		return agendaRepository.findOne(agendaPK);
+		Optional<Agenda> agendaSalva = agendaRepository.findById(agendaPK);
+
+		return agendaSalva.get();
+
 	}
 
 	@Transactional
@@ -94,15 +98,18 @@ public class AgendaServiceImpl implements AgendaService {
 	@Transactional
 	public void delete(Long agendaId) {
 
-		Agenda agenda = this.getAgendaByAgendaPK(agendaId);
+
+		Optional<Agenda> agendaSalva = agendaRepository.findById(agendaId);
 		
-		agendaRepository.delete(agenda.getAgendaPK());
+		if (agendaSalva.isPresent()) {
+			agendaRepository.delete(agendaSalva.get());
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Agenda Delete " + "\n Usuário => " + username + 
-										" // Id => "+agenda.getAgendaPK() + 
-										" // Agenda => "+agenda.getAgendaNome() + 
-										" // Descrição => "+ agenda.getAgendaDescricao());
+										" // Id => "+agendaSalva.get().getAgendaPK() + 
+										" // Agenda => "+agendaSalva.get().getAgendaNome() + 
+										" // Descrição => "+ agendaSalva.get().getAgendaDescricao());
 		
 
     }

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +17,20 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.j4business.saga.processo.model.ProcessoForm;
-import br.com.j4business.saga.processo.service.ProcessoService;
-import br.com.j4business.saga.processocertificacao.model.ProcessoCertificacao;
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.curso.model.CursoForm;
 import br.com.j4business.saga.curso.service.CursoService;
+import br.com.j4business.saga.processo.model.ProcessoForm;
+import br.com.j4business.saga.processo.service.ProcessoService;
 import br.com.j4business.saga.processocurso.model.ProcessoCurso;
 import br.com.j4business.saga.processocurso.model.ProcessoCursoByProcessoForm;
 import br.com.j4business.saga.processocurso.model.ProcessoCursoForm;
@@ -55,7 +54,7 @@ public class ProcessoCursoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/processoCursoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/processoCursoAdd")
 	public ModelAndView processoCursoAdd(ProcessoCursoForm processoCursoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoCurso/processoCursoAdd");
@@ -63,18 +62,18 @@ public class ProcessoCursoController {
 		mv.addObject("processoCursoForm", processoCursoForm);
 		mv.addObject("processoCursoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("processoCursoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable cursoPageable = new PageRequest(0, 200, Direction.ASC, "cursoNome");
+		Pageable cursoPageable = PageRequest.of(0, 200, Direction.ASC, "cursoNome");
 		mv.addObject("cursoPage", cursoService.getCursoAll(cursoPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoCursoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/processoCursoCreate")
 	public ModelAndView processoCursoCreate(@Valid ProcessoCursoForm processoCursoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -108,7 +107,7 @@ public class ProcessoCursoController {
 	}
 
 
-	@RequestMapping(path = "/processoCursoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/processoCursoDelete/{id}")
 	public ModelAndView processoCursoDelete(@PathVariable("id") long processoCursoId, @Valid CursoForm cursoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/processoCursoHome");
@@ -134,7 +133,7 @@ public class ProcessoCursoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoCursoEdit/{processoCursoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/processoCursoEdit/{processoCursoPK}")
 	public ModelAndView processoCursoEdit(@PathVariable("processoCursoPK") Long processoCursoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoCurso/processoCursoEdit");
@@ -143,18 +142,18 @@ public class ProcessoCursoController {
 		mv.addObject("processoCursoForm", processoCursoForm);
 		mv.addObject("processoCursoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("processoCursoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable cursoPageable = new PageRequest(0, 200, Direction.ASC, "cursoNome");
+		Pageable cursoPageable = PageRequest.of(0, 200, Direction.ASC, "cursoNome");
 		mv.addObject("cursoPage", cursoService.getCursoAll(cursoPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/processoCursoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/processoCursoHome")
 	public ModelAndView processoCursoHome(@Valid ProcessoCursoByProcessoForm processoCursoByProcessoForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoCurso/processoCursoHome");
@@ -174,10 +173,10 @@ public class ProcessoCursoController {
 
 		if (processoCursoByProcessoForm.getProcessoCursoSortTipo().equalsIgnoreCase("ProcessoNome")
 				|| processoCursoByProcessoForm.getProcessoCursoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","curso.cursoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","curso.cursoNome"); 
 		
 		} else if (processoCursoByProcessoForm.getProcessoCursoSortTipo().equalsIgnoreCase("CursoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"curso.cursoNome","processo.processoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"curso.cursoNome","processo.processoNome"); 
 
 		}
 
@@ -200,7 +199,7 @@ public class ProcessoCursoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoCursoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/processoCursoSave")
 	public ModelAndView processoCursoSave(@Valid ProcessoCursoForm processoCursoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -223,7 +222,7 @@ public class ProcessoCursoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoCursoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/processoCursoRelMenu")
 	public ModelAndView processoCursoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("processoCurso/processoCursoRelMenu");
@@ -233,18 +232,18 @@ public class ProcessoCursoController {
 		
 	}
 
-	@RequestMapping("/processoCursoRel001")
+	@GetMapping("/processoCursoRel001")
 	public ModelAndView processoCursoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoCurso/processoCursoRel001");
-		Pageable processoCursoPageable = new PageRequest(0, 200, Direction.ASC, "processo.processoNome","curso.cursoNome");
+		Pageable processoCursoPageable = PageRequest.of(0, 200, Direction.ASC, "processo.processoNome","curso.cursoNome");
 		mv.addObject("processoCursoPage", processoCursoService.getProcessoCursoAll(processoCursoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoCursoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/processoCursoView/{id}")
 	public ModelAndView processoCursoView(@PathVariable("id") Long processoCursoId) {
 
 		ProcessoCurso processoCurso = processoCursoService.getProcessoCursoByProcessoCursoPK(processoCursoId);

@@ -3,8 +3,8 @@ package br.com.j4business.saga.ocorrenciaatendimento.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.ocorrencia.model.Ocorrencia;
 import br.com.j4business.saga.ocorrenciaatendimento.model.OcorrenciaAtendimento;
 
 @Repository("ocorrenciaAtendimentoRepository")
-public interface OcorrenciaAtendimentoRepository extends PagingAndSortingRepository<OcorrenciaAtendimento, Long>{
+public interface OcorrenciaAtendimentoRepository extends JpaRepository<OcorrenciaAtendimento, Long>{
 
 /*	 @Query("SELECT ea FROM OcorrenciaAtendimento ea where ea.atendimento.atendimentoPK = :id") 
 	    List<OcorrenciaAtendimento> findByAtendimentoPK(@Param("id") Long id);

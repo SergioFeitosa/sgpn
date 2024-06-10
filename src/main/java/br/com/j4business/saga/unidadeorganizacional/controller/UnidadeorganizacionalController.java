@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -47,21 +47,21 @@ public class UnidadeorganizacionalController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/unidadeorganizacionalAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalAdd")
 	public ModelAndView unidadeorganizacionalAdd(UnidadeorganizacionalForm unidadeorganizacionalForm) {
 
 		ModelAndView mv = new ModelAndView("unidadeorganizacional/unidadeorganizacionalAdd");
 		unidadeorganizacionalForm = unidadeorganizacionalService.unidadeorganizacionalParametros(unidadeorganizacionalForm);
 		mv.addObject("unidadeorganizacionalForm", unidadeorganizacionalForm);
 		mv.addObject("unidadeorganizacionalStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/unidadeorganizacionalCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/unidadeorganizacionalCreate")
 	public ModelAndView unidadeorganizacionalCreate(@Valid UnidadeorganizacionalForm unidadeorganizacionalForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -94,7 +94,7 @@ public class UnidadeorganizacionalController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/unidadeorganizacionalDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalDelete/{id}")
 	public ModelAndView unidadeorganizacionalDelete(@PathVariable("id") long unidadeorganizacionalPK, @Valid UnidadeorganizacionalForm unidadeorganizacionalForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/unidadeorganizacionalHome");
@@ -115,7 +115,7 @@ public class UnidadeorganizacionalController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/unidadeorganizacionalEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalEdit/{id}")
 	public ModelAndView unidadeorganizacionalEdit(@PathVariable("id") Long unidadeorganizacionalPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("unidadeorganizacional/unidadeorganizacionalEdit");
@@ -123,16 +123,16 @@ public class UnidadeorganizacionalController {
 		UnidadeorganizacionalForm unidadeorganizacionalForm = unidadeorganizacionalService.converteUnidadeorganizacional(unidadeorganizacional);
 		mv.addObject("unidadeorganizacionalForm", unidadeorganizacionalForm);
 		mv.addObject("unidadeorganizacionalStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable unidadeorganizacionalProcessoPageable = new PageRequest(0, 200, Direction.ASC, "processo.processoNome");
+		Pageable unidadeorganizacionalProcessoPageable = PageRequest.of(0, 200, Direction.ASC, "processo.processoNome");
 		mv.addObject("unidadeorganizacionalProcessoPage", unidadeorganizacionalProcessoService.getByUnidadeorganizacionalPK(unidadeorganizacionalPK, unidadeorganizacionalProcessoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping("/unidadeorganizacionalHome")
+	@GetMapping("/unidadeorganizacionalHome")
 	public ModelAndView unidadeorganizacionalHome(@Valid UnidadeorganizacionalByUnidadeorganizacionalForm unidadeorganizacionalByUnidadeorganizacionalForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("unidadeorganizacional/unidadeorganizacionalHome");
@@ -151,10 +151,10 @@ public class UnidadeorganizacionalController {
 		}
 
 		if (unidadeorganizacionalByUnidadeorganizacionalForm.getUnidadeorganizacionalSortTipo().equalsIgnoreCase("UnidadeorganizacionalNome") || unidadeorganizacionalByUnidadeorganizacionalForm.getUnidadeorganizacionalSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "unidadeorganizacionalNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "unidadeorganizacionalNome");
 
 		} else if (unidadeorganizacionalByUnidadeorganizacionalForm.getUnidadeorganizacionalSortTipo().equalsIgnoreCase("UnidadeorganizacionalDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "unidadeorganizacionalDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "unidadeorganizacionalDescricao");
 
 		}
 
@@ -176,7 +176,7 @@ public class UnidadeorganizacionalController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/unidadeorganizacionalSave", method = RequestMethod.POST)
+	@PostMapping(path = "/unidadeorganizacionalSave")
 	public ModelAndView unidadeorganizacionalSave(@Valid UnidadeorganizacionalForm unidadeorganizacionalForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -199,7 +199,7 @@ public class UnidadeorganizacionalController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/unidadeorganizacionalRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalRelMenu")
 	public ModelAndView unidadeorganizacionalRelMenu() {
 
 		ModelAndView mv = new ModelAndView("unidadeorganizacional/unidadeorganizacionalRelMenu");
@@ -209,18 +209,18 @@ public class UnidadeorganizacionalController {
 		
 	}
 
-	@RequestMapping("/unidadeorganizacionalRel001")
+	@GetMapping("/unidadeorganizacionalRel001")
 	public ModelAndView unidadeorganizacionalRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("unidadeorganizacional/unidadeorganizacionalRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "unidadeorganizacionalNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "unidadeorganizacionalNome");
 		mv.addObject("unidadeorganizacionalPage", unidadeorganizacionalService.getUnidadeorganizacionalAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/unidadeorganizacionalView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalView/{id}")
 	public ModelAndView unidadeorganizacionalView(@PathVariable("id") Long unidadeorganizacionalId) {
 
 		Unidadeorganizacional unidadeorganizacional = unidadeorganizacionalService.getUnidadeorganizacionalByUnidadeorganizacionalPK(unidadeorganizacionalId);

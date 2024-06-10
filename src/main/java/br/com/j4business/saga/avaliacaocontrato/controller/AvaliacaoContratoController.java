@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -90,7 +90,7 @@ public class AvaliacaoContratoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/avaliacaoContratoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoContratoAdd")
 	public ModelAndView avaliacaoContratoAdd(AvaliacaoContratoForm avaliacaoContratoForm) {
 
 		ModelAndView mv = new ModelAndView("avaliacaoContrato/avaliacaoContratoAdd");
@@ -98,26 +98,26 @@ public class AvaliacaoContratoController {
 		mv.addObject("avaliacaoContratoForm", avaliacaoContratoForm);
 		mv.addObject("avaliacaoContratoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("avaliacaoContratoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable contratoPageable = new PageRequest(0, 200, Direction.ASC, "contratoNome");
+		Pageable contratoPageable = PageRequest.of(0, 200, Direction.ASC, "contratoNome");
 		mv.addObject("contratoPage", contratoService.getContratoAll(contratoPageable));
-		Pageable cenarioPageable = new PageRequest(0, 200, Direction.ASC, "cenarioNome");
+		Pageable cenarioPageable = PageRequest.of(0, 200, Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(cenarioPageable));
-		Pageable questionarioPageable = new PageRequest(0, 200, Direction.ASC, "questionarioNome");
+		Pageable questionarioPageable = PageRequest.of(0, 200, Direction.ASC, "questionarioNome");
 		mv.addObject("questionarioPage", questionarioService.getQuestionarioAll(questionarioPageable));
-		Pageable avaliacaoPageable = new PageRequest(0, 200, Direction.ASC, "avaliacaoNome");
+		Pageable avaliacaoPageable = PageRequest.of(0, 200, Direction.ASC, "avaliacaoNome");
 		mv.addObject("avaliacaoPage", avaliacaoService.getAvaliacaoAll(avaliacaoPageable));
-		Pageable unidadeorganizacionalPageable = new PageRequest(0, 200, Direction.ASC, "unidadeorganizacional.unidadeorganizacionalNome");
+		Pageable unidadeorganizacionalPageable = PageRequest.of(0, 200, Direction.ASC, "unidadeorganizacional.unidadeorganizacionalNome");
 		mv.addObject("unidadeorganizacionalContratoPage", unidadeorganizacionalContratoService.getUnidadeorganizacionalContratoAll(unidadeorganizacionalPageable));
-		Pageable estruturafisicaUnidadeorganizacionalPageable = new PageRequest(0, 200, Direction.ASC, "estruturafisica.estruturafisicaNome");
+		Pageable estruturafisicaUnidadeorganizacionalPageable = PageRequest.of(0, 200, Direction.ASC, "estruturafisica.estruturafisicaNome");
 		mv.addObject("estruturafisicaUnidadeorganizacionalPage", estruturafisicaUnidadeorganizacionalService.getByEstruturafisicaUnidadeorganizacionalAll(estruturafisicaUnidadeorganizacionalPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoContratoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/avaliacaoContratoCreate")
 	public ModelAndView avaliacaoContratoCreate(@Valid AvaliacaoContratoForm avaliacaoContratoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		AvaliacaoContrato avaliacaoContrato = null;
@@ -141,7 +141,7 @@ public class AvaliacaoContratoController {
 	}
 
 
-	@RequestMapping(path = "/avaliacaoContratoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoContratoDelete/{id}")
 	public ModelAndView avaliacaoContratoDelete(@PathVariable("id") long avaliacaoContratoId, @Valid ContratoForm contratoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/avaliacaoContratoHome");
@@ -167,7 +167,7 @@ public class AvaliacaoContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoContratoEdit/{avaliacaoContratoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoContratoEdit/{avaliacaoContratoPK}")
 	public ModelAndView avaliacaoContratoEdit(@PathVariable("avaliacaoContratoPK") Long avaliacaoContratoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("avaliacaoContrato/avaliacaoContratoEdit");
@@ -176,27 +176,27 @@ public class AvaliacaoContratoController {
 		mv.addObject("avaliacaoContratoForm", avaliacaoContratoForm);
 		mv.addObject("avaliacaoContratoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("avaliacaoContratoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable contratoPageable = new PageRequest(0, 200, Direction.ASC, "contratoNome");
+		Pageable contratoPageable = PageRequest.of(0, 200, Direction.ASC, "contratoNome");
 		mv.addObject("contratoPage", contratoService.getContratoAll(contratoPageable));
-		Pageable cenarioPageable = new PageRequest(0, 200, Direction.ASC, "cenarioNome");
+		Pageable cenarioPageable = PageRequest.of(0, 200, Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(cenarioPageable));
-		Pageable questionarioPageable = new PageRequest(0, 200, Direction.ASC, "questionarioNome");
+		Pageable questionarioPageable = PageRequest.of(0, 200, Direction.ASC, "questionarioNome");
 		mv.addObject("questionarioPage", questionarioService.getQuestionarioAll(questionarioPageable));
-		Pageable avaliacaoPageable = new PageRequest(0, 200, Direction.ASC, "avaliacaoNome");
+		Pageable avaliacaoPageable = PageRequest.of(0, 200, Direction.ASC, "avaliacaoNome");
 		mv.addObject("avaliacaoPage", avaliacaoService.getAvaliacaoAll(avaliacaoPageable));
 
-		Pageable unidadeorganizacionalPageable = new PageRequest(0, 200, Direction.ASC, "unidadeorganizacional.unidadeorganizacionalNome");
+		Pageable unidadeorganizacionalPageable = PageRequest.of(0, 200, Direction.ASC, "unidadeorganizacional.unidadeorganizacionalNome");
 		mv.addObject("unidadeorganizacionalContratoPage", unidadeorganizacionalContratoService.getUnidadeorganizacionalContratoAll(unidadeorganizacionalPageable));
-		Pageable estruturafisicaUnidadeorganizacionalPageable = new PageRequest(0, 200, Direction.ASC, "estruturafisica.estruturafisicaNome");
+		Pageable estruturafisicaUnidadeorganizacionalPageable = PageRequest.of(0, 200, Direction.ASC, "estruturafisica.estruturafisicaNome");
 		mv.addObject("estruturafisicaUnidadeorganizacionalPage", estruturafisicaUnidadeorganizacionalService.getByEstruturafisicaUnidadeorganizacionalAll(estruturafisicaUnidadeorganizacionalPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoContratoDashboard/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoContratoDashboard/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoContratoDashboard(@PathVariable("avaliacaoContratoPK") Long avaliacaoContratoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("contratoPK") Long contratoPK,
@@ -321,7 +321,7 @@ public class AvaliacaoContratoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoContratoDashboardCenario/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoContratoDashboardCenario/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoContratoDashboardCenario(@PathVariable("avaliacaoContratoPK") Long avaliacaoContratoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("contratoPK") Long contratoPK,
@@ -343,7 +343,7 @@ public class AvaliacaoContratoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoContratoDashboardMenu/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoContratoDashboardMenu/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoContratoDashboardMenu(@PathVariable("avaliacaoContratoPK") Long avaliacaoContratoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("contratoPK") Long contratoPK,
@@ -359,7 +359,7 @@ public class AvaliacaoContratoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoContratoQuestionario/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoContratoQuestionario/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoContratoQuestionario(@PathVariable("avaliacaoContratoPK") Long avaliacaoContratoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("contratoPK") Long contratoPK,
@@ -396,7 +396,7 @@ public class AvaliacaoContratoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoContratoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoContratoHome")
 	public ModelAndView avaliacaoContratoHome(@Valid AvaliacaoContratoByAvaliacaoForm avaliacaoContratoByAvaliacaoForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("avaliacaoContrato/avaliacaoContratoHome");
@@ -423,16 +423,16 @@ public class AvaliacaoContratoController {
 
 		if (avaliacaoContratoByAvaliacaoForm.getAvaliacaoContratoSortTipo().equalsIgnoreCase("AvaliacaoNome")
 				|| avaliacaoContratoByAvaliacaoForm.getAvaliacaoContratoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"avaliacao.avaliacaoNome","contrato.contratoNome","questionario.questionarioNome","avaliacaoContratoPeriodo"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"avaliacao.avaliacaoNome","contrato.contratoNome","questionario.questionarioNome","avaliacaoContratoPeriodo"); 
 		
 		} else if (avaliacaoContratoByAvaliacaoForm.getAvaliacaoContratoSortTipo().equalsIgnoreCase("ContratoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"contrato.contratoNome","avaliacao.avaliacaoNome","questionario.questionarioNome","avaliacaoContratoPeriodo"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"contrato.contratoNome","avaliacao.avaliacaoNome","questionario.questionarioNome","avaliacaoContratoPeriodo"); 
 
 		} else if (avaliacaoContratoByAvaliacaoForm.getAvaliacaoContratoSortTipo().equalsIgnoreCase("QuestionarioNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"questionario.questionarioNome","contrato.contratoNome","avaliacao.avaliacaoNome","avaliacaoContratoPeriodo"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"questionario.questionarioNome","contrato.contratoNome","avaliacao.avaliacaoNome","avaliacaoContratoPeriodo"); 
 
 		} else if (avaliacaoContratoByAvaliacaoForm.getAvaliacaoContratoSortTipo().equalsIgnoreCase("PeriodoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"avaliacaoContratoPeriodo","questionario.questionarioNome","contrato.contratoNome","avaliacao.avaliacaoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"avaliacaoContratoPeriodo","questionario.questionarioNome","contrato.contratoNome","avaliacao.avaliacaoNome"); 
 
 		}
 
@@ -464,7 +464,7 @@ public class AvaliacaoContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoContratoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/avaliacaoContratoSave")
 	public ModelAndView avaliacaoContratoSave(@Valid AvaliacaoContratoForm avaliacaoContratoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -479,7 +479,7 @@ public class AvaliacaoContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoContratoQuestionario", method = RequestMethod.POST)
+	@PostMapping(path = "/avaliacaoContratoQuestionario")
 	public ModelAndView avaliacaoContratoQuestionario(AvaliacaoContratoForm avaliacaoContratoForm, RedirectAttributes attributes,Pageable pageable) {
 
 
@@ -505,7 +505,7 @@ public class AvaliacaoContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoContratoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoContratoRelMenu")
 	public ModelAndView avaliacaoContratoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("avaliacaoContrato/avaliacaoContratoRelMenu");
@@ -514,18 +514,18 @@ public class AvaliacaoContratoController {
 		return mv;
 	}
 
-	@RequestMapping("/avaliacaoContratoRel001")
+	@GetMapping("/avaliacaoContratoRel001")
 	public ModelAndView avaliacaoContratoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("avaliacaoContrato/avaliacaoContratoRel001");
-		Pageable avaliacaoContratoPageable = new PageRequest(0, 200, Direction.ASC, "avaliacao.avaliacaoNome","contrato.contratoNome");
+		Pageable avaliacaoContratoPageable = PageRequest.of(0, 200, Direction.ASC, "avaliacao.avaliacaoNome","contrato.contratoNome");
 		mv.addObject("avaliacaoContratoPage", avaliacaoContratoService.getAvaliacaoContratoAll(avaliacaoContratoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoContratoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoContratoView/{id}")
 	public ModelAndView avaliacaoContratoView(@PathVariable("id") Long avaliacaoContratoId) {
 
 		AvaliacaoContrato avaliacaoContrato = avaliacaoContratoService.getAvaliacaoContratoByAvaliacaoContratoPK(avaliacaoContratoId);
@@ -542,7 +542,7 @@ public class AvaliacaoContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoContratoDashboardCenarioAnual/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoContratoDashboardCenarioAnual/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoContratoDashboardCenarioAnual(@PathVariable("avaliacaoContratoPK") Long avaliacaoContratoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("contratoPK") Long contratoPK,
@@ -565,7 +565,7 @@ public class AvaliacaoContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoContratoDashboardCenarioBimestral/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoContratoDashboardCenarioBimestral/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoContratoDashboardCenarioBimestral(@PathVariable("avaliacaoContratoPK") Long avaliacaoContratoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("contratoPK") Long contratoPK,
@@ -588,7 +588,7 @@ public class AvaliacaoContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoContratoDashboardCenarioMensal/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoContratoDashboardCenarioMensal/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoContratoDashboardCenarioMensal(@PathVariable("avaliacaoContratoPK") Long avaliacaoContratoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("contratoPK") Long contratoPK,
@@ -611,7 +611,7 @@ public class AvaliacaoContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoContratoDashboardCenarioSemestral/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoContratoDashboardCenarioSemestral/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoContratoDashboardCenarioSemestral(@PathVariable("avaliacaoContratoPK") Long avaliacaoContratoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("contratoPK") Long contratoPK,
@@ -634,7 +634,7 @@ public class AvaliacaoContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoContratoDashboardCenarioTrimestral/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoContratoDashboardCenarioTrimestral/{avaliacaoContratoPK}/{questionarioPK}/{contratoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoContratoDashboardCenarioTrimestral(@PathVariable("avaliacaoContratoPK") Long avaliacaoContratoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("contratoPK") Long contratoPK,

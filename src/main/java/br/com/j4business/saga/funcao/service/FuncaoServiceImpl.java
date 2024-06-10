@@ -1,8 +1,10 @@
 package br.com.j4business.saga.funcao.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,8 @@ public class FuncaoServiceImpl implements FuncaoService {
 	@Override
 	public Funcao getFuncaoByFuncaoPK(long funcaoPK) {
 		
-		return funcaoRepository.findOne(funcaoPK);
+		Optional<Funcao> funcao = funcaoRepository.findById(funcaoPK);
+		return funcao.get();
 	}
 
 	@Transactional
@@ -93,7 +96,7 @@ public class FuncaoServiceImpl implements FuncaoService {
 
 		Funcao funcao = this.getFuncaoByFuncaoPK(funcaoId);
 		
-		funcaoRepository.delete(funcao.getFuncaoPK());
+		funcaoRepository.delete(funcao);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Funcao Delete " + "\n Usuário => " + username + 

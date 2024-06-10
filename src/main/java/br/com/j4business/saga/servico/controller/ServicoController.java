@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -47,21 +47,21 @@ public class ServicoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/servicoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/servicoAdd")
 	public ModelAndView servicoAdd(ServicoForm servicoForm) {
 
 		ModelAndView mv = new ModelAndView("servico/servicoAdd");
 		servicoForm = servicoService.servicoParametros(servicoForm);
 		mv.addObject("servicoForm", servicoForm);
 		mv.addObject("servicoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/servicoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/servicoCreate")
 	public ModelAndView servicoCreate(@Valid ServicoForm servicoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -94,7 +94,7 @@ public class ServicoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/servicoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/servicoDelete/{id}")
 	public ModelAndView servicoDelete(@PathVariable("id") long servicoPK, @Valid ServicoForm servicoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/servicoHome");
@@ -115,7 +115,7 @@ public class ServicoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/servicoEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/servicoEdit/{id}")
 	public ModelAndView servicoEdit(@PathVariable("id") Long servicoId, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("servico/servicoEdit");
@@ -123,16 +123,16 @@ public class ServicoController {
 		ServicoForm servicoForm = servicoService.converteServico(servico);
 		mv.addObject("servicoForm", servicoForm);
 		mv.addObject("servicoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable servicoProcessoPageable = new PageRequest(0, 200, Direction.ASC, "servico.servicoNome","servicoProcessoSequencia");
+		Pageable servicoProcessoPageable = PageRequest.of(0, 200, Direction.ASC, "servico.servicoNome","servicoProcessoSequencia");
 		mv.addObject("servicoProcessoPage", servicoProcessoService.getByServicoPK(servico.getServicoPK(),servicoProcessoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/servicoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/servicoHome")
 	public ModelAndView servicoHome(@Valid ServicoByServicoForm servicoByServicoForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("servico/servicoHome");
@@ -151,10 +151,10 @@ public class ServicoController {
 		}
 
 		if (servicoByServicoForm.getServicoSortTipo().equalsIgnoreCase("ServicoNome") || servicoByServicoForm.getServicoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "servicoNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "servicoNome");
 
 		} else if (servicoByServicoForm.getServicoSortTipo().equalsIgnoreCase("ServicoDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "servicoDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "servicoDescricao");
 
 		}
 
@@ -176,7 +176,7 @@ public class ServicoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/servicoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/servicoSave")
 	public ModelAndView servicoSave(@Valid ServicoForm servicoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -199,7 +199,7 @@ public class ServicoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/servicoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/servicoRelMenu")
 	public ModelAndView servicoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("servico/servicoRelMenu");
@@ -209,29 +209,29 @@ public class ServicoController {
 		
 	}
 
-	@RequestMapping(path = "/servicoRel001", method = RequestMethod.GET)
+	@GetMapping(path = "/servicoRel001")
 	public ModelAndView servicoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("servico/servicoRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "servicoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "servicoNome");
 		mv.addObject("servicoPage", servicoService.getServicoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/servicoRel002", method = RequestMethod.GET)
+	@GetMapping(path = "/servicoRel002")
 	public ModelAndView servicoRel002(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("servico/servicoRel002");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "servicoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "servicoNome");
 		mv.addObject("servicoPage", servicoService.getServicoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/servicoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/servicoView/{id}")
 	public ModelAndView servicoView(@PathVariable("id") Long servicoId) {
 
 		Servico servico = servicoService.getServicoByServicoPK(servicoId);

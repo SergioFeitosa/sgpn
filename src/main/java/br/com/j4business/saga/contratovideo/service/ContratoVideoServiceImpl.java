@@ -6,16 +6,16 @@ import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.contrato.model.Contrato;
 import br.com.j4business.saga.contrato.service.ContratoService;
-import br.com.j4business.saga.contratotexto.model.ContratoTexto;
 import br.com.j4business.saga.contratovideo.model.ContratoVideo;
 import br.com.j4business.saga.video.model.Video;
 import br.com.j4business.saga.video.service.VideoService;
 import br.com.j4business.saga.contratovideo.model.ContratoVideoForm;
 import br.com.j4business.saga.contratovideo.repository.ContratoVideoRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
+
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +93,8 @@ public class ContratoVideoServiceImpl implements ContratoVideoService {
 
 	@Override
 	public ContratoVideo getContratoVideoByContratoVideoPK(long contratoVideoPK) {
-		return contratoVideoRepository.findOne(contratoVideoPK);
+		Optional<ContratoVideo> contratoVideo =  contratoVideoRepository.findById(contratoVideoPK);
+		return contratoVideo.get();
 	}
 
 	@Override
@@ -142,7 +143,7 @@ public class ContratoVideoServiceImpl implements ContratoVideoService {
 
 		ContratoVideo contratoVideoTemp = this.getContratoVideoByContratoVideoPK(contratoVideoPK);
 
-		contratoVideoRepository.delete(contratoVideoPK);
+		contratoVideoRepository.delete(contratoVideoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ContratoVideo Save " + "\n Usuário => " + username + 
@@ -156,7 +157,9 @@ public class ContratoVideoServiceImpl implements ContratoVideoService {
 		
 		List<ContratoVideo> contratoVideoList = contratoVideoRepository.findByVideo(video);
 
-		contratoVideoRepository.delete(contratoVideoList);
+		for (ContratoVideo contratoVideo2 : contratoVideoList) {
+			contratoVideoRepository.delete(contratoVideo2);			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

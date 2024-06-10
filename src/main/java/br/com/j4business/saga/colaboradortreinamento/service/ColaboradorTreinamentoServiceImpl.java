@@ -4,17 +4,16 @@ import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.colaboradorprocesso.model.ColaboradorProcesso;
 import br.com.j4business.saga.treinamento.model.Treinamento;
 import br.com.j4business.saga.treinamento.service.TreinamentoService;
 import br.com.j4business.saga.colaboradortreinamento.model.ColaboradorTreinamento;
 import br.com.j4business.saga.colaboradortreinamento.model.ColaboradorTreinamentoForm;
 import br.com.j4business.saga.colaboradortreinamento.repository.ColaboradorTreinamentoRepository;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -85,7 +84,8 @@ public class ColaboradorTreinamentoServiceImpl implements ColaboradorTreinamento
 
 	@Override
 	public ColaboradorTreinamento getColaboradorTreinamentoByColaboradorTreinamentoPK(long colaboradorTreinamentoPK) {
-		return colaboradorTreinamentoRepository.findOne(colaboradorTreinamentoPK);
+		Optional<ColaboradorTreinamento> colaboradorTreinamento =  colaboradorTreinamentoRepository.findById(colaboradorTreinamentoPK);
+		return colaboradorTreinamento.get();
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class ColaboradorTreinamentoServiceImpl implements ColaboradorTreinamento
 
 		ColaboradorTreinamento colaboradorTreinamentoTemp = this.getColaboradorTreinamentoByColaboradorTreinamentoPK(colaboradorTreinamentoPK);
 
-		colaboradorTreinamentoRepository.delete(colaboradorTreinamentoPK);
+		colaboradorTreinamentoRepository.delete(colaboradorTreinamentoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ColaboradorTreinamento Save " + "\n Usuário => " + username + 
@@ -130,7 +130,11 @@ public class ColaboradorTreinamentoServiceImpl implements ColaboradorTreinamento
 		
 		List<ColaboradorTreinamento> colaboradorTreinamentoList = colaboradorTreinamentoRepository.findByTreinamento(treinamento);
 
-		colaboradorTreinamentoRepository.delete(colaboradorTreinamentoList);
+		for (ColaboradorTreinamento colaboradorTreinamento2 : colaboradorTreinamentoList) {
+
+			colaboradorTreinamentoRepository.delete(colaboradorTreinamento2);
+			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

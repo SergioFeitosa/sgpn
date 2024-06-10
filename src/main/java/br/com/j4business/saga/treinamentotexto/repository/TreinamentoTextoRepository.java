@@ -3,8 +3,8 @@ package br.com.j4business.saga.treinamentotexto.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.treinamento.model.Treinamento;
 import br.com.j4business.saga.treinamentotexto.model.TreinamentoTexto;
 
 @Repository("treinamentoTextoRepository")
-public interface TreinamentoTextoRepository extends PagingAndSortingRepository<TreinamentoTexto, Long>{
+public interface TreinamentoTextoRepository extends JpaRepository<TreinamentoTexto, Long>{
 
 /*	 @Query("SELECT ea FROM TreinamentoTexto ea where ea.texto.textoPK = :id") 
 	    List<TreinamentoTexto> findByTextoPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface TreinamentoTextoRepository extends PagingAndSortingRepository<T
 	@Query("SELECT ep FROM TreinamentoTexto ep INNER JOIN ep.texto p WHERE p = :texto")
 	public List<TreinamentoTexto> findByTexto(@Param("texto")Texto texto);
 
-	@Query("SELECT ep FROM TreinamentoTexto ep INNER JOIN ep.texto p INNER JOIN ep.treinamento e WHERE p = :texto AND s = :treinamento")
+	@Query("SELECT tr FROM TreinamentoTexto tr INNER JOIN tr.texto t INNER JOIN tr.treinamento r WHERE t = :texto AND r = :treinamento")
 	public TreinamentoTexto findByTreinamentoAndTexto( @Param("treinamento") Treinamento treinamento, @Param("texto")Texto texto);
 	
 	@Query("SELECT ep FROM TreinamentoTexto ep")

@@ -1,9 +1,10 @@
 package br.com.j4business.saga.atendimento.service;
 
 import java.util.List;
+import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,7 +51,10 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	@Override
 	public Atendimento getAtendimentoByAtendimentoPK(long atendimentoPK) {
 		
-		return atendimentoRepository.findOne(atendimentoPK);
+		Optional<Atendimento> atendimentoSalva =  atendimentoRepository.findById(atendimentoPK);
+
+		return atendimentoSalva.get();
+
 	}
 
 	@Transactional
@@ -94,15 +98,20 @@ public class AtendimentoServiceImpl implements AtendimentoService {
 	@Transactional
 	public void delete(Long atendimentoId) {
 
-		Atendimento atendimento = this.getAtendimentoByAtendimentoPK(atendimentoId);
+		Optional<Atendimento> atendimento =  atendimentoRepository.findById(atendimentoId);
+
+
+		Atendimento atendimentoSalvo = atendimento.get();
 		
-		atendimentoRepository.delete(atendimento.getAtendimentoPK());
+		if (atendimento.isPresent()) {
+			atendimentoRepository.delete(atendimentoSalvo);
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Atendimento Delete " + "\n Usuário => " + username + 
-										" // Id => "+atendimento.getAtendimentoPK() + 
-										" // Atendimento => "+atendimento.getAtendimentoNome() + 
-										" // Descrição => "+ atendimento.getAtendimentoDescricao());
+										" // Id => "+atendimento.get().getAtendimentoPK() + 
+										" // Atendimento => "+atendimento.get().getAtendimentoNome() + 
+										" // Descrição => "+ atendimento.get().getAtendimentoDescricao());
 		
 
     }

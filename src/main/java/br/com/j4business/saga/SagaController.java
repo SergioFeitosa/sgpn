@@ -4,8 +4,8 @@ import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
+
 import org.springframework.web.servlet.ModelAndView;
 
 import br.com.j4business.saga.atividade.service.AtividadeService;
@@ -63,7 +63,7 @@ public class SagaController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path="/", method=RequestMethod.GET)
+	@GetMapping(path="/")
 	public ModelAndView goPrincipal(){
 		
 		ModelAndView mv = new ModelAndView("index");
@@ -79,7 +79,8 @@ public class SagaController {
 		mv.addObject("processoList", processoService.getProcessoAll());
 		mv.addObject("servicoList", servicoService.getServicoAll());
 		mv.addObject("unidadeOrganizacionalList", unidadeorganizacionalService.getUnidadeorganizacionalAll());
-		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
+		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); 
+		mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
@@ -96,7 +97,7 @@ public class SagaController {
 	}
 */	
 	
-	@RequestMapping(path="/login", method=RequestMethod.GET)
+	@GetMapping(path="/login")
 	public String goLogin(){
 		
 		
@@ -119,55 +120,57 @@ public class SagaController {
 		eventoService.save(evento);
 */		
 		
+		
+		
 		return "login";
 	}
 
-	@RequestMapping(path="/indexBootstrap", method=RequestMethod.GET)
+	@GetMapping(path="/indexBootstrap")
 	public String goIndexBootstrap(){
 		return "indexBootstrap";
 	}
 
-	@RequestMapping(path="/template", method=RequestMethod.GET)
+	@GetMapping(path="/template")
 	public String goTemplate(){
 		return "template";
 	}
 
-	@RequestMapping(path="/add", method=RequestMethod.GET)
+	@GetMapping(path="/add")
 	public String goAdd(){
 		return "add";
 	}
 
-	@RequestMapping(path="/edit", method=RequestMethod.GET)
+	@GetMapping(path="/edit")
 	public String goEdit(){
 		return "edit";
 	}
 
-	@RequestMapping(path="/view", method=RequestMethod.GET)
+	@GetMapping(path="/view")
 	public String goView(){
 		return "view";
 	}
 
-	@RequestMapping(path="/home", method=RequestMethod.GET)
+	@GetMapping(path="/home")
 	public String goHome(){
 		return "home";
 	}
 
-	@RequestMapping(path="/sidebar", method=RequestMethod.GET)
+	@GetMapping(path="/sidebar")
 	public String goSidebar(){
 		return "sidebar";
 	}
 
-	@RequestMapping(path="/vertical", method=RequestMethod.GET)
+	@GetMapping(path="/vertical")
 	public String goVertical(){
 		return "vertical";
 	}
 
-	@RequestMapping(path="/colapse", method=RequestMethod.GET)
+	@GetMapping(path="/colapse")
 	public String goColpase(){
 		return "colapse";
 	}
 
-	@RequestMapping(path="/index", method=RequestMethod.GET)
+	@GetMapping(path="/index")
 	public ModelAndView goIndex(){
 		
 		ModelAndView mv = new ModelAndView("index");
@@ -188,22 +191,22 @@ public class SagaController {
 		return mv;
 	}
 
-	@RequestMapping(path="/403", method=RequestMethod.GET)
+	@GetMapping(path="/403")
 	public String go403(){
 		return "403";
 	}
 	
-	@RequestMapping(path="/evento", method=RequestMethod.GET)
+	@GetMapping(path="/evento")
 	public String goEvento(){
 		return "evento/eventoHome";
 	}
 
-	@RequestMapping(path="/atributo", method=RequestMethod.GET)
+	@GetMapping(path="/atributo")
 	public String goAtributo(){
 		return "atributo/atributoHome";
 	}
 
-	@RequestMapping(path="/colaborador", method=RequestMethod.GET)
+	@GetMapping(path="/colaborador")
 	public String goColaborador(){
 		return "colaborador/colaboradorHome";
 	}

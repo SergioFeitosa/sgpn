@@ -3,8 +3,8 @@ package br.com.j4business.saga.contratovideo.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.contrato.model.Contrato;
 import br.com.j4business.saga.contratovideo.model.ContratoVideo;
 
 @Repository("contratoVideoRepository")
-public interface ContratoVideoRepository extends PagingAndSortingRepository<ContratoVideo, Long>{
+public interface ContratoVideoRepository extends JpaRepository<ContratoVideo, Long>{
 
 /*	 @Query("SELECT ea FROM ContratoVideo ea where ea.video.videoPK = :id") 
 	    List<ContratoVideo> findByVideoPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface ContratoVideoRepository extends PagingAndSortingRepository<Cont
 	@Query("SELECT ep FROM ContratoVideo ep INNER JOIN ep.video p WHERE p = :video")
 	public List<ContratoVideo> findByVideo(@Param("video")Video video);
 
-	@Query("SELECT ep FROM ContratoVideo ep INNER JOIN ep.video p INNER JOIN ep.contrato e WHERE p = :video AND s = :contrato")
+	@Query("SELECT cv FROM ContratoVideo cv INNER JOIN cv.video v INNER JOIN cv.contrato c WHERE v = :video AND c = :contrato")
 	public ContratoVideo findByContratoAndVideo( @Param("contrato") Contrato contrato, @Param("video")Video video);
 	
 	@Query("SELECT ep FROM ContratoVideo ep")

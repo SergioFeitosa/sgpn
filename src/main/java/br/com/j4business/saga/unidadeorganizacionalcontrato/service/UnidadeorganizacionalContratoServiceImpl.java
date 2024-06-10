@@ -1,26 +1,28 @@
 package br.com.j4business.saga.unidadeorganizacionalcontrato.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.unidadeorganizacionalcontrato.model.UnidadeorganizacionalContrato;
 import br.com.j4business.saga.contrato.model.Contrato;
 import br.com.j4business.saga.contrato.service.ContratoService;
 import br.com.j4business.saga.unidadeorganizacional.model.Unidadeorganizacional;
 import br.com.j4business.saga.unidadeorganizacional.service.UnidadeorganizacionalService;
-import br.com.j4business.saga.unidadeorganizacionalcenario.model.UnidadeorganizacionalCenario;
+import br.com.j4business.saga.unidadeorganizacionalcontrato.model.UnidadeorganizacionalContrato;
 import br.com.j4business.saga.unidadeorganizacionalcontrato.model.UnidadeorganizacionalContratoForm;
 import br.com.j4business.saga.unidadeorganizacionalcontrato.repository.UnidadeorganizacionalContratoRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 @Service("unidadeorganizacionalContratoService")
 public class UnidadeorganizacionalContratoServiceImpl implements UnidadeorganizacionalContratoService {
@@ -88,7 +90,8 @@ public class UnidadeorganizacionalContratoServiceImpl implements Unidadeorganiza
 
 	@Override
 	public UnidadeorganizacionalContrato getUnidadeorganizacionalContratoByUnidadeorganizacionalContratoPK(long unidadeorganizacionalContratoPK) {
-		return unidadeorganizacionalContratoRepository.findOne(unidadeorganizacionalContratoPK);
+		Optional<UnidadeorganizacionalContrato> unidadeorganizacionalContrato = unidadeorganizacionalContratoRepository.findById(unidadeorganizacionalContratoPK);
+		return unidadeorganizacionalContrato.get();
 	}
 
 	@Override
@@ -138,7 +141,7 @@ public class UnidadeorganizacionalContratoServiceImpl implements Unidadeorganiza
 
 		UnidadeorganizacionalContrato unidadeorganizacionalContratoTemp = this.getUnidadeorganizacionalContratoByUnidadeorganizacionalContratoPK(unidadeorganizacionalContratoPK);
 
-		unidadeorganizacionalContratoRepository.delete(unidadeorganizacionalContratoPK);
+		unidadeorganizacionalContratoRepository.delete(unidadeorganizacionalContratoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("UnidadeorganizacionalContrato Save " + "\n Usuário => " + username + 
@@ -151,9 +154,10 @@ public class UnidadeorganizacionalContratoServiceImpl implements Unidadeorganiza
 	public void deleteByContrato(Contrato contrato) {
 		
 		List<UnidadeorganizacionalContrato> unidadeorganizacionalContratoList = unidadeorganizacionalContratoRepository.findByContrato(contrato);
-
-		unidadeorganizacionalContratoRepository.delete(unidadeorganizacionalContratoList);
-
+		for (UnidadeorganizacionalContrato unidadeorganizacionalContrato2 : unidadeorganizacionalContratoList) {
+			unidadeorganizacionalContratoRepository.delete(unidadeorganizacionalContrato2);	
+		}
+		
 		String username = usuarioSeguranca.getUsuarioLogado();
 
 		unidadeorganizacionalContratoList.forEach((UnidadeorganizacionalContrato unidadeorganizacionalContrato) -> {

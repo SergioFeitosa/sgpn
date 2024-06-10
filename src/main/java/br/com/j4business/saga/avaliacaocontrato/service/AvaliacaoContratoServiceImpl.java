@@ -34,8 +34,8 @@ import br.com.j4business.saga.avaliacaoresultadocontrato.model.AvaliacaoResultad
 import br.com.j4business.saga.avaliacaoresultadocontrato.service.AvaliacaoResultadoContratoService;
 import br.com.j4business.saga.cenario.service.CenarioService;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -146,7 +147,9 @@ public class AvaliacaoContratoServiceImpl implements AvaliacaoContratoService {
 
 	@Override
 	public AvaliacaoContrato getAvaliacaoContratoByAvaliacaoContratoPK(long avaliacaoContratoPK) {
-		return avaliacaoContratoRepository.findOne(avaliacaoContratoPK);
+		
+		Optional<AvaliacaoContrato> avaliacaoContrato = avaliacaoContratoRepository.findById(avaliacaoContratoPK);
+		return avaliacaoContrato.get();
 	}
 
 	@Override
@@ -186,15 +189,15 @@ public class AvaliacaoContratoServiceImpl implements AvaliacaoContratoService {
 	@Transactional
 	public void delete(Long avaliacaoContratoPK) {
 
-		AvaliacaoContrato avaliacaoContratoTemp = this.getAvaliacaoContratoByAvaliacaoContratoPK(avaliacaoContratoPK);
+		AvaliacaoContrato avaliacaoContrato = this.getAvaliacaoContratoByAvaliacaoContratoPK(avaliacaoContratoPK);
 
-		avaliacaoContratoRepository.delete(avaliacaoContratoPK);
+		avaliacaoContratoRepository.delete(avaliacaoContrato);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("AvaliacaoContrato Save " + "\n Usuário => " + username + 
-										" // Id => "+avaliacaoContratoTemp.getAvaliacaoContratoPK() + 
-										" // Avaliacao Id => "+avaliacaoContratoTemp.getAvaliacao().getAvaliacaoPK() + 
-										" // Contrato Id => "+avaliacaoContratoTemp.getContrato().getContratoPK()); 
+										" // Id => "+avaliacaoContrato.getAvaliacaoContratoPK() + 
+										" // Avaliacao Id => "+avaliacaoContrato.getAvaliacao().getAvaliacaoPK() + 
+										" // Contrato Id => "+avaliacaoContrato.getContrato().getContratoPK()); 
     }
 
 	@Transactional
@@ -202,7 +205,11 @@ public class AvaliacaoContratoServiceImpl implements AvaliacaoContratoService {
 		
 		List<AvaliacaoContrato> avaliacaoContratoList = avaliacaoContratoRepository.findByContrato(contrato);
 
-		avaliacaoContratoRepository.delete(avaliacaoContratoList);
+		for (AvaliacaoContrato avaliacaoContrato2 : avaliacaoContratoList) {
+
+			avaliacaoContratoRepository.delete(avaliacaoContrato2);
+
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 
@@ -376,7 +383,6 @@ public class AvaliacaoContratoServiceImpl implements AvaliacaoContratoService {
 			    inActiveDate = format1.format(date);
 			    System.out.println(inActiveDate );
 			} catch (Exception e1) {
-			    // TODO Auto-generated catch block
 			    e1.printStackTrace();
 			}
 			

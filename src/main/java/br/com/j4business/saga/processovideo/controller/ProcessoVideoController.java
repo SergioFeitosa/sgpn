@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,25 +17,24 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes; 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.j4business.saga.processo.model.ProcessoForm;
-import br.com.j4business.saga.processo.service.ProcessoService;
-import br.com.j4business.saga.processocurso.model.ProcessoCurso;
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.video.model.VideoForm;
-import br.com.j4business.saga.video.service.VideoService;
+import br.com.j4business.saga.processo.model.ProcessoForm;
+import br.com.j4business.saga.processo.service.ProcessoService;
 import br.com.j4business.saga.processovideo.model.ProcessoVideo;
 import br.com.j4business.saga.processovideo.model.ProcessoVideoByProcessoForm;
 import br.com.j4business.saga.processovideo.model.ProcessoVideoForm;
 import br.com.j4business.saga.processovideo.service.ProcessoVideoService;
+import br.com.j4business.saga.video.model.VideoForm;
+import br.com.j4business.saga.video.service.VideoService;
 
 @Controller
 public class ProcessoVideoController {
@@ -55,7 +54,7 @@ public class ProcessoVideoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/processoVideoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/processoVideoAdd")
 	public ModelAndView processoVideoAdd(ProcessoVideoForm processoVideoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoVideo/processoVideoAdd");
@@ -63,18 +62,18 @@ public class ProcessoVideoController {
 		mv.addObject("processoVideoForm", processoVideoForm);
 		mv.addObject("processoVideoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("processoVideoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable videoPageable = new PageRequest(0, 200, Direction.ASC, "videoNome");
+		Pageable videoPageable = PageRequest.of(0, 200, Direction.ASC, "videoNome");
 		mv.addObject("videoPage", videoService.getVideoAll(videoPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoVideoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/processoVideoCreate")
 	public ModelAndView processoVideoCreate(@Valid ProcessoVideoForm processoVideoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -121,7 +120,7 @@ public class ProcessoVideoController {
 	}
 
 
-	@RequestMapping(path = "/processoVideoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/processoVideoDelete/{id}")
 	public ModelAndView processoVideoDelete(@PathVariable("id") long processoVideoId, @Valid VideoForm videoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/processoVideoHome");
@@ -147,7 +146,7 @@ public class ProcessoVideoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoVideoEdit/{processoVideoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/processoVideoEdit/{processoVideoPK}")
 	public ModelAndView processoVideoEdit(@PathVariable("processoVideoPK") Long processoVideoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoVideo/processoVideoEdit");
@@ -156,18 +155,18 @@ public class ProcessoVideoController {
 		mv.addObject("processoVideoForm", processoVideoForm);
 		mv.addObject("processoVideoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("processoVideoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable videoPageable = new PageRequest(0, 200, Direction.ASC, "videoNome");
+		Pageable videoPageable = PageRequest.of(0, 200, Direction.ASC, "videoNome");
 		mv.addObject("videoPage", videoService.getVideoAll(videoPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/processoVideoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/processoVideoHome")
 	public ModelAndView processoVideoHome(@Valid ProcessoVideoByProcessoForm processoVideoByProcessoForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoVideo/processoVideoHome");
@@ -187,10 +186,10 @@ public class ProcessoVideoController {
 
 		if (processoVideoByProcessoForm.getProcessoVideoSortTipo().equalsIgnoreCase("ProcessoNome")
 				|| processoVideoByProcessoForm.getProcessoVideoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","video.videoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","video.videoNome"); 
 		
 		} else if (processoVideoByProcessoForm.getProcessoVideoSortTipo().equalsIgnoreCase("VideoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"video.videoNome","processo.processoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"video.videoNome","processo.processoNome"); 
 
 		}
 
@@ -213,7 +212,7 @@ public class ProcessoVideoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoVideoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/processoVideoSave")
 	public ModelAndView processoVideoSave(@Valid ProcessoVideoForm processoVideoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -245,7 +244,7 @@ public class ProcessoVideoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoVideoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/processoVideoRelMenu")
 	public ModelAndView processoVideoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("processoVideo/processoVideoRelMenu");
@@ -255,18 +254,18 @@ public class ProcessoVideoController {
 		
 	}
 
-	@RequestMapping("/processoVideoRel001")
+	@GetMapping("/processoVideoRel001")
 	public ModelAndView processoVideoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoVideo/processoVideoRel001");
-		Pageable processoVideoPageable = new PageRequest(0, 200, Direction.ASC, "processo.processoNome","video.videoNome");
+		Pageable processoVideoPageable = PageRequest.of(0, 200, Direction.ASC, "processo.processoNome","video.videoNome");
 		mv.addObject("processoVideoPage", processoVideoService.getProcessoVideoAll(processoVideoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoVideoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/processoVideoView/{id}")
 	public ModelAndView processoVideoView(@PathVariable("id") Long processoVideoId) {
 
 		ProcessoVideo processoVideo = processoVideoService.getProcessoVideoByProcessoVideoPK(processoVideoId);

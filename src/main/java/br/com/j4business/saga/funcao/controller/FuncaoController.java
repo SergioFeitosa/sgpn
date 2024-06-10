@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -43,20 +43,20 @@ public class FuncaoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/funcaoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/funcaoAdd")
 	public ModelAndView funcaoAdd(FuncaoForm funcaoForm) {
 
 		ModelAndView mv = new ModelAndView("funcao/funcaoAdd");
 		funcaoForm = funcaoService.funcaoParametros(funcaoForm);
 		mv.addObject("funcaoForm", funcaoForm);
 		mv.addObject("funcaoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/funcaoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/funcaoCreate")
 	public ModelAndView funcaoCreate(@Valid FuncaoForm funcaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -89,7 +89,7 @@ public class FuncaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/funcaoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/funcaoDelete/{id}")
 	public ModelAndView funcaoDelete(@PathVariable("id") long funcaoPK, @Valid FuncaoForm funcaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/funcaoHome");
@@ -109,7 +109,7 @@ public class FuncaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/funcaoEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/funcaoEdit/{id}")
 	public ModelAndView funcaoEdit(@PathVariable("id") Long funcaoId, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("funcao/funcaoEdit");
@@ -117,14 +117,14 @@ public class FuncaoController {
 		FuncaoForm funcaoForm = funcaoService.converteFuncao(funcao);
 		mv.addObject("funcaoForm", funcaoForm);
 		mv.addObject("funcaoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping("/funcaoHome")
+	@GetMapping("/funcaoHome")
 	public ModelAndView funcaoHome(@Valid FuncaoByFuncaoForm funcaoByFuncaoForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("funcao/funcaoHome");
@@ -143,10 +143,10 @@ public class FuncaoController {
 		}
 
 		if (funcaoByFuncaoForm.getFuncaoSortTipo().equalsIgnoreCase("FuncaoNome") || funcaoByFuncaoForm.getFuncaoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "funcaoNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "funcaoNome");
 
 		} else if (funcaoByFuncaoForm.getFuncaoSortTipo().equalsIgnoreCase("FuncaoDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "funcaoDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "funcaoDescricao");
 
 		}
 
@@ -168,7 +168,7 @@ public class FuncaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/funcaoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/funcaoSave")
 	public ModelAndView funcaoSave(@Valid FuncaoForm funcaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -191,7 +191,7 @@ public class FuncaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/funcaoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/funcaoRelMenu")
 	public ModelAndView funcaoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("funcao/funcaoRelMenu");
@@ -201,18 +201,18 @@ public class FuncaoController {
 		
 	}
 
-	@RequestMapping("/funcaoRel001")
+	@GetMapping("/funcaoRel001")
 	public ModelAndView funcaoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("funcao/funcaoRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "funcaoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "funcaoNome");
 		mv.addObject("funcaoPage", funcaoService.getFuncaoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/funcaoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/funcaoView/{id}")
 	public ModelAndView funcaoView(@PathVariable("id") Long funcaoId) {
 
 		Funcao funcao = funcaoService.getFuncaoByFuncaoPK(funcaoId);

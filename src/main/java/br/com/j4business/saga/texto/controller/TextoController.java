@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -43,20 +43,20 @@ public class TextoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/textoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/textoAdd")
 	public ModelAndView textoAdd(TextoForm textoForm) {
 
 		ModelAndView mv = new ModelAndView("texto/textoAdd");
 		textoForm = textoService.textoParametros(textoForm);
 		mv.addObject("textoForm", textoForm);
 		mv.addObject("textoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/textoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/textoCreate")
 	public ModelAndView textoCreate(@Valid TextoForm textoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -89,7 +89,7 @@ public class TextoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/textoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/textoDelete/{id}")
 	public ModelAndView textoDelete(@PathVariable("id") long textoPK, @Valid TextoForm textoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/textoHome");
@@ -109,7 +109,7 @@ public class TextoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/textoEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/textoEdit/{id}")
 	public ModelAndView textoEdit(@PathVariable("id") Long textoId, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("texto/textoEdit");
@@ -117,14 +117,14 @@ public class TextoController {
 		TextoForm textoForm = textoService.converteTexto(texto);
 		mv.addObject("textoForm", textoForm);
 		mv.addObject("textoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping("/textoHome")
+	@GetMapping("/textoHome")
 	public ModelAndView textoHome(@Valid TextoByTextoForm textoByTextoForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("texto/textoHome");
@@ -143,10 +143,10 @@ public class TextoController {
 		}
 
 		if (textoByTextoForm.getTextoSortTipo().equalsIgnoreCase("TextoNome") || textoByTextoForm.getTextoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "textoNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "textoNome");
 
 		} else if (textoByTextoForm.getTextoSortTipo().equalsIgnoreCase("TextoDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "textoDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "textoDescricao");
 
 		}
 
@@ -168,7 +168,7 @@ public class TextoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/textoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/textoSave")
 	public ModelAndView textoSave(@Valid TextoForm textoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -191,7 +191,7 @@ public class TextoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/textoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/textoRelMenu")
 	public ModelAndView textoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("texto/textoRelMenu");
@@ -201,18 +201,18 @@ public class TextoController {
 		
 	}
 
-	@RequestMapping("/textoRel001")
+	@GetMapping("/textoRel001")
 	public ModelAndView textoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("texto/textoRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "textoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "textoNome");
 		mv.addObject("textoPage", textoService.getTextoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/textoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/textoView/{id}")
 	public ModelAndView textoView(@PathVariable("id") Long textoId) {
 
 		Texto texto = textoService.getTextoByTextoPK(textoId);

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -48,7 +48,7 @@ public class EventoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/eventoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/eventoAdd")
 	public ModelAndView eventoAdd(EventoForm eventoForm) {
 
 		ModelAndView mv = new ModelAndView("evento/eventoAdd");
@@ -56,13 +56,13 @@ public class EventoController {
 		mv.addObject("eventoForm", eventoForm);
 		mv.addObject("eventoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("eventoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/eventoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/eventoCreate")
 	public ModelAndView eventoCreate(@Valid EventoForm eventoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -95,7 +95,7 @@ public class EventoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/eventoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/eventoDelete/{id}")
 	public ModelAndView eventoDelete(@PathVariable("id") long eventoPK, @Valid EventoForm eventoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/eventoHome");
@@ -115,7 +115,7 @@ public class EventoController {
 		return mv;
 	}
 
-	@RequestMapping("/eventoHome")
+	@GetMapping("/eventoHome")
 	public ModelAndView eventoHome(@Valid EventoByEventoForm eventoByEventoForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("evento/eventoHome");
@@ -134,10 +134,10 @@ public class EventoController {
 		}
 
 		if (eventoByEventoForm.getEventoSortTipo().equalsIgnoreCase("EventoNome") || eventoByEventoForm.getEventoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "eventoNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "eventoNome");
 
 		} else if (eventoByEventoForm.getEventoSortTipo().equalsIgnoreCase("EventoDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "eventoDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "eventoDescricao");
 
 		}
  
@@ -159,7 +159,7 @@ public class EventoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/eventoEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/eventoEdit/{id}")
 	public ModelAndView eventoEdit(@PathVariable("id") Long eventoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("evento/eventoEdit");
@@ -168,16 +168,16 @@ public class EventoController {
 		mv.addObject("eventoForm", eventoForm);
 		mv.addObject("eventoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("eventoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable eventoProcessoPageable = new PageRequest(0, 200, Direction.ASC, "processo.processoNome");
+		Pageable eventoProcessoPageable = PageRequest.of(0, 200, Direction.ASC, "processo.processoNome");
 		mv.addObject("eventoProcessoPage", eventoProcessoService.getByEventoPK(eventoPK, eventoProcessoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/eventoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/eventoSave")
 	public ModelAndView eventoSave(@Valid EventoForm eventoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -200,7 +200,7 @@ public class EventoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/eventoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/eventoRelMenu")
 	public ModelAndView eventoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("evento/eventoRelMenu");
@@ -210,18 +210,18 @@ public class EventoController {
 		
 	}
 
-	@RequestMapping("/eventoRel001")
+	@GetMapping("/eventoRel001")
 	public ModelAndView eventoRel001() {
 
 		ModelAndView mv = new ModelAndView("evento/eventoRel001");
-		Pageable pageable = new PageRequest(0, 200 , Direction.ASC, "eventoNome");
+		Pageable pageable = PageRequest.of(0, 200 , Direction.ASC, "eventoNome");
 		mv.addObject("eventoPage", eventoService.getEventoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/eventoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/eventoView/{id}")
 	public ModelAndView eventoView(@PathVariable("id") Long eventoId) {
 
 		Evento evento = eventoService.getEventoByEventoPK(eventoId);

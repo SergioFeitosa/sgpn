@@ -3,8 +3,8 @@ package br.com.j4business.saga.colaboradorcertificacao.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaboradorcertificacao.model.ColaboradorCertificacao;
 
 @Repository("colaboradorCertificacaoRepository")
-public interface ColaboradorCertificacaoRepository extends PagingAndSortingRepository<ColaboradorCertificacao, Long>{
+public interface ColaboradorCertificacaoRepository extends JpaRepository<ColaboradorCertificacao, Long>{
 
 /*	 @Query("SELECT ea FROM ColaboradorCertificacao ea where ea.certificacao.certificacaoPK = :id") 
 	    List<ColaboradorCertificacao> findByCertificacaoPK(@Param("id") Long id);

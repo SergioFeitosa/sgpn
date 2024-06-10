@@ -1,17 +1,18 @@
 package br.com.j4business.saga.usuario.model;
 
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.NotEmpty;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 
 public class UsuarioForm {
 
-    @NotEmpty(message = "Nome é uma informação obrigatória.")
+    @NotBlank(message = "Nome é uma informação obrigatória.")
 	@Size(min = 3,max = 200, message = "O nome não pode ter menos que 3 e mais que 100 caracteres")
 	private String usuarioNome;
 	
-    @NotEmpty(message = "Descrição é uma informação obrigatória.")
+    @NotBlank(message = "Descrição é uma informação obrigatória.")
 	@Size(min = 5,max = 200, message = "A descrição não pode ter menos que 5 e mais que 200 caracteres")
 	private String usuarioDescricao;
 

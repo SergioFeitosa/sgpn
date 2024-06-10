@@ -3,8 +3,9 @@ package br.com.j4business.saga.processovideo.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
+
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import br.com.j4business.saga.processo.model.Processo;
 import br.com.j4business.saga.processovideo.model.ProcessoVideo;
 
 @Repository("processoVideoRepository")
-public interface ProcessoVideoRepository extends PagingAndSortingRepository<ProcessoVideo, Long>{
+public interface ProcessoVideoRepository extends JpaRepository<ProcessoVideo, Long>{
 
 /*	 @Query("SELECT ea FROM ProcessoVideo ea where ea.video.videoPK = :id") 
 	    List<ProcessoVideo> findByVideoPK(@Param("id") Long id);
@@ -21,7 +22,7 @@ public interface ProcessoVideoRepository extends PagingAndSortingRepository<Proc
 	@Query("SELECT ep FROM ProcessoVideo ep INNER JOIN ep.video p WHERE p = :video")
 	public List<ProcessoVideo> findByVideo(@Param("video")Video video);
 
-	@Query("SELECT ep FROM ProcessoVideo ep INNER JOIN ep.video p INNER JOIN ep.processo e WHERE p = :video AND s = :processo")
+	@Query("SELECT pv FROM ProcessoVideo pv INNER JOIN pv.video v INNER JOIN pv.processo p WHERE v = :video AND p = :processo")
 	public ProcessoVideo findByProcessoAndVideo( @Param("processo") Processo processo, @Param("video")Video video);
 	
 	@Query("SELECT ep FROM ProcessoVideo ep")

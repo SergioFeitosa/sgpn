@@ -1,8 +1,10 @@
 package br.com.j4business.saga.curso.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +48,8 @@ public class CursoServiceImpl implements CursoService {
 
 	@Override
 	public Curso getCursoByCursoPK(long cursoPK) {
-		
-		return cursoRepository.findOne(cursoPK);
+		Optional<Curso> curso = cursoRepository.findById(cursoPK);
+		return curso.get();
 	}
 
 	@Transactional
@@ -93,7 +95,7 @@ public class CursoServiceImpl implements CursoService {
 
 		Curso curso = this.getCursoByCursoPK(cursoId);
 		
-		cursoRepository.delete(curso.getCursoPK());
+		cursoRepository.delete(curso);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Curso Delete " + "\n Usuário => " + username + 

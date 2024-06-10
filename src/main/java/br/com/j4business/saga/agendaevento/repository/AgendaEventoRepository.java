@@ -3,8 +3,8 @@ package br.com.j4business.saga.agendaevento.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.agenda.model.Agenda;
 import br.com.j4business.saga.agendaevento.model.AgendaEvento;
 
 @Repository("agendaEventoRepository")
-public interface AgendaEventoRepository extends PagingAndSortingRepository<AgendaEvento, Long>{
+public interface AgendaEventoRepository extends JpaRepository<AgendaEvento, Long>{
 
 /*	 @Query("SELECT ea FROM AgendaEvento ea where ea.evento.eventoPK = :id") 
 	    List<AgendaEvento> findByEventoPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface AgendaEventoRepository extends PagingAndSortingRepository<Agend
 	@Query("SELECT ep FROM AgendaEvento ep INNER JOIN ep.evento p WHERE p = :evento")
 	public List<AgendaEvento> findByEvento(@Param("evento")Evento evento);
 
-	@Query("SELECT ep FROM AgendaEvento ep INNER JOIN ep.evento p INNER JOIN ep.agenda e WHERE p = :evento AND s = :agenda")
+	@Query("SELECT ae FROM AgendaEvento ae INNER JOIN ae.evento e INNER JOIN ae.agenda a WHERE e = :evento AND a = :agenda")
 	public AgendaEvento findByAgendaAndEvento( @Param("agenda") Agenda agenda, @Param("evento")Evento evento);
 	
 	@Query("SELECT ep FROM AgendaEvento ep")
@@ -48,5 +48,8 @@ public interface AgendaEventoRepository extends PagingAndSortingRepository<Agend
 	@Query("SELECT ep FROM AgendaEvento ep INNER JOIN ep.evento p WHERE p.eventoNome like :eventoNome%")
 	public List<AgendaEvento> findByEventoNome(@Param("eventoNome")String eventoNome);
 	
+	@Query("SELECT ae FROM AgendaEvento ae WHERE ae.agendaEventoPK = :agendaEventoPK")
+	public AgendaEvento findByAgendaEventoPK(@Param("agendaEventoPK") long agendaEventoPK);
+
 
 }

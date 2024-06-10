@@ -11,9 +11,11 @@ import br.com.j4business.saga.video.model.Video;
 import br.com.j4business.saga.video.service.VideoService;
 import br.com.j4business.saga.processovideo.model.ProcessoVideoForm;
 import br.com.j4business.saga.processovideo.repository.ProcessoVideoRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
+
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -91,7 +93,8 @@ public class ProcessoVideoServiceImpl implements ProcessoVideoService {
 
 	@Override
 	public ProcessoVideo getProcessoVideoByProcessoVideoPK(long processoVideoPK) {
-		return processoVideoRepository.findOne(processoVideoPK);
+		Optional<ProcessoVideo> processoVideo = processoVideoRepository.findById(processoVideoPK);
+		return processoVideo.get();
 	}
 
 	@Override
@@ -140,7 +143,7 @@ public class ProcessoVideoServiceImpl implements ProcessoVideoService {
 
 		ProcessoVideo processoVideoTemp = this.getProcessoVideoByProcessoVideoPK(processoVideoPK);
 
-		processoVideoRepository.delete(processoVideoPK);
+		processoVideoRepository.delete(processoVideoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ProcessoVideo Save " + "\n Usuário => " + username + 
@@ -154,7 +157,9 @@ public class ProcessoVideoServiceImpl implements ProcessoVideoService {
 		
 		List<ProcessoVideo> processoVideoList = processoVideoRepository.findByVideo(video);
 
-		processoVideoRepository.delete(processoVideoList);
+		for (ProcessoVideo processoVideo2 : processoVideoList) {
+			processoVideoRepository.delete(processoVideo2);			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

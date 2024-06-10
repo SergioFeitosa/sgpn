@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -29,7 +29,6 @@ import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.empresaprocesso.model.EmpresaProcesso;
 import br.com.j4business.saga.unidadeorganizacional.model.UnidadeorganizacionalForm;
 import br.com.j4business.saga.unidadeorganizacional.service.UnidadeorganizacionalService;
 import br.com.j4business.saga.estruturafisicaunidadeorganizacional.model.EstruturafisicaUnidadeorganizacional;
@@ -55,7 +54,7 @@ public class EstruturafisicaUnidadeorganizacionalController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/estruturafisicaUnidadeorganizacionalAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/estruturafisicaUnidadeorganizacionalAdd")
 	public ModelAndView estruturafisicaUnidadeorganizacionalAdd(EstruturafisicaUnidadeorganizacionalForm estruturafisicaUnidadeorganizacionalForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("estruturafisicaUnidadeorganizacional/estruturafisicaUnidadeorganizacionalAdd");
@@ -63,17 +62,17 @@ public class EstruturafisicaUnidadeorganizacionalController {
 		mv.addObject("estruturafisicaUnidadeorganizacionalForm", estruturafisicaUnidadeorganizacionalForm);
 		mv.addObject("estruturafisicaUnidadeorganizacionalPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("estruturafisicaUnidadeorganizacionalStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable estruturafisicaPageable = new PageRequest(0, 200, Direction.ASC, "estruturafisicaNome");
+		Pageable estruturafisicaPageable = PageRequest.of(0, 200, Direction.ASC, "estruturafisicaNome");
 		mv.addObject("estruturafisicaPage", estruturafisicaService.getEstruturafisicaAll(estruturafisicaPageable));
-		Pageable unidadeorganizacionalPageable = new PageRequest(0, 200, Direction.ASC, "unidadeorganizacionalNome");
+		Pageable unidadeorganizacionalPageable = PageRequest.of(0, 200, Direction.ASC, "unidadeorganizacionalNome");
 		mv.addObject("unidadeorganizacionalPage", unidadeorganizacionalService.getUnidadeorganizacionalAll(unidadeorganizacionalPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/estruturafisicaUnidadeorganizacionalCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/estruturafisicaUnidadeorganizacionalCreate")
 	public ModelAndView estruturafisicaUnidadeorganizacionalCreate(@Valid EstruturafisicaUnidadeorganizacionalForm estruturafisicaUnidadeorganizacionalForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -107,7 +106,7 @@ public class EstruturafisicaUnidadeorganizacionalController {
 	}
 
 
-	@RequestMapping(path = "/estruturafisicaUnidadeorganizacionalDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/estruturafisicaUnidadeorganizacionalDelete/{id}")
 	public ModelAndView estruturafisicaUnidadeorganizacionalDelete(@PathVariable("id") long estruturafisicaUnidadeorganizacionalId, @Valid UnidadeorganizacionalForm unidadeorganizacionalForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/estruturafisicaUnidadeorganizacionalHome");
@@ -133,7 +132,7 @@ public class EstruturafisicaUnidadeorganizacionalController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/estruturafisicaUnidadeorganizacionalEdit/{estruturafisicaUnidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/estruturafisicaUnidadeorganizacionalEdit/{estruturafisicaUnidadeorganizacionalPK}")
 	public ModelAndView estruturafisicaUnidadeorganizacionalEdit(@PathVariable("estruturafisicaUnidadeorganizacionalPK") Long estruturafisicaUnidadeorganizacionalPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("estruturafisicaUnidadeorganizacional/estruturafisicaUnidadeorganizacionalEdit");
@@ -142,18 +141,18 @@ public class EstruturafisicaUnidadeorganizacionalController {
 		mv.addObject("estruturafisicaUnidadeorganizacionalForm", estruturafisicaUnidadeorganizacionalForm);
 		mv.addObject("estruturafisicaUnidadeorganizacionalPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("estruturafisicaUnidadeorganizacionalStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable estruturafisicaPageable = new PageRequest(0, 200, Direction.ASC, "estruturafisicaNome");
+		Pageable estruturafisicaPageable = PageRequest.of(0, 200, Direction.ASC, "estruturafisicaNome");
 		mv.addObject("estruturafisicaPage", estruturafisicaService.getEstruturafisicaAll(estruturafisicaPageable));
-		Pageable unidadeorganizacionalPageable = new PageRequest(0, 200, Direction.ASC, "unidadeorganizacionalNome");
+		Pageable unidadeorganizacionalPageable = PageRequest.of(0, 200, Direction.ASC, "unidadeorganizacionalNome");
 		mv.addObject("unidadeorganizacionalPage", unidadeorganizacionalService.getUnidadeorganizacionalAll(unidadeorganizacionalPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/estruturafisicaUnidadeorganizacionalHome", method = RequestMethod.GET)
+	@GetMapping(path = "/estruturafisicaUnidadeorganizacionalHome")
 	public ModelAndView estruturafisicaUnidadeorganizacionalHome(@Valid EstruturafisicaUnidadeorganizacionalByEstruturafisicaForm estruturafisicaUnidadeorganizacionalByEstruturafisicaForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("estruturafisicaUnidadeorganizacional/estruturafisicaUnidadeorganizacionalHome");
@@ -173,10 +172,10 @@ public class EstruturafisicaUnidadeorganizacionalController {
 
 		if (estruturafisicaUnidadeorganizacionalByEstruturafisicaForm.getEstruturafisicaUnidadeorganizacionalSortTipo().equalsIgnoreCase("EstruturafisicaNome")
 				|| estruturafisicaUnidadeorganizacionalByEstruturafisicaForm.getEstruturafisicaUnidadeorganizacionalSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"estruturafisica.estruturafisicaNome","unidadeorganizacional.unidadeorganizacionalNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"estruturafisica.estruturafisicaNome","unidadeorganizacional.unidadeorganizacionalNome"); 
 		
 		} else if (estruturafisicaUnidadeorganizacionalByEstruturafisicaForm.getEstruturafisicaUnidadeorganizacionalSortTipo().equalsIgnoreCase("UnidadeorganizacionalNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"unidadeorganizacional.unidadeorganizacionalNome","estruturafisica.estruturafisicaNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"unidadeorganizacional.unidadeorganizacionalNome","estruturafisica.estruturafisicaNome"); 
 
 		}
 
@@ -199,7 +198,7 @@ public class EstruturafisicaUnidadeorganizacionalController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/estruturafisicaUnidadeorganizacionalSave", method = RequestMethod.POST)
+	@PostMapping(path = "/estruturafisicaUnidadeorganizacionalSave")
 	public ModelAndView estruturafisicaUnidadeorganizacionalSave(@Valid EstruturafisicaUnidadeorganizacionalForm estruturafisicaUnidadeorganizacionalForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -223,7 +222,7 @@ public class EstruturafisicaUnidadeorganizacionalController {
 		
 	}
 
-	@RequestMapping(path = "/estruturafisicaUnidadeorganizacionalRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/estruturafisicaUnidadeorganizacionalRelMenu")
 	public ModelAndView estruturafisicaUnidadeorganizacionalRelMenu() {
 
 		ModelAndView mv = new ModelAndView("estruturafisicaUnidadeorganizacional/estruturafisicaUnidadeorganizacionalRelMenu");
@@ -233,18 +232,18 @@ public class EstruturafisicaUnidadeorganizacionalController {
 		
 	}
 
-	@RequestMapping("/estruturafisicaUnidadeorganizacionalRel001")
+	@GetMapping("/estruturafisicaUnidadeorganizacionalRel001")
 	public ModelAndView estruturafisicaUnidadeorganizacionalRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("estruturafisicaUnidadeorganizacional/estruturafisicaUnidadeorganizacionalRel001");
-		Pageable estruturafisicaUnidadeorganizacionalPageable = new PageRequest(0, 200, Direction.ASC, "estruturafisica.estruturafisicaNome", "unidadeorganizacional.unidadeorganizacionalNome");
+		Pageable estruturafisicaUnidadeorganizacionalPageable = PageRequest.of(0, 200, Direction.ASC, "estruturafisica.estruturafisicaNome", "unidadeorganizacional.unidadeorganizacionalNome");
 		mv.addObject("estruturafisicaUnidadeorganizacionalPage", estruturafisicaUnidadeorganizacionalService.getByEstruturafisicaUnidadeorganizacionalAll(estruturafisicaUnidadeorganizacionalPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/estruturafisicaUnidadeorganizacionalView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/estruturafisicaUnidadeorganizacionalView/{id}")
 	public ModelAndView estruturafisicaUnidadeorganizacionalView(@PathVariable("id") Long estruturafisicaUnidadeorganizacionalId) {
 
 		EstruturafisicaUnidadeorganizacional estruturafisicaUnidadeorganizacional = estruturafisicaUnidadeorganizacionalService.getEstruturafisicaUnidadeorganizacionalByEstruturafisicaUnidadeorganizacionalPK(estruturafisicaUnidadeorganizacionalId);

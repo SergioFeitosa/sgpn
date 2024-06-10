@@ -1,12 +1,12 @@
 package br.com.j4business.saga.planejamentoacao.model;
 
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
@@ -17,15 +17,15 @@ public class PlanejamentoAcaoForm {
 	private long planejamentoPK;
 	private long acaoPK;
 	
-    @NotEmpty(message = "Nome do planejamento é uma informação obrigatória.")
+    @NotBlank(message = "Nome do planejamento é uma informação obrigatória.")
 	@NotNull
 	private String planejamentoNome;
 	
-    @NotEmpty(message = "Nome da Acao é uma informação obrigatória.")
+    @NotBlank(message = "Nome da Acao é uma informação obrigatória.")
 	@NotNull
 	private String acaoNome;
 	
-    @NotEmpty(message = "Sequência é uma informação obrigatória.")
+    @NotBlank(message = "Sequência é uma informação obrigatória.")
 	private String planejamentoAcaoSequencia;
 	
     @DateTimeFormat(pattern = "dd/MM/yyyy")
@@ -35,11 +35,11 @@ public class PlanejamentoAcaoForm {
 	@Enumerated(EnumType.STRING)
 	private AtributoStatus planejamentoAcaoStatus;
 
-    @NotEmpty(message = "Responsável é uma informação obrigatória.")
+    @NotBlank(message = "Responsável é uma informação obrigatória.")
 	@NotNull
 	private String planejamentoAcaoResponsavel;
 
-    @NotEmpty(message = "Motivo da Operação é uma informação obrigatória.")
+    @NotBlank(message = "Motivo da Operação é uma informação obrigatória.")
 	@Size(min = 5,max = 200, message = "Motivo da Operação não pode ter menos que 5 e mais que 200 caracteres")
 	private String planejamentoAcaoMotivoOperacao;
 

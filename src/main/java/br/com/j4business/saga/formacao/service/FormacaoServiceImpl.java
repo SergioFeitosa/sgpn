@@ -1,8 +1,10 @@
 package br.com.j4business.saga.formacao.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,8 @@ public class FormacaoServiceImpl implements FormacaoService {
 	@Override
 	public Formacao getFormacaoByFormacaoPK(long formacaoPK) {
 		
-		return formacaoRepository.findOne(formacaoPK);
+		Optional<Formacao> formacao = formacaoRepository.findById(formacaoPK);
+		return formacao.get();
 	}
 
 	@Transactional
@@ -93,7 +96,7 @@ public class FormacaoServiceImpl implements FormacaoService {
 
 		Formacao formacao = this.getFormacaoByFormacaoPK(formacaoId);
 		
-		formacaoRepository.delete(formacao.getFormacaoPK());
+		formacaoRepository.delete(formacao);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Formacao Delete " + "\n Usuário => " + username + 

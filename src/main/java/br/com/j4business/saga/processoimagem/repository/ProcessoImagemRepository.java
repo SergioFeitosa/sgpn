@@ -3,8 +3,9 @@ package br.com.j4business.saga.processoimagem.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
+
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import br.com.j4business.saga.processo.model.Processo;
 import br.com.j4business.saga.processoimagem.model.ProcessoImagem;
 
 @Repository("processoImagemRepository")
-public interface ProcessoImagemRepository extends PagingAndSortingRepository<ProcessoImagem, Long>{
+public interface ProcessoImagemRepository extends JpaRepository<ProcessoImagem, Long>{
 
 /*	 @Query("SELECT ea FROM ProcessoImagem ea where ea.imagem.imagemPK = :id") 
 	    List<ProcessoImagem> findByImagemPK(@Param("id") Long id);
@@ -21,7 +22,7 @@ public interface ProcessoImagemRepository extends PagingAndSortingRepository<Pro
 	@Query("SELECT ep FROM ProcessoImagem ep INNER JOIN ep.imagem p WHERE p = :imagem")
 	public List<ProcessoImagem> findByImagem(@Param("imagem")Imagem imagem);
 
-	@Query("SELECT ep FROM ProcessoImagem ep INNER JOIN ep.imagem p INNER JOIN ep.processo e WHERE p = :imagem AND s = :processo")
+	@Query("SELECT pi FROM ProcessoImagem pi INNER JOIN pi.imagem i INNER JOIN pi.processo p WHERE i = :imagem AND p = :processo")
 	public ProcessoImagem findByProcessoAndImagem( @Param("processo") Processo processo, @Param("imagem")Imagem imagem);
 	
 	@Query("SELECT ep FROM ProcessoImagem ep")

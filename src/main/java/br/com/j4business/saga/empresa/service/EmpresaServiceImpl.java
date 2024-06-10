@@ -1,8 +1,10 @@
 package br.com.j4business.saga.empresa.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +49,8 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 	@Override
 	public Empresa getEmpresaByEmpresaPK(long empresaPK) {
-		
-		return empresaRepository.findOne(empresaPK);
+		Optional<Empresa> empresa = empresaRepository.findById(empresaPK);
+		return empresa.get();
 	}
 
 	@Transactional
@@ -94,7 +96,7 @@ public class EmpresaServiceImpl implements EmpresaService {
 
 		Empresa empresa = this.getEmpresaByEmpresaPK(empresaId);
 		
-		empresaRepository.delete(empresa.getPessoaPK());
+		empresaRepository.delete(empresa);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Empresa Delete " + "\n Usuário => " + username + 

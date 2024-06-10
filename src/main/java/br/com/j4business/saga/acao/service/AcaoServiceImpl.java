@@ -1,9 +1,10 @@
 package br.com.j4business.saga.acao.service;
 
 import java.util.List;
+import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,7 +52,9 @@ public class AcaoServiceImpl implements AcaoService {
 	@Override
 	public Acao getAcaoByAcaoPK(long acaoPK) {
 		
-		return acaoRepository.findOne(acaoPK);
+		Optional<Acao> acaoSalva =  acaoRepository.findById(acaoPK);
+
+		return acaoSalva.get();
 	}
 
 	@Transactional
@@ -94,15 +97,20 @@ public class AcaoServiceImpl implements AcaoService {
 	@Transactional
 	public void delete(Long acaoId) {
 
-		Acao acao = this.getAcaoByAcaoPK(acaoId);
+
+		Optional<Acao> acao = acaoRepository.findById(acaoId);
 		
-		acaoRepository.delete(acao.getAcaoPK());
+		Acao acaoSalva = acao.get();
+		
+		if (acao.isPresent()) {
+			acaoRepository.delete(acaoSalva);
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Acao Delete " + "\n Usuário => " + username + 
-										" // Id => "+acao.getAcaoPK() + 
-										" // Acao => "+acao.getAcaoNome() + 
-										" // Descrição => "+ acao.getAcaoDescricao());
+										" // Id => "+acaoSalva.getAcaoPK() + 
+										" // Acao => "+acaoSalva.getAcaoNome() + 
+										" // Descrição => "+ acaoSalva.getAcaoDescricao());
 		
 
     }

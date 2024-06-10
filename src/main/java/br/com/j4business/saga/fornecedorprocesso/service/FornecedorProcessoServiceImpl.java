@@ -1,26 +1,28 @@
 package br.com.j4business.saga.fornecedorprocesso.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.fornecedorprocesso.model.FornecedorProcesso;
-import br.com.j4business.saga.processo.model.Processo;
-import br.com.j4business.saga.processo.service.ProcessoService;
 import br.com.j4business.saga.fornecedor.model.Fornecedor;
 import br.com.j4business.saga.fornecedor.service.FornecedorService;
-import br.com.j4business.saga.fornecedorcontrato.model.FornecedorContrato;
+import br.com.j4business.saga.fornecedorprocesso.model.FornecedorProcesso;
 import br.com.j4business.saga.fornecedorprocesso.model.FornecedorProcessoForm;
 import br.com.j4business.saga.fornecedorprocesso.repository.FornecedorProcessoRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import br.com.j4business.saga.processo.model.Processo;
+import br.com.j4business.saga.processo.service.ProcessoService;
 
 @Service("fornecedorProcessoService")
 public class FornecedorProcessoServiceImpl implements FornecedorProcessoService {
@@ -83,7 +85,8 @@ public class FornecedorProcessoServiceImpl implements FornecedorProcessoService 
 
 	@Override
 	public FornecedorProcesso getFornecedorProcessoByFornecedorProcessoPK(long fornecedorProcessoPK) {
-		return fornecedorProcessoRepository.findOne(fornecedorProcessoPK);
+		Optional<FornecedorProcesso> fornecedorProcesso = fornecedorProcessoRepository.findById(fornecedorProcessoPK);
+		return fornecedorProcesso.get();
 	}
 
 	@Override
@@ -132,7 +135,7 @@ public class FornecedorProcessoServiceImpl implements FornecedorProcessoService 
 
 		FornecedorProcesso fornecedorProcessoTemp = this.getFornecedorProcessoByFornecedorProcessoPK(fornecedorProcessoPK);
 
-		fornecedorProcessoRepository.delete(fornecedorProcessoPK);
+		fornecedorProcessoRepository.delete(fornecedorProcessoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("FornecedorProcesso Save " + "\n Usuário => " + username + 
@@ -146,7 +149,9 @@ public class FornecedorProcessoServiceImpl implements FornecedorProcessoService 
 		
 		List<FornecedorProcesso> fornecedorProcessoList = fornecedorProcessoRepository.findByProcesso(processo);
 
-		fornecedorProcessoRepository.delete(fornecedorProcessoList);
+		for (FornecedorProcesso fornecedorProcesso2 : fornecedorProcessoList) {
+			fornecedorProcessoRepository.delete(fornecedorProcesso2);			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

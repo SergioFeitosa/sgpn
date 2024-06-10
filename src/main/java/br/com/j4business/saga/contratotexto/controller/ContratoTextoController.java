@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +17,14 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes; 
 
 import br.com.j4business.saga.contrato.model.ContratoForm;
 import br.com.j4business.saga.contrato.service.ContratoService;
-import br.com.j4business.saga.contratoimagem.model.ContratoImagem;
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
@@ -55,7 +54,7 @@ public class ContratoTextoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/contratoTextoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/contratoTextoAdd")
 	public ModelAndView contratoTextoAdd(ContratoTextoForm contratoTextoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("contratoTexto/contratoTextoAdd");
@@ -63,18 +62,18 @@ public class ContratoTextoController {
 		mv.addObject("contratoTextoForm", contratoTextoForm);
 		mv.addObject("contratoTextoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("contratoTextoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable textoPageable = new PageRequest(0, 200, Direction.ASC, "textoNome");
+		Pageable textoPageable = PageRequest.of(0, 200, Direction.ASC, "textoNome");
 		mv.addObject("textoPage", textoService.getTextoAll(textoPageable));
-		Pageable contratoPageable = new PageRequest(0, 200, Direction.ASC, "contratoNome");
+		Pageable contratoPageable = PageRequest.of(0, 200, Direction.ASC, "contratoNome");
 		mv.addObject("contratoPage", contratoService.getContratoAll(contratoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/contratoTextoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/contratoTextoCreate")
 	public ModelAndView contratoTextoCreate(@Valid ContratoTextoForm contratoTextoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -121,7 +120,7 @@ public class ContratoTextoController {
 	}
 
 
-	@RequestMapping(path = "/contratoTextoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/contratoTextoDelete/{id}")
 	public ModelAndView contratoTextoDelete(@PathVariable("id") long contratoTextoId, @Valid TextoForm textoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/contratoTextoHome");
@@ -144,7 +143,7 @@ public class ContratoTextoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/contratoTextoEdit/{contratoTextoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/contratoTextoEdit/{contratoTextoPK}")
 	public ModelAndView contratoTextoEdit(@PathVariable("contratoTextoPK") Long contratoTextoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("contratoTexto/contratoTextoEdit");
@@ -153,18 +152,18 @@ public class ContratoTextoController {
 		mv.addObject("contratoTextoForm", contratoTextoForm);
 		mv.addObject("contratoTextoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("contratoTextoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable textoPageable = new PageRequest(0, 200, Direction.ASC, "textoNome");
+		Pageable textoPageable = PageRequest.of(0, 200, Direction.ASC, "textoNome");
 		mv.addObject("textoPage", textoService.getTextoAll(textoPageable));
-		Pageable contratoPageable = new PageRequest(0, 200, Direction.ASC, "contratoNome");
+		Pageable contratoPageable = PageRequest.of(0, 200, Direction.ASC, "contratoNome");
 		mv.addObject("contratoPage", contratoService.getContratoAll(contratoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/contratoTextoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/contratoTextoHome")
 	public ModelAndView contratoTextoHome(@Valid ContratoTextoByContratoForm contratoTextoByContratoForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("contratoTexto/contratoTextoHome");
@@ -184,10 +183,10 @@ public class ContratoTextoController {
 
 		if (contratoTextoByContratoForm.getContratoTextoSortTipo().equalsIgnoreCase("ContratoNome")
 				|| contratoTextoByContratoForm.getContratoTextoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"contrato.contratoNome","texto.textoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"contrato.contratoNome","texto.textoNome"); 
 		
 		} else if (contratoTextoByContratoForm.getContratoTextoSortTipo().equalsIgnoreCase("TextoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"texto.textoNome","contrato.contratoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"texto.textoNome","contrato.contratoNome"); 
 
 		}
 
@@ -210,7 +209,7 @@ public class ContratoTextoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/contratoTextoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/contratoTextoSave")
 	public ModelAndView contratoTextoSave(@Valid ContratoTextoForm contratoTextoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -242,7 +241,7 @@ public class ContratoTextoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/contratoTextoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/contratoTextoRelMenu")
 	public ModelAndView contratoTextoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("contratoTexto/contratoTextoRelMenu");
@@ -252,18 +251,18 @@ public class ContratoTextoController {
 		
 	}
 
-	@RequestMapping("/contratoTextoRel001")
+	@GetMapping("/contratoTextoRel001")
 	public ModelAndView contratoTextoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("contratoTexto/contratoTextoRel001");
-		Pageable contratoTextoPageable = new PageRequest(0, 200, Direction.ASC, "contrato.contratoNome","texto.textoNome");
+		Pageable contratoTextoPageable = PageRequest.of(0, 200, Direction.ASC, "contrato.contratoNome","texto.textoNome");
 		mv.addObject("contratoTextoPage", contratoTextoService.getContratoTextoAll(contratoTextoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/contratoTextoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/contratoTextoView/{id}")
 	public ModelAndView contratoTextoView(@PathVariable("id") Long contratoTextoId) {
 
 		ContratoTexto contratoTexto = contratoTextoService.getContratoTextoByContratoTextoPK(contratoTextoId);

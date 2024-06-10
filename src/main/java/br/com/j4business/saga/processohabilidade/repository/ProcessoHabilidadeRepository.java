@@ -3,8 +3,8 @@ package br.com.j4business.saga.processohabilidade.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.processo.model.Processo;
 import br.com.j4business.saga.processohabilidade.model.ProcessoHabilidade;
 
 @Repository("processoHabilidadeRepository")
-public interface ProcessoHabilidadeRepository extends PagingAndSortingRepository<ProcessoHabilidade, Long>{
+public interface ProcessoHabilidadeRepository extends JpaRepository<ProcessoHabilidade, Long>{
 
 /*	 @Query("SELECT ea FROM ProcessoHabilidade ea where ea.habilidade.habilidadePK = :id") 
 	    List<ProcessoHabilidade> findByHabilidadePK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface ProcessoHabilidadeRepository extends PagingAndSortingRepository
 	@Query("SELECT ep FROM ProcessoHabilidade ep INNER JOIN ep.habilidade p WHERE p = :habilidade")
 	public List<ProcessoHabilidade> findByHabilidade(@Param("habilidade")Habilidade habilidade);
 
-	@Query("SELECT ep FROM ProcessoHabilidade ep INNER JOIN ep.habilidade p INNER JOIN ep.processo e WHERE p = :habilidade AND s = :processo")
+	@Query("SELECT ph FROM ProcessoHabilidade ph INNER JOIN ph.habilidade h INNER JOIN ph.processo p WHERE h = :habilidade AND p = :processo")
 	public ProcessoHabilidade findByProcessoAndHabilidade( @Param("processo") Processo processo, @Param("habilidade")Habilidade habilidade);
 	
 	@Query("SELECT ep FROM ProcessoHabilidade ep")

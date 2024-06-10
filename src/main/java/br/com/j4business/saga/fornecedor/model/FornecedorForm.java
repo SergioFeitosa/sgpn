@@ -1,13 +1,13 @@
 package br.com.j4business.saga.fornecedor.model;
 
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.br.CNPJ;
 
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
@@ -17,11 +17,11 @@ public class FornecedorForm {
 
 	private long fornecedorPK;
 	
-    @NotEmpty(message = "Nome é uma informação obrigatória.")
+    @NotBlank(message = "Nome é uma informação obrigatória.")
 	@Size(min = 3,max = 200, message = "O nome não pode ter menos que 3 e mais que 200 caracteres")
 	private String fornecedorNome;
 	
-    @NotEmpty(message = "Nome Fantasia é uma informação obrigatória.")
+    @NotBlank(message = "Nome Fantasia é uma informação obrigatória.")
 	@Size(min = 3,max = 200, message = "O nome fantasia não pode ter menos que 3 e mais que 200 caracteres")
 	private String fornecedorNomeFantasia;
 	
@@ -29,7 +29,7 @@ public class FornecedorForm {
 	@Enumerated(EnumType.STRING)
 	private FornecedorRamo fornecedorRamo;
 	
-    @NotEmpty(message = "CNPJ é uma informação obrigatória.")
+    @NotBlank(message = "CNPJ é uma informação obrigatória.")
 	@CNPJ(message = "CNPJ inválido. Informe Novamente.")
 	private String fornecedorCNPJ;
 	
@@ -37,11 +37,11 @@ public class FornecedorForm {
 	@Enumerated(EnumType.STRING)
 	private AtributoStatus fornecedorStatus;
 
-    @NotEmpty(message = "Responsável é uma informação obrigatória.")
+    @NotBlank(message = "Responsável é uma informação obrigatória.")
 	@NotNull(message = "Responsável é uma informação obrigatória.")
 	private String fornecedorResponsavel;
 
-    @NotEmpty(message = "Motivo da Operação é uma informação obrigatória.")
+    @NotBlank(message = "Motivo da Operação é uma informação obrigatória.")
 	@Size(min = 5,max = 200, message = "Motivo da Operação não pode ter menos que 5 e mais que 200 caracteres")
 	private String fornecedorMotivoOperacao;
 
@@ -51,28 +51,28 @@ public class FornecedorForm {
 	private boolean fornecedorNomeSortAsc = false ;
 	private boolean fornecedorDescricaoSortAsc = false ;
 
-    @NotEmpty(message = "Logradouro é uma informação obrigatória.")
+    @NotBlank(message = "Logradouro é uma informação obrigatória.")
 	@Size(min = 3,max = 200, message = "O Logradouro não pode ter menos que 3 e mais que 200 caracteres")
 	private String enderecoLogradouro;
-    @NotEmpty(message = "Bairro é uma informação obrigatória.")
+    @NotBlank(message = "Bairro é uma informação obrigatória.")
 	@Size(min = 3,max = 200, message = "O Bairro não pode ter menos que 3 e mais que 200 caracteres")
 	private String enderecoBairro;
-    @NotEmpty(message = "Município é uma informação obrigatória.")
+    @NotBlank(message = "Município é uma informação obrigatória.")
 	@Size(min = 3,max = 200, message = "O município não pode ter menos que 3 e mais que 200 caracteres")
 	private String enderecoMunicipio;
-    @NotEmpty(message = "U.F. é uma informação obrigatória.")
+    @NotBlank(message = "U.F. é uma informação obrigatória.")
 	@Size(min = 2,max = 2, message = "A U.F. deve ter 2 caracteres")
 	private String enderecoUF;
-    @NotEmpty(message = "CEP é uma informação obrigatória.")
+    @NotBlank(message = "CEP é uma informação obrigatória.")
 	@Size(min = 9,max = 9, message = "O CEP deve ter 9 caracteres")
     private String enderecoCEP;
 
 
-    @NotEmpty(message = "Número de telefone é uma informação obrigatória.")
+    @NotBlank(message = "Número de telefone é uma informação obrigatória.")
 	@Size(min = 13,max = 14, message = "Número de telefone deve ter 13 ou 14 caracteres")
 	private String telefoneNumero;
     
-    @NotEmpty(message = "Operadora de telefone é uma informação obrigatória.")
+    @NotBlank(message = "Operadora de telefone é uma informação obrigatória.")
 	@Size(min = 2,max = 20, message = "Operadora de Telefone deve ter de 2 a 20 caracteres")
 	private String telefoneOperadora;
     
@@ -80,11 +80,11 @@ public class FornecedorForm {
 	@Size(min = 5,max = 50, message = "Email deve ter de 2 a 50caracteres")
     private String emailNome;
     
-    @NotEmpty(message = "Rede Social é uma informação obrigatória.")
+    @NotBlank(message = "Rede Social é uma informação obrigatória.")
 	@Size(min = 2,max = 30, message = "A Rede Social deve ter de 2 a 30 caracteres")
 	private String redeSocialNome;
     
-    @NotEmpty(message = "Identificação na Rede Social é uma informação obrigatória.")
+    @NotBlank(message = "Identificação na Rede Social é uma informação obrigatória.")
 	@Size(min = 2,max = 30, message = "A Identificação na Rede Social deve ter de 2 a 30 caracteres")
 	private String redeSocialIdentificacao;
     

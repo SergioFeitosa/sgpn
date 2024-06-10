@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,13 +15,15 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.acao.model.Acao;
 import br.com.j4business.saga.acao.model.AcaoByAcaoForm;
@@ -44,7 +44,7 @@ public class AcaoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/acaoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/acaoAdd")
 	public ModelAndView acaoAdd(AcaoForm acaoForm) {
 
 		ModelAndView mv = new ModelAndView("acao/acaoAdd");
@@ -52,13 +52,15 @@ public class AcaoController {
 		mv.addObject("acaoForm", acaoForm);
 		mv.addObject("acaoStatusValues", AtributoStatus.values());
 		mv.addObject("acaoAprovacaoValues", AtributoAprovacao.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date()); mv.addObject("standardDate",new Date());
+		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); 
+		mv.addObject("standardDate",new Date()); 
+		mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/acaoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/acaoCreate")
 	public ModelAndView acaoCreate(@Valid AcaoForm acaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -91,7 +93,7 @@ public class AcaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/acaoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/acaoDelete/{id}")
 	public ModelAndView acaoDelete(@PathVariable("id") long acaoPK, @Valid AcaoForm acaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/acaoHome");
@@ -112,7 +114,7 @@ public class AcaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/acaoEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/acaoEdit/{id}")
 	public ModelAndView acaoEdit(@PathVariable("id") Long acaoId, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("acao/acaoEdit");
@@ -121,13 +123,13 @@ public class AcaoController {
 		mv.addObject("acaoForm", acaoForm);
 		mv.addObject("acaoAprovacaoValues", AtributoAprovacao.values());
 		mv.addObject("acaoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/acaoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/acaoHome")
 	public ModelAndView acaoHome(@Valid AcaoByAcaoForm acaoByAcaoForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("acao/acaoHome");
@@ -146,10 +148,10 @@ public class AcaoController {
 		}
 
 		if (acaoByAcaoForm.getAcaoSortTipo().equalsIgnoreCase("AcaoNome") || acaoByAcaoForm.getAcaoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "acaoNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "acaoNome");
 
 		} else if (acaoByAcaoForm.getAcaoSortTipo().equalsIgnoreCase("AcaoDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "acaoDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "acaoDescricao");
 
 		}
 
@@ -172,7 +174,7 @@ public class AcaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/acaoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/acaoRelMenu")
 	public ModelAndView acaoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("acao/acaoRelMenu");
@@ -181,18 +183,18 @@ public class AcaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/acaoRel001", method = RequestMethod.GET)
+	@GetMapping(path = "/acaoRel001")
 	public ModelAndView acaoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("acao/acaoRel001");
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "acaoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "acaoNome");
 		mv.addObject("acaoPage", acaoService.getAcaoAll(pageable));
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/acaoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/acaoSave")
 	public ModelAndView acaoSave(@Valid AcaoForm acaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -215,7 +217,7 @@ public class AcaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/acaoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/acaoView/{id}")
 	public ModelAndView acaoView(@PathVariable("id") Long acaoId) {
 
 		Acao acao = acaoService.getAcaoByAcaoPK(acaoId);

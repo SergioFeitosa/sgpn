@@ -3,8 +3,9 @@ package br.com.j4business.saga.planejamentoacao.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
+
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import br.com.j4business.saga.planejamento.model.Planejamento;
 import br.com.j4business.saga.planejamentoacao.model.PlanejamentoAcao;
 
 @Repository("planejamentoAcaoRepository")
-public interface PlanejamentoAcaoRepository extends PagingAndSortingRepository<PlanejamentoAcao, Long>{
+public interface PlanejamentoAcaoRepository extends JpaRepository<PlanejamentoAcao, Long>{
 
 /*	 @Query("SELECT ea FROM PlanejamentoAcao ea where ea.planejamento.planejamentoPK = :id") 
 	    List<PlanejamentoAcao> findByPlanejamentoPK(@Param("id") Long id);

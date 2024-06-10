@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,19 +17,19 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import br.com.j4business.saga.servico.model.ServicoForm;
-import br.com.j4business.saga.servico.service.ServicoService;
+
 import br.com.j4business.saga.UsuarioSeguranca;
-import br.com.j4business.saga.agendaevento.model.AgendaEvento;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.processo.model.ProcessoForm;
 import br.com.j4business.saga.processo.service.ProcessoService;
+import br.com.j4business.saga.servico.model.ServicoForm;
+import br.com.j4business.saga.servico.service.ServicoService;
 import br.com.j4business.saga.servicoprocesso.model.ServicoProcesso;
 import br.com.j4business.saga.servicoprocesso.model.ServicoProcessoByServicoForm;
 import br.com.j4business.saga.servicoprocesso.model.ServicoProcessoForm;
@@ -53,25 +53,25 @@ public class ServicoProcessoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/servicoProcessoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/servicoProcessoAdd")
 	public ModelAndView servicoProcessoAdd(ServicoProcessoForm servicoProcessoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("servicoProcesso/servicoProcessoAdd");
 		servicoProcessoForm = servicoProcessoService.servicoProcessoParametros(servicoProcessoForm);
 		mv.addObject("servicoProcessoForm", servicoProcessoForm);
 		mv.addObject("servicoProcessoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
-		Pageable servicoPageable = new PageRequest(0, 200, Direction.ASC, "servicoNome");
+		Pageable servicoPageable = PageRequest.of(0, 200, Direction.ASC, "servicoNome");
 		mv.addObject("servicoPage", servicoService.getServicoAll(servicoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/servicoProcessoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/servicoProcessoCreate")
 	public ModelAndView servicoProcessoCreate(@Valid ServicoProcessoForm servicoProcessoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -104,7 +104,7 @@ public class ServicoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/servicoProcessoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/servicoProcessoDelete/{id}")
 	public ModelAndView goServicoProcessoDelete(@PathVariable("id") long servicoProcessoId, @Valid ProcessoForm processoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/servicoProcessoHome");
@@ -130,7 +130,7 @@ public class ServicoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/servicoProcessoEdit/{servicoProcessoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/servicoProcessoEdit/{servicoProcessoPK}")
 	public ModelAndView goServicoProcessoEdit(@PathVariable("servicoProcessoPK") Long servicoProcessoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("servicoProcesso/servicoProcessoEdit");
@@ -138,11 +138,11 @@ public class ServicoProcessoController {
 		ServicoProcessoForm servicoProcessoForm = servicoProcessoService.converteServicoProcesso(servicoProcesso);
 		mv.addObject("servicoProcessoForm", servicoProcessoForm);
 		mv.addObject("servicoProcessoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
-		Pageable servicoPageable = new PageRequest(0, 200, Direction.ASC, "servicoNome");
+		Pageable servicoPageable = PageRequest.of(0, 200, Direction.ASC, "servicoNome");
 		mv.addObject("servicoPage", servicoService.getServicoAll(servicoPageable));
 		
 		servicoProcesso.getServicoProcessoSequencia();
@@ -151,7 +151,7 @@ public class ServicoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/servicoProcessoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/servicoProcessoHome")
 	public ModelAndView goServicoProcessoHome(@Valid ServicoProcessoByServicoForm servicoProcessoByServicoForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("servicoProcesso/servicoProcessoHome");
@@ -171,13 +171,13 @@ public class ServicoProcessoController {
 
 		if (servicoProcessoByServicoForm.getServicoProcessoSortTipo().equalsIgnoreCase("ServicoNome")
 				|| servicoProcessoByServicoForm.getServicoProcessoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"servico.servicoNome","servicoProcessoSequencia"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"servico.servicoNome","servicoProcessoSequencia"); 
 		
 		} else if (servicoProcessoByServicoForm.getServicoProcessoSortTipo().equalsIgnoreCase("ProcessoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","servicoProcessoSequencia"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","servicoProcessoSequencia"); 
 
 		} else if (servicoProcessoByServicoForm.getServicoProcessoSortTipo().equalsIgnoreCase("Sequencia")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"servicoProcessoSequencia","servico.servicoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"servicoProcessoSequencia","servico.servicoNome"); 
 
 		}
 
@@ -198,7 +198,7 @@ public class ServicoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/servicoProcessoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/servicoProcessoSave")
 	public ModelAndView servicoProcessoSave(@Valid ServicoProcessoForm servicoProcessoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -221,7 +221,7 @@ public class ServicoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/servicoProcessoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/servicoProcessoRelMenu")
 	public ModelAndView goServicoProcessoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("servicoProcesso/servicoProcessoRelMenu");
@@ -230,18 +230,18 @@ public class ServicoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping("/servicoProcessoRel001")
+	@GetMapping("/servicoProcessoRel001")
 	public ModelAndView goServicoProcessoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("servicoProcesso/servicoProcessoRel001");
-		Pageable servicoProcessoPageable = new PageRequest(0, 200, Direction.ASC, "servico.servicoNome","processo.processoNome");
+		Pageable servicoProcessoPageable = PageRequest.of(0, 200, Direction.ASC, "servico.servicoNome","processo.processoNome");
 		mv.addObject("servicoProcessoPage", servicoProcessoService.getServicoProcessoAll(servicoProcessoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/servicoProcessoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/servicoProcessoView/{id}")
 	public ModelAndView goServicoProcessoView(@PathVariable("id") Long servicoProcessoId) {
 
 		ServicoProcesso servicoProcesso = servicoProcessoService.getServicoProcessoByServicoProcessoPK(servicoProcessoId);

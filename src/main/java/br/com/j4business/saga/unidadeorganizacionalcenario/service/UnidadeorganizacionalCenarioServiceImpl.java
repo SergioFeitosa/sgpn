@@ -1,26 +1,28 @@
 package br.com.j4business.saga.unidadeorganizacionalcenario.service;
 
-import br.com.j4business.saga.UsuarioSeguranca;
-import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
-import br.com.j4business.saga.colaborador.model.Colaborador;
-import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.treinamentovideo.model.TreinamentoVideo;
-import br.com.j4business.saga.unidadeorganizacionalcenario.model.UnidadeorganizacionalCenario;
-import br.com.j4business.saga.cenario.model.Cenario;
-import br.com.j4business.saga.cenario.service.CenarioService;
-import br.com.j4business.saga.unidadeorganizacional.model.Unidadeorganizacional;
-import br.com.j4business.saga.unidadeorganizacional.service.UnidadeorganizacionalService;
-import br.com.j4business.saga.unidadeorganizacionalcenario.model.UnidadeorganizacionalCenarioForm;
-import br.com.j4business.saga.unidadeorganizacionalcenario.repository.UnidadeorganizacionalCenarioRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
 import java.util.List;
-import org.apache.logging.log4j.Logger;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import br.com.j4business.saga.UsuarioSeguranca;
+import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
+import br.com.j4business.saga.cenario.model.Cenario;
+import br.com.j4business.saga.cenario.service.CenarioService;
+import br.com.j4business.saga.colaborador.model.Colaborador;
+import br.com.j4business.saga.colaborador.service.ColaboradorService;
+import br.com.j4business.saga.unidadeorganizacional.model.Unidadeorganizacional;
+import br.com.j4business.saga.unidadeorganizacional.service.UnidadeorganizacionalService;
+import br.com.j4business.saga.unidadeorganizacionalcenario.model.UnidadeorganizacionalCenario;
+import br.com.j4business.saga.unidadeorganizacionalcenario.model.UnidadeorganizacionalCenarioForm;
+import br.com.j4business.saga.unidadeorganizacionalcenario.repository.UnidadeorganizacionalCenarioRepository;
 
 @Service("unidadeorganizacionalCenarioService")
 public class UnidadeorganizacionalCenarioServiceImpl implements UnidadeorganizacionalCenarioService {
@@ -83,7 +85,8 @@ public class UnidadeorganizacionalCenarioServiceImpl implements Unidadeorganizac
 
 	@Override
 	public UnidadeorganizacionalCenario getUnidadeorganizacionalCenarioByUnidadeorganizacionalCenarioPK(long unidadeorganizacionalCenarioPK) {
-		return unidadeorganizacionalCenarioRepository.findOne(unidadeorganizacionalCenarioPK);
+		Optional<UnidadeorganizacionalCenario> unidadeorganizacionalCenario = unidadeorganizacionalCenarioRepository.findById(unidadeorganizacionalCenarioPK);
+		return unidadeorganizacionalCenario.get();
 	}
 
 	@Override
@@ -133,7 +136,7 @@ public class UnidadeorganizacionalCenarioServiceImpl implements Unidadeorganizac
 
 		UnidadeorganizacionalCenario unidadeorganizacionalCenarioTemp = this.getUnidadeorganizacionalCenarioByUnidadeorganizacionalCenarioPK(unidadeorganizacionalCenarioPK);
 
-		unidadeorganizacionalCenarioRepository.delete(unidadeorganizacionalCenarioPK);
+		unidadeorganizacionalCenarioRepository.delete(unidadeorganizacionalCenarioTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("UnidadeorganizacionalCenario Save " + "\n Usuário => " + username + 
@@ -147,7 +150,9 @@ public class UnidadeorganizacionalCenarioServiceImpl implements Unidadeorganizac
 		
 		List<UnidadeorganizacionalCenario> unidadeorganizacionalCenarioList = unidadeorganizacionalCenarioRepository.findByCenario(cenario);
 
-		unidadeorganizacionalCenarioRepository.delete(unidadeorganizacionalCenarioList);
+		for (UnidadeorganizacionalCenario unidadeorganizacionalCenario2 : unidadeorganizacionalCenarioList) {
+			unidadeorganizacionalCenarioRepository.delete(unidadeorganizacionalCenario2);			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

@@ -3,8 +3,8 @@ package br.com.j4business.saga.unidadeorganizacionalcenario.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.unidadeorganizacional.model.Unidadeorganizacional;
 import br.com.j4business.saga.unidadeorganizacionalcenario.model.UnidadeorganizacionalCenario;
 
 @Repository("unidadeorganizacionalCenarioRepository")
-public interface UnidadeorganizacionalCenarioRepository extends PagingAndSortingRepository<UnidadeorganizacionalCenario, Long>{
+public interface UnidadeorganizacionalCenarioRepository extends JpaRepository<UnidadeorganizacionalCenario, Long>{
 
 /*	 @Query("SELECT ea FROM UnidadeorganizacionalCenario ea where ea.cenario.cenarioPK = :id") 
 	    List<UnidadeorganizacionalCenario> findByCenarioPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface UnidadeorganizacionalCenarioRepository extends PagingAndSorting
 	@Query("SELECT ep FROM UnidadeorganizacionalCenario ep INNER JOIN ep.cenario p WHERE p = :cenario")
 	public List<UnidadeorganizacionalCenario> findByCenario(@Param("cenario")Cenario cenario);
 
-	@Query("SELECT ep FROM UnidadeorganizacionalCenario ep INNER JOIN ep.cenario p INNER JOIN ep.unidadeorganizacional e WHERE p = :cenario AND s = :unidadeorganizacional")
+	@Query("SELECT uc FROM UnidadeorganizacionalCenario uc INNER JOIN uc.cenario c INNER JOIN uc.unidadeorganizacional u WHERE c = :cenario AND u = :unidadeorganizacional")
 	public UnidadeorganizacionalCenario findByUnidadeorganizacionalAndCenario( @Param("unidadeorganizacional") Unidadeorganizacional unidadeorganizacional, @Param("cenario")Cenario cenario);
 	
 	@Query("SELECT ep FROM UnidadeorganizacionalCenario ep")

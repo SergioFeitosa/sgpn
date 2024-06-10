@@ -4,7 +4,6 @@ import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.empresaprocesso.model.EmpresaProcesso;
 import br.com.j4business.saga.unidadeorganizacional.model.Unidadeorganizacional;
 import br.com.j4business.saga.unidadeorganizacional.service.UnidadeorganizacionalService;
 import br.com.j4business.saga.estruturafisica.model.Estruturafisica;
@@ -12,10 +11,11 @@ import br.com.j4business.saga.estruturafisica.service.EstruturafisicaService;
 import br.com.j4business.saga.estruturafisicaunidadeorganizacional.model.EstruturafisicaUnidadeorganizacional;
 import br.com.j4business.saga.estruturafisicaunidadeorganizacional.model.EstruturafisicaUnidadeorganizacionalForm;
 import br.com.j4business.saga.estruturafisicaunidadeorganizacional.repository.EstruturafisicaUnidadeorganizacionalRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
+
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +94,8 @@ public class EstruturafisicaUnidadeorganizacionalServiceImpl implements Estrutur
 
 	@Override
 	public EstruturafisicaUnidadeorganizacional getEstruturafisicaUnidadeorganizacionalByEstruturafisicaUnidadeorganizacionalPK(long estruturafisicaUnidadeorganizacionalPK) {
-		return estruturafisicaUnidadeorganizacionalRepository.findOne(estruturafisicaUnidadeorganizacionalPK);
+		Optional<EstruturafisicaUnidadeorganizacional>  estruturafisicaUnidadeorganizacional = estruturafisicaUnidadeorganizacionalRepository.findById(estruturafisicaUnidadeorganizacionalPK);
+		return estruturafisicaUnidadeorganizacional.get();
 	}
 
 	@Override
@@ -125,7 +126,7 @@ public class EstruturafisicaUnidadeorganizacionalServiceImpl implements Estrutur
 
 		EstruturafisicaUnidadeorganizacional estruturafisicaUnidadeorganizacionalTemp = this.getEstruturafisicaUnidadeorganizacionalByEstruturafisicaUnidadeorganizacionalPK(estruturafisicaUnidadeorganizacionalPK);
 
-		estruturafisicaUnidadeorganizacionalRepository.delete(estruturafisicaUnidadeorganizacionalPK);
+		estruturafisicaUnidadeorganizacionalRepository.delete(estruturafisicaUnidadeorganizacionalTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("EstruturafisicaUnidadeorganizacional Save " + "\n Usuário => " + username + 
@@ -139,7 +140,11 @@ public class EstruturafisicaUnidadeorganizacionalServiceImpl implements Estrutur
 		
 		List<EstruturafisicaUnidadeorganizacional> estruturafisicaUnidadeorganizacionalList = estruturafisicaUnidadeorganizacionalRepository.findByUnidadeorganizacional(unidadeorganizacional);
 
-		estruturafisicaUnidadeorganizacionalRepository.delete(estruturafisicaUnidadeorganizacionalList);
+		for (EstruturafisicaUnidadeorganizacional estruturafisicaUnidadeorganizacional2 : estruturafisicaUnidadeorganizacionalList) {
+
+			estruturafisicaUnidadeorganizacionalRepository.delete(estruturafisicaUnidadeorganizacional2);
+			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

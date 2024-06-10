@@ -1,8 +1,10 @@
 package br.com.j4business.saga.estruturafisica.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +48,8 @@ public class EstruturafisicaServiceImpl implements EstruturafisicaService {
 
 	@Override
 	public Estruturafisica getEstruturafisicaByEstruturafisicaPK(long estruturafisicaPK) {
-		
-		return estruturafisicaRepository.findOne(estruturafisicaPK);
+		Optional<Estruturafisica> estruturafisica = estruturafisicaRepository.findById(estruturafisicaPK);
+		return estruturafisica.get();
 	}
 
 	@Transactional
@@ -93,7 +95,7 @@ public class EstruturafisicaServiceImpl implements EstruturafisicaService {
 
 		Estruturafisica estruturafisica = this.getEstruturafisicaByEstruturafisicaPK(estruturafisicaId);
 		
-		estruturafisicaRepository.delete(estruturafisica.getEstruturafisicaPK());
+		estruturafisicaRepository.delete(estruturafisica);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Estruturafisica Delete " + "\n Usuário => " + username + 

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -55,7 +55,7 @@ public class AgendaPlanejamentoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/agendaPlanejamentoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaPlanejamentoAdd")
 	public ModelAndView agendaPlanejamentoAdd(AgendaPlanejamentoForm agendaPlanejamentoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("agendaPlanejamento/agendaPlanejamentoAdd");
@@ -65,17 +65,17 @@ public class AgendaPlanejamentoController {
 		mv.addObject("agendaPlanejamentoEnvioValues", AgendaPlanejamentoEnvio.values());
 		mv.addObject("agendaPlanejamentoStatusValues", AtributoStatus.values());
 
-		Pageable agendaPageable = new PageRequest(0, 200, Direction.ASC, "agendaNome");
+		Pageable agendaPageable = PageRequest.of(0, 200, Direction.ASC, "agendaNome");
 		mv.addObject("agendaPage", agendaService.getAgendaAll(agendaPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable planejamentoPageable = new PageRequest(0, 200, Direction.ASC, "planejamentoNome");
+		Pageable planejamentoPageable = PageRequest.of(0, 200, Direction.ASC, "planejamentoNome");
 		mv.addObject("planejamentoPage", planejamentoService.getPlanejamentoAll(planejamentoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/agendaPlanejamentoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/agendaPlanejamentoCreate")
 	public ModelAndView agendaPlanejamentoCreate(@Valid AgendaPlanejamentoForm agendaPlanejamentoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -108,7 +108,7 @@ public class AgendaPlanejamentoController {
 	}
 
 
-	@RequestMapping(path = "/agendaPlanejamentoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaPlanejamentoDelete/{id}")
 	public ModelAndView agendaPlanejamentoDelete(@PathVariable("id") long agendaPlanejamentoId, @Valid PlanejamentoForm planejamentoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/agendaPlanejamentoHome");
@@ -133,7 +133,7 @@ public class AgendaPlanejamentoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/agendaPlanejamentoEdit/{agendaPlanejamentoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaPlanejamentoEdit/{agendaPlanejamentoPK}")
 	public ModelAndView agendaPlanejamentoEdit(@PathVariable("agendaPlanejamentoPK") Long agendaPlanejamentoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("agendaPlanejamento/agendaPlanejamentoEdit");
@@ -144,18 +144,18 @@ public class AgendaPlanejamentoController {
 		mv.addObject("agendaPlanejamentoEnvioValues", AgendaPlanejamentoEnvio.values());
 		mv.addObject("agendaPlanejamentoStatusValues", AtributoStatus.values());
 
-		Pageable agendaPageable = new PageRequest(0, 200, Direction.ASC, "agendaNome");
+		Pageable agendaPageable = PageRequest.of(0, 200, Direction.ASC, "agendaNome");
 		mv.addObject("agendaPage", agendaService.getAgendaAll(agendaPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable planejamentoPageable = new PageRequest(0, 200, Direction.ASC, "planejamentoNome");
+		Pageable planejamentoPageable = PageRequest.of(0, 200, Direction.ASC, "planejamentoNome");
 		mv.addObject("planejamentoPage", planejamentoService.getPlanejamentoAll(planejamentoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/agendaPlanejamentoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaPlanejamentoHome")
 	public ModelAndView agendaPlanejamentoHome(@Valid AgendaPlanejamentoByAgendaForm agendaPlanejamentoByAgendaForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("agendaPlanejamento/agendaPlanejamentoHome");
@@ -175,10 +175,10 @@ public class AgendaPlanejamentoController {
 
 		if (agendaPlanejamentoByAgendaForm.getAgendaPlanejamentoSortTipo().equalsIgnoreCase("AgendaNome")
 				|| agendaPlanejamentoByAgendaForm.getAgendaPlanejamentoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"agenda.agendaNome","planejamento.planejamentoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"agenda.agendaNome","planejamento.planejamentoNome"); 
 		
 		} else if (agendaPlanejamentoByAgendaForm.getAgendaPlanejamentoSortTipo().equalsIgnoreCase("PlanejamentoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"planejamento.planejamentoNome","agenda.agendaNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"planejamento.planejamentoNome","agenda.agendaNome"); 
 
 		}
 
@@ -201,7 +201,7 @@ public class AgendaPlanejamentoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/agendaPlanejamentoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/agendaPlanejamentoSave")
 	public ModelAndView agendaPlanejamentoSave(@Valid AgendaPlanejamentoForm agendaPlanejamentoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -225,7 +225,7 @@ public class AgendaPlanejamentoController {
 		
 	}
 
-	@RequestMapping(path = "/agendaPlanejamentoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaPlanejamentoRelMenu")
 	public ModelAndView agendaPlanejamentoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("agendaPlanejamento/agendaPlanejamentoRelMenu");
@@ -235,17 +235,17 @@ public class AgendaPlanejamentoController {
 		
 	}
 
-	@RequestMapping("/agendaPlanejamentoRel001")
+	@GetMapping("/agendaPlanejamentoRel001")
 	public ModelAndView agendaPlanejamentoRel001() {
 
 		ModelAndView mv = new ModelAndView("agendaPlanejamento/agendaPlanejamentoRel001");
-		Pageable agendaPageable = new PageRequest(0, 200, Direction.ASC, "agenda.agendaNome","planejamento.planejamentoNome");
+		Pageable agendaPageable = PageRequest.of(0, 200, Direction.ASC, "agenda.agendaNome","planejamento.planejamentoNome");
 		mv.addObject("agendaPlanejamentoPage", agendaPlanejamentoService.getAgendaPlanejamentoAll(agendaPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/agendaPlanejamentoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaPlanejamentoView/{id}")
 	public ModelAndView agendaPlanejamentoView(@PathVariable("id") Long agendaPlanejamentoId) {
 
 		AgendaPlanejamento agendaPlanejamento = agendaPlanejamentoService.getAgendaPlanejamentoByAgendaPlanejamentoPK(agendaPlanejamentoId);

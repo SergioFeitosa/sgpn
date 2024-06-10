@@ -9,6 +9,7 @@ import br.com.j4business.saga.evento.model.Evento;
 import br.com.j4business.saga.evento.service.EventoService;
 import br.com.j4business.saga.eventoprocesso.model.EventoProcesso;
 import br.com.j4business.saga.eventoprocesso.service.EventoProcessoService;
+import jakarta.transaction.Transactional;
 import br.com.j4business.saga.agenda.model.Agenda;
 import br.com.j4business.saga.agenda.service.AgendaService;
 import br.com.j4business.saga.agendaevento.enumeration.AgendaEventoEnvio;
@@ -16,15 +17,13 @@ import br.com.j4business.saga.agendaevento.model.AgendaEvento;
 import br.com.j4business.saga.agendaevento.model.AgendaEventoForm;
 import br.com.j4business.saga.agendaevento.repository.AgendaEventoRepository;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -42,7 +41,7 @@ public class AgendaEventoServiceImpl implements AgendaEventoService {
 	private ColaboradorService colaboradorService;
 
 	@Autowired
-	EntityManager entityManager;
+	jakarta.persistence.EntityManager entityManager;
 	
 	@Autowired
 	private AgendaEventoRepository agendaEventoRepository;
@@ -96,7 +95,7 @@ public class AgendaEventoServiceImpl implements AgendaEventoService {
 
 	@Override
 	public AgendaEvento getAgendaEventoByAgendaEventoPK(long agendaEventoPK) {
-		return agendaEventoRepository.findOne(agendaEventoPK);
+		return agendaEventoRepository.findByAgendaEventoPK(agendaEventoPK);
 	}
 
 	@Override
@@ -126,36 +125,48 @@ public class AgendaEventoServiceImpl implements AgendaEventoService {
 	@Transactional
 	public void delete(Long agendaEventoPK) {
 
-		AgendaEvento agendaEventoTemp = this.getAgendaEventoByAgendaEventoPK(agendaEventoPK);
 
-		agendaEventoRepository.delete(agendaEventoPK);
+		Optional<AgendaEvento> agendaEventoSalvo = agendaEventoRepository.findById(agendaEventoPK);
+
+		if (agendaEventoSalvo.isPresent()) {
+			agendaEventoRepository.delete(agendaEventoSalvo.get());
+		}
+
+		
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("AgendaEvento Save " + "\n Usuário => " + username + 
-										" // Id => "+agendaEventoTemp.getAgendaEventoPK() + 
-										" // Agenda Id => "+agendaEventoTemp.getAgenda().getAgendaPK() + 
-										" // Evento Id => "+agendaEventoTemp.getEvento().getEventoPK()); 
+										" // Id => "+agendaEventoSalvo.get().getAgendaEventoPK() + 
+										" // Agenda Id => "+agendaEventoSalvo.get().getAgenda().getAgendaPK() + 
+										" // Evento Id => "+agendaEventoSalvo.get().getEvento().getEventoPK()); 
     }
+
 
 	@Transactional
 	public void deleteByEvento(Evento evento) {
 		
 		List<AgendaEvento> agendaEventoList = agendaEventoRepository.findByEvento(evento);
 
-		agendaEventoRepository.delete(agendaEventoList);
+
+		for (AgendaEvento agendaEvento2 : agendaEventoList) {
+
+			agendaEventoRepository.deleteById(agendaEvento2.getAgendaEventoPK());
+
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 
-		agendaEventoList.forEach((AgendaEvento agendaEvento) ->  
+		agendaEventoList.forEach((AgendaEvento agendaEvento) -> {
 			
 			logger.info("AgendaEvento Delete2 " + "\n Usuário => " + username + 
-											" // Id => "+agendaEvento.getAgendaEventoPK() + 
-											" // Agenda Id => "+agendaEvento.getAgenda().getAgendaPK() + 
-											" // Evento Id => "+agendaEvento.getEvento().getEventoPK()) 
-
+			" // Id => "+agendaEvento.getAgendaEventoPK() + 
+			" // Agenda Id => "+agendaEvento.getAgenda().getAgendaPK() + 
+			" // Evento Id => "+agendaEvento.getEvento().getEventoPK());
+		}
 		);
-		
-    }
+
+
+	}
 
 	@Transactional
 	public AgendaEvento converteAgendaEventoForm(AgendaEventoForm agendaEventoForm) {
@@ -163,9 +174,7 @@ public class AgendaEventoServiceImpl implements AgendaEventoService {
 		AgendaEvento agendaEvento = new AgendaEvento();
 		
 		if (agendaEventoForm.getAgendaEventoPK() > 0) {
-			agendaEvento = this.getAgendaEventoByAgendaEventoPK(agendaEventoForm.getAgendaEventoPK());
-		}
-		
+
 		Evento evento = eventoService.getEventoByEventoPK(Long.parseLong(agendaEventoForm.getEventoNome()));
 		agendaEvento.setEvento(evento);
 
@@ -210,7 +219,10 @@ public class AgendaEventoServiceImpl implements AgendaEventoService {
 		Colaborador colaborador = colaboradorService.getColaboradorByColaboradorPK(Long.parseLong(agendaEventoForm.getAgendaEventoResponsavel()));
 		agendaEvento.setColaboradorResponsavel(colaborador);
 		
+		}
+
 		return agendaEvento;
+
 	}
 
 	@Transactional
@@ -380,7 +392,6 @@ public class AgendaEventoServiceImpl implements AgendaEventoService {
 			try {
 				eventoDataInicio.setTime(sdf.parse(evento.getEventoDataInicio()));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}// all done
 			

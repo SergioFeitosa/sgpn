@@ -1,8 +1,10 @@
 package br.com.j4business.saga.fornecedor.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +50,8 @@ public class FornecedorServiceImpl implements FornecedorService {
 	@Override
 	public Fornecedor getFornecedorByFornecedorPK(long fornecedorPK) {
 		
-		return fornecedorRepository.findOne(fornecedorPK);
+		Optional<Fornecedor> fornecedor = fornecedorRepository.findById(fornecedorPK);
+		return fornecedor.get();
 	}
 
 	@Transactional
@@ -94,7 +97,7 @@ public class FornecedorServiceImpl implements FornecedorService {
 
 		Fornecedor fornecedor = this.getFornecedorByFornecedorPK(fornecedorId);
 		
-		fornecedorRepository.delete(fornecedor.getPessoaPK());
+		fornecedorRepository.delete(fornecedor);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Fornecedor Delete " + "\n Usuário => " + username + 

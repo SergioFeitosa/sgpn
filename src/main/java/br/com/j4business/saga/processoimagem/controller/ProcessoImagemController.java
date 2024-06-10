@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +17,20 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes; 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.j4business.saga.processo.model.ProcessoForm;
-import br.com.j4business.saga.processo.service.ProcessoService;
-import br.com.j4business.saga.processocurso.model.ProcessoCurso;
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.imagem.model.ImagemForm;
 import br.com.j4business.saga.imagem.service.ImagemService;
+import br.com.j4business.saga.processo.model.ProcessoForm;
+import br.com.j4business.saga.processo.service.ProcessoService;
 import br.com.j4business.saga.processoimagem.model.ProcessoImagem;
 import br.com.j4business.saga.processoimagem.model.ProcessoImagemByProcessoForm;
 import br.com.j4business.saga.processoimagem.model.ProcessoImagemForm;
@@ -55,7 +54,7 @@ public class ProcessoImagemController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/processoImagemAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/processoImagemAdd")
 	public ModelAndView processoImagemAdd(ProcessoImagemForm processoImagemForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoImagem/processoImagemAdd");
@@ -63,18 +62,18 @@ public class ProcessoImagemController {
 		mv.addObject("processoImagemForm", processoImagemForm);
 		mv.addObject("processoImagemPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("processoImagemStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable imagemPageable = new PageRequest(0, 200, Direction.ASC, "imagemNome");
+		Pageable imagemPageable = PageRequest.of(0, 200, Direction.ASC, "imagemNome");
 		mv.addObject("imagemPage", imagemService.getImagemAll(imagemPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoImagemCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/processoImagemCreate")
 	public ModelAndView processoImagemCreate(@Valid ProcessoImagemForm processoImagemForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -121,7 +120,7 @@ public class ProcessoImagemController {
 	}
 
 
-	@RequestMapping(path = "/processoImagemDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/processoImagemDelete/{id}")
 	public ModelAndView processoImagemDelete(@PathVariable("id") long processoImagemId, @Valid ImagemForm imagemForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/processoImagemHome");
@@ -147,7 +146,7 @@ public class ProcessoImagemController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoImagemEdit/{processoImagemPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/processoImagemEdit/{processoImagemPK}")
 	public ModelAndView processoImagemEdit(@PathVariable("processoImagemPK") Long processoImagemPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoImagem/processoImagemEdit");
@@ -156,18 +155,18 @@ public class ProcessoImagemController {
 		mv.addObject("processoImagemForm", processoImagemForm);
 		mv.addObject("processoImagemPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("processoImagemStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable imagemPageable = new PageRequest(0, 200, Direction.ASC, "imagemNome");
+		Pageable imagemPageable = PageRequest.of(0, 200, Direction.ASC, "imagemNome");
 		mv.addObject("imagemPage", imagemService.getImagemAll(imagemPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/processoImagemHome", method = RequestMethod.GET)
+	@GetMapping(path = "/processoImagemHome")
 	public ModelAndView processoImagemHome(@Valid ProcessoImagemByProcessoForm processoImagemByProcessoForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoImagem/processoImagemHome");
@@ -187,10 +186,10 @@ public class ProcessoImagemController {
 
 		if (processoImagemByProcessoForm.getProcessoImagemSortTipo().equalsIgnoreCase("ProcessoNome")
 				|| processoImagemByProcessoForm.getProcessoImagemSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","imagem.imagemNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","imagem.imagemNome"); 
 		
 		} else if (processoImagemByProcessoForm.getProcessoImagemSortTipo().equalsIgnoreCase("ImagemNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"imagem.imagemNome","processo.processoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"imagem.imagemNome","processo.processoNome"); 
 
 		}
 
@@ -213,7 +212,7 @@ public class ProcessoImagemController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoImagemSave", method = RequestMethod.POST)
+	@PostMapping(path = "/processoImagemSave")
 	public ModelAndView processoImagemSave(@Valid ProcessoImagemForm processoImagemForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -245,7 +244,7 @@ public class ProcessoImagemController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoImagemRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/processoImagemRelMenu")
 	public ModelAndView processoImagemRelMenu() {
 
 		ModelAndView mv = new ModelAndView("processoImagem/processoImagemRelMenu");
@@ -255,18 +254,18 @@ public class ProcessoImagemController {
 		
 	}
 
-	@RequestMapping("/processoImagemRel001")
+	@GetMapping("/processoImagemRel001")
 	public ModelAndView processoImagemRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoImagem/processoImagemRel001");
-		Pageable processoImagemPageable = new PageRequest(0, 200, Direction.ASC, "processo.processoNome","imagem.imagemNome");
+		Pageable processoImagemPageable = PageRequest.of(0, 200, Direction.ASC, "processo.processoNome","imagem.imagemNome");
 		mv.addObject("processoImagemPage", processoImagemService.getProcessoImagemAll(processoImagemPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoImagemView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/processoImagemView/{id}")
 	public ModelAndView processoImagemView(@PathVariable("id") Long processoImagemId) {
 
 		ProcessoImagem processoImagem = processoImagemService.getProcessoImagemByProcessoImagemPK(processoImagemId);

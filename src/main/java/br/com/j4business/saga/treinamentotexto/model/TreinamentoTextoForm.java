@@ -1,12 +1,12 @@
 package br.com.j4business.saga.treinamentotexto.model;
 
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
@@ -17,11 +17,11 @@ public class TreinamentoTextoForm {
 	private long textoPK;
 	private long treinamentoPK;
 	
-    @NotEmpty(message = "Nome do texto é uma informação obrigatória.")
+    @NotBlank(message = "Nome do texto é uma informação obrigatória.")
 	@NotNull
 	private String textoNome;
 	
-    @NotEmpty(message = "Nome da Treinamento é uma informação obrigatória.")
+    @NotBlank(message = "Nome da Treinamento é uma informação obrigatória.")
 	@NotNull
 	private String treinamentoNome;
 	
@@ -32,11 +32,11 @@ public class TreinamentoTextoForm {
 	@Enumerated(EnumType.STRING)
 	private AtributoStatus treinamentoTextoStatus;
 
-    @NotEmpty(message = "Responsável é uma informação obrigatória.")
+    @NotBlank(message = "Responsável é uma informação obrigatória.")
 	@NotNull
 	private String treinamentoTextoResponsavel;
 
-    @NotEmpty(message = "Motivo da Operação é uma informação obrigatória.")
+    @NotBlank(message = "Motivo da Operação é uma informação obrigatória.")
 	@Size(min = 5,max = 200, message = "Motivo da Operação não pode ter menos que 5 e mais que 200 caracteres")
 	private String treinamentoTextoMotivoOperacao;
 

@@ -34,8 +34,8 @@ import br.com.j4business.saga.avaliacaoresultado.model.AvaliacaoResultado;
 import br.com.j4business.saga.avaliacaoresultado.service.AvaliacaoResultadoService;
 import br.com.j4business.saga.cenario.service.CenarioService;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -44,6 +44,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -166,7 +167,9 @@ public class AvaliacaoProcessoServiceImpl implements AvaliacaoProcessoService {
 
 	@Override
 	public AvaliacaoProcesso getAvaliacaoProcessoByAvaliacaoProcessoPK(long avaliacaoProcessoPK) {
-		return avaliacaoProcessoRepository.findOne(avaliacaoProcessoPK);
+		
+		Optional<AvaliacaoProcesso> avaliacaoProcesso = avaliacaoProcessoRepository.findById(avaliacaoProcessoPK);
+		return avaliacaoProcesso.get();
 	}
 
 	@Override
@@ -220,7 +223,7 @@ public class AvaliacaoProcessoServiceImpl implements AvaliacaoProcessoService {
 
 		AvaliacaoProcesso avaliacaoProcessoTemp = this.getAvaliacaoProcessoByAvaliacaoProcessoPK(avaliacaoProcessoPK);
 
-		avaliacaoProcessoRepository.delete(avaliacaoProcessoPK);
+		avaliacaoProcessoRepository.delete(avaliacaoProcessoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("AvaliacaoProcesso Save " + "\n Usuário => " + username + " // Id => "
@@ -234,7 +237,11 @@ public class AvaliacaoProcessoServiceImpl implements AvaliacaoProcessoService {
 
 		List<AvaliacaoProcesso> avaliacaoProcessos = avaliacaoProcessoRepository.findByProcesso(processo);
 
-		avaliacaoProcessoRepository.delete(avaliacaoProcessos);
+		for (AvaliacaoProcesso avaliacaoProcesso2 : avaliacaoProcessos) {
+
+			avaliacaoProcessoRepository.delete(avaliacaoProcesso2);
+			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 
@@ -434,7 +441,6 @@ public class AvaliacaoProcessoServiceImpl implements AvaliacaoProcessoService {
 				inActiveDate = format1.format(date);
 				System.out.println(inActiveDate);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -723,7 +729,6 @@ public class AvaliacaoProcessoServiceImpl implements AvaliacaoProcessoService {
 				inActiveDate = format1.format(date);
 				System.out.println(inActiveDate);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -896,7 +901,6 @@ public class AvaliacaoProcessoServiceImpl implements AvaliacaoProcessoService {
 				inActiveDate = format1.format(date);
 				System.out.println(inActiveDate);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -1064,7 +1068,6 @@ public class AvaliacaoProcessoServiceImpl implements AvaliacaoProcessoService {
 				inActiveDate = format1.format(date);
 				System.out.println(inActiveDate);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -1237,7 +1240,6 @@ public class AvaliacaoProcessoServiceImpl implements AvaliacaoProcessoService {
 				inActiveDate = format1.format(date);
 				System.out.println(inActiveDate);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -1405,7 +1407,6 @@ public class AvaliacaoProcessoServiceImpl implements AvaliacaoProcessoService {
 				inActiveDate = format1.format(date);
 				System.out.println(inActiveDate);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -1574,7 +1575,6 @@ public class AvaliacaoProcessoServiceImpl implements AvaliacaoProcessoService {
 				inActiveDate = format1.format(date);
 				System.out.println(inActiveDate);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -1962,7 +1962,6 @@ public class AvaliacaoProcessoServiceImpl implements AvaliacaoProcessoService {
 				inActiveDate = format1.format(date);
 				System.out.println(inActiveDate);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -2132,7 +2131,6 @@ public class AvaliacaoProcessoServiceImpl implements AvaliacaoProcessoService {
 				inActiveDate = format1.format(date);
 				System.out.println(inActiveDate);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 
@@ -2498,7 +2496,6 @@ public class AvaliacaoProcessoServiceImpl implements AvaliacaoProcessoService {
 				inActiveDate = format1.format(date);
 				System.out.println(inActiveDate);
 			} catch (Exception e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 

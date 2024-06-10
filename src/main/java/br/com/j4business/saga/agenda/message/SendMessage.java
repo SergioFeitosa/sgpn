@@ -21,12 +21,12 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
-import javax.servlet.Servlet;
-import javax.servlet.ServletException;
-import javax.servlet.UnavailableException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.UnavailableException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Servlet implementation class FreeMobileSMSServlet
@@ -98,7 +98,6 @@ public class SendMessage extends HttpServlet {
     /**
 	 * @see HttpServlet#init()
 	 */
-	@SuppressWarnings("unused")
 	@Override
 	public void init() throws ServletException {
 		super.init();
@@ -162,7 +161,7 @@ public class SendMessage extends HttpServlet {
 			return;
 		}
 
-		String fullURLStr = gatewayUrl + URLEncoder.encode(msg, StandardCharsets.ISO_8859_1.name());//FIXME should RFC5997-encode?  http://tools.ietf.org/html/rfc5987
+		String fullURLStr = gatewayUrl + URLEncoder.encode(msg, StandardCharsets.ISO_8859_1.name());
 		URL fullURL = new URL(fullURLStr);
 
 		Proxy proxy = Proxy.NO_PROXY;

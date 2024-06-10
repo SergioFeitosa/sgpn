@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +17,20 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.j4business.saga.processo.model.ProcessoForm;
-import br.com.j4business.saga.processo.service.ProcessoService;
-import br.com.j4business.saga.processocurso.model.ProcessoCurso;
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.habilidade.model.HabilidadeForm;
 import br.com.j4business.saga.habilidade.service.HabilidadeService;
+import br.com.j4business.saga.processo.model.ProcessoForm;
+import br.com.j4business.saga.processo.service.ProcessoService;
 import br.com.j4business.saga.processohabilidade.model.ProcessoHabilidade;
 import br.com.j4business.saga.processohabilidade.model.ProcessoHabilidadeByProcessoForm;
 import br.com.j4business.saga.processohabilidade.model.ProcessoHabilidadeForm;
@@ -55,7 +54,7 @@ public class ProcessoHabilidadeController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/processoHabilidadeAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/processoHabilidadeAdd")
 	public ModelAndView processoHabilidadeAdd(ProcessoHabilidadeForm processoHabilidadeForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoHabilidade/processoHabilidadeAdd");
@@ -63,18 +62,18 @@ public class ProcessoHabilidadeController {
 		mv.addObject("processoHabilidadeForm", processoHabilidadeForm);
 		mv.addObject("processoHabilidadePrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("processoHabilidadeStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable habilidadePageable = new PageRequest(0, 200, Direction.ASC, "habilidadeNome");
+		Pageable habilidadePageable = PageRequest.of(0, 200, Direction.ASC, "habilidadeNome");
 		mv.addObject("habilidadePage", habilidadeService.getHabilidadeAll(habilidadePageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoHabilidadeCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/processoHabilidadeCreate")
 	public ModelAndView processoHabilidadeCreate(@Valid ProcessoHabilidadeForm processoHabilidadeForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -108,7 +107,7 @@ public class ProcessoHabilidadeController {
 	}
 
 
-	@RequestMapping(path = "/processoHabilidadeDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/processoHabilidadeDelete/{id}")
 	public ModelAndView processoHabilidadeDelete(@PathVariable("id") long processoHabilidadeId, @Valid HabilidadeForm habilidadeForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/processoHabilidadeHome");
@@ -134,7 +133,7 @@ public class ProcessoHabilidadeController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoHabilidadeEdit/{processoHabilidadePK}", method = RequestMethod.GET)
+	@GetMapping(path = "/processoHabilidadeEdit/{processoHabilidadePK}")
 	public ModelAndView processoHabilidadeEdit(@PathVariable("processoHabilidadePK") Long processoHabilidadePK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoHabilidade/processoHabilidadeEdit");
@@ -143,18 +142,18 @@ public class ProcessoHabilidadeController {
 		mv.addObject("processoHabilidadeForm", processoHabilidadeForm);
 		mv.addObject("processoHabilidadePrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("processoHabilidadeStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable habilidadePageable = new PageRequest(0, 200, Direction.ASC, "habilidadeNome");
+		Pageable habilidadePageable = PageRequest.of(0, 200, Direction.ASC, "habilidadeNome");
 		mv.addObject("habilidadePage", habilidadeService.getHabilidadeAll(habilidadePageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/processoHabilidadeHome", method = RequestMethod.GET)
+	@GetMapping(path = "/processoHabilidadeHome")
 	public ModelAndView processoHabilidadeHome(@Valid ProcessoHabilidadeByProcessoForm processoHabilidadeByProcessoForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoHabilidade/processoHabilidadeHome");
@@ -174,10 +173,10 @@ public class ProcessoHabilidadeController {
 
 		if (processoHabilidadeByProcessoForm.getProcessoHabilidadeSortTipo().equalsIgnoreCase("ProcessoNome")
 				|| processoHabilidadeByProcessoForm.getProcessoHabilidadeSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","habilidade.habilidadeNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","habilidade.habilidadeNome"); 
 		
 		} else if (processoHabilidadeByProcessoForm.getProcessoHabilidadeSortTipo().equalsIgnoreCase("HabilidadeNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"habilidade.habilidadeNome","processo.processoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"habilidade.habilidadeNome","processo.processoNome"); 
 
 		}
 
@@ -200,7 +199,7 @@ public class ProcessoHabilidadeController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoHabilidadeSave", method = RequestMethod.POST)
+	@PostMapping(path = "/processoHabilidadeSave")
 	public ModelAndView processoHabilidadeSave(@Valid ProcessoHabilidadeForm processoHabilidadeForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -223,7 +222,7 @@ public class ProcessoHabilidadeController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoHabilidadeRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/processoHabilidadeRelMenu")
 	public ModelAndView processoHabilidadeRelMenu() {
 
 		ModelAndView mv = new ModelAndView("processoHabilidade/processoHabilidadeRelMenu");
@@ -233,18 +232,18 @@ public class ProcessoHabilidadeController {
 		
 	}
 
-	@RequestMapping("/processoHabilidadeRel001")
+	@GetMapping("/processoHabilidadeRel001")
 	public ModelAndView processoHabilidadeRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoHabilidade/processoHabilidadeRel001");
-		Pageable processoHabilidadePageable = new PageRequest(0, 200, Direction.ASC, "processo.processoNome","habilidade.habilidadeNome");
+		Pageable processoHabilidadePageable = PageRequest.of(0, 200, Direction.ASC, "processo.processoNome","habilidade.habilidadeNome");
 		mv.addObject("processoHabilidadePage", processoHabilidadeService.getProcessoHabilidadeAll(processoHabilidadePageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoHabilidadeView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/processoHabilidadeView/{id}")
 	public ModelAndView processoHabilidadeView(@PathVariable("id") Long processoHabilidadeId) {
 
 		ProcessoHabilidade processoHabilidade = processoHabilidadeService.getProcessoHabilidadeByProcessoHabilidadePK(processoHabilidadeId);

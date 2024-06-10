@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +17,14 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.j4business.saga.colaborador.model.ColaboradorForm;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.colaboradorcurso.model.ColaboradorCurso;
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
@@ -51,7 +50,7 @@ public class ColaboradorProcessoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/colaboradorProcessoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorProcessoAdd")
 	public ModelAndView colaboradorProcessoAdd(ColaboradorProcessoForm colaboradorProcessoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorProcesso/colaboradorProcessoAdd");
@@ -59,15 +58,15 @@ public class ColaboradorProcessoController {
 		mv.addObject("colaboradorProcessoForm", colaboradorProcessoForm);
 		mv.addObject("colaboradorProcessoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("colaboradorProcessoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorProcessoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/colaboradorProcessoCreate")
 	public ModelAndView colaboradorProcessoCreate(@Valid ColaboradorProcessoForm colaboradorProcessoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -101,7 +100,7 @@ public class ColaboradorProcessoController {
 	}
 
 
-	@RequestMapping(path = "/colaboradorProcessoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorProcessoDelete/{id}")
 	public ModelAndView colaboradorProcessoDelete(@PathVariable("id") long colaboradorProcessoId, @Valid ProcessoForm processoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/colaboradorProcessoHome");
@@ -127,7 +126,7 @@ public class ColaboradorProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorProcessoEdit/{colaboradorProcessoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorProcessoEdit/{colaboradorProcessoPK}")
 	public ModelAndView colaboradorProcessoEdit(@PathVariable("colaboradorProcessoPK") Long colaboradorProcessoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorProcesso/colaboradorProcessoEdit");
@@ -136,16 +135,16 @@ public class ColaboradorProcessoController {
 		mv.addObject("colaboradorProcessoForm", colaboradorProcessoForm);
 		mv.addObject("colaboradorProcessoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("colaboradorProcessoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 	
-	@RequestMapping(path = "/colaboradorProcessoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorProcessoHome")
 	public ModelAndView colaboradorProcessoHome(@Valid ColaboradorProcessoByColaboradorForm colaboradorProcessoByColaboradorForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorProcesso/colaboradorProcessoHome");
@@ -165,10 +164,10 @@ public class ColaboradorProcessoController {
 
 		if (colaboradorProcessoByColaboradorForm.getColaboradorProcessoSortTipo().equalsIgnoreCase("ColaboradorNome")
 				|| colaboradorProcessoByColaboradorForm.getColaboradorProcessoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"colaborador.pessoaNome","processo.processoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"colaborador.pessoaNome","processo.processoNome"); 
 		
 		} else if (colaboradorProcessoByColaboradorForm.getColaboradorProcessoSortTipo().equalsIgnoreCase("ProcessoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","colaborador.pessoaNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","colaborador.pessoaNome"); 
 
 		}
 
@@ -191,7 +190,7 @@ public class ColaboradorProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorProcessoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/colaboradorProcessoSave")
 	public ModelAndView colaboradorProcessoSave(@Valid ColaboradorProcessoForm colaboradorProcessoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -215,7 +214,7 @@ public class ColaboradorProcessoController {
 		
 	}
 
-	@RequestMapping(path = "/colaboradorProcessoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorProcessoRelMenu")
 	public ModelAndView colaboradorProcessoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("colaboradorProcesso/colaboradorProcessoRelMenu");
@@ -224,18 +223,18 @@ public class ColaboradorProcessoController {
 		return mv;
 	}
 
-	@RequestMapping("/colaboradorProcessoRel001")
+	@GetMapping("/colaboradorProcessoRel001")
 	public ModelAndView colaboradorProcessoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorProcesso/colaboradorProcessoRel001");
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "colaborador.pessoaNome","processo.processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "colaborador.pessoaNome","processo.processoNome");
 		mv.addObject("colaboradorProcessoPage", colaboradorProcessoService.getColaboradorProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorProcessoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorProcessoView/{id}")
 	public ModelAndView colaboradorProcessoView(@PathVariable("id") Long colaboradorProcessoId) {
 
 		ColaboradorProcesso colaboradorProcesso = colaboradorProcessoService.getColaboradorProcessoByColaboradorProcessoPK(colaboradorProcessoId);

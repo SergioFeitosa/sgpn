@@ -3,8 +3,8 @@ package br.com.j4business.saga.contratotexto.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.contrato.model.Contrato;
 import br.com.j4business.saga.contratotexto.model.ContratoTexto;
 
 @Repository("contratoTextoRepository")
-public interface ContratoTextoRepository extends PagingAndSortingRepository<ContratoTexto, Long>{
+public interface ContratoTextoRepository extends JpaRepository<ContratoTexto, Long>{
 
 /*	 @Query("SELECT ea FROM ContratoTexto ea where ea.texto.textoPK = :id") 
 	    List<ContratoTexto> findByTextoPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface ContratoTextoRepository extends PagingAndSortingRepository<Cont
 	@Query("SELECT ep FROM ContratoTexto ep INNER JOIN ep.texto p WHERE p = :texto")
 	public List<ContratoTexto> findByTexto(@Param("texto")Texto texto);
 
-	@Query("SELECT ep FROM ContratoTexto ep INNER JOIN ep.texto p INNER JOIN ep.contrato e WHERE p = :texto AND s = :contrato")
+	@Query("SELECT ct FROM ContratoTexto ct INNER JOIN ct.texto t INNER JOIN ct.contrato c WHERE t = :texto AND c = :contrato")
 	public ContratoTexto findByContratoAndTexto( @Param("contrato") Contrato contrato, @Param("texto")Texto texto);
 	
 	@Query("SELECT ep FROM ContratoTexto ep")

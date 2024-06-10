@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,9 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -40,20 +40,20 @@ public class PaisController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/paisAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/paisAdd")
 	public ModelAndView paisAdd(PaisForm paisForm) {
 
 		ModelAndView mv = new ModelAndView("pais/paisAdd");
 		paisForm = paisService.paisParametros(paisForm);
 		mv.addObject("paisForm", paisForm);
 		mv.addObject("paisStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/paisCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/paisCreate")
 	public ModelAndView paisCreate(@Valid PaisForm paisForm, BindingResult result, RedirectAttributes attributes) {
 
 		Pais pais = null;
@@ -74,7 +74,7 @@ public class PaisController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/paisDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/paisDelete/{id}")
 	public ModelAndView paisDelete(@PathVariable("id") long paisPK, @Valid PaisForm paisForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/paisHome");
@@ -94,7 +94,7 @@ public class PaisController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/paisEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/paisEdit/{id}")
 	public ModelAndView paisEdit(@PathVariable("id") Long paisId, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("pais/paisEdit");
@@ -102,14 +102,14 @@ public class PaisController {
 		PaisForm paisForm = paisService.convertePais(pais);
 		mv.addObject("paisForm", paisForm);
 		mv.addObject("paisStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/paisHome", method = RequestMethod.GET)
+	@GetMapping(path = "/paisHome")
 	public ModelAndView paisHome(@Valid PaisByPaisForm paisByPaisForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("pais/paisHome");
@@ -128,10 +128,10 @@ public class PaisController {
 		}
 
 		if (paisByPaisForm.getPaisSortTipo().equalsIgnoreCase("PaisNome") || paisByPaisForm.getPaisSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "paisNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "paisNome");
 
 		} else if (paisByPaisForm.getPaisSortTipo().equalsIgnoreCase("PaisSigla")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "paisSigla");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "paisSigla");
 
 		}
 
@@ -153,7 +153,7 @@ public class PaisController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/paisSave", method = RequestMethod.POST)
+	@PostMapping(path = "/paisSave")
 	public ModelAndView paisSave(@Valid PaisForm paisForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -167,7 +167,7 @@ public class PaisController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/paisRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/paisRelMenu")
 	public ModelAndView paisRelMenu() {
 
 		ModelAndView mv = new ModelAndView("pais/paisRelMenu");
@@ -177,18 +177,18 @@ public class PaisController {
 		
 	}
 
-	@RequestMapping(path = "/paisRel001", method = RequestMethod.GET)
+	@GetMapping(path = "/paisRel001")
 	public ModelAndView paisRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("pais/paisRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "paisNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "paisNome");
 		mv.addObject("paisPage", paisService.getPaisAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/paisView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/paisView/{id}")
 	public ModelAndView paisView(@PathVariable("id") Long paisId) {
 
 		Pais pais = paisService.getPaisByPaisPK(paisId);

@@ -6,9 +6,10 @@ import br.com.j4business.saga.avaliacao.model.Avaliacao;
 import br.com.j4business.saga.avaliacaoresultadocontrato.model.AvaliacaoResultadoContrato;
 import br.com.j4business.saga.avaliacaoresultadocontrato.repository.AvaliacaoResultadoContratoRepository;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -78,7 +79,9 @@ public class AvaliacaoResultadoContratoServiceImpl implements AvaliacaoResultado
 
 	@Override
 	public AvaliacaoResultadoContrato getAvaliacaoResultadoContratoByAvaliacaoResultadoContratoPK(long avaliacaoResultadoContratoPK) {
-		return avaliacaoResultadoContratoRepository.findOne(avaliacaoResultadoContratoPK);
+		Optional<AvaliacaoResultadoContrato> avaliacaoResultadoContrato = avaliacaoResultadoContratoRepository.findById(avaliacaoResultadoContratoPK);
+
+		return avaliacaoResultadoContrato.get();
 	}
 
 	@Override
@@ -114,7 +117,7 @@ public class AvaliacaoResultadoContratoServiceImpl implements AvaliacaoResultado
 
 		AvaliacaoResultadoContrato avaliacaoResultadoContratoTemp = this.getAvaliacaoResultadoContratoByAvaliacaoResultadoContratoPK(avaliacaoResultadoContratoPK);
 
-		avaliacaoResultadoContratoRepository.delete(avaliacaoResultadoContratoPK);
+		avaliacaoResultadoContratoRepository.delete(avaliacaoResultadoContratoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("AvaliacaoResultadoContrato Save " + "\n Usuário => " + username + 
@@ -128,7 +131,11 @@ public class AvaliacaoResultadoContratoServiceImpl implements AvaliacaoResultado
 		
 		List<AvaliacaoResultadoContrato> avaliacaoResultadoContratos = avaliacaoResultadoContratoRepository.findByResultado(resultado);
 
-		avaliacaoResultadoContratoRepository.delete(avaliacaoResultadoContratos);
+		for (AvaliacaoResultadoContrato avaliacaoResultadoContrato2 : avaliacaoResultadoContratos) {
+
+			avaliacaoResultadoContratoRepository.delete(avaliacaoResultadoContrato2);
+
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

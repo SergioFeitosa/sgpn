@@ -3,9 +3,10 @@ package br.com.j4business.saga.colaborador.service;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -53,7 +54,6 @@ public class ColaboradorServiceImpl implements ColaboradorService {
 	@Autowired
 	private ColaboradorCursoService colaboradorCursoService;
 
-
 	@Autowired
 	private ColaboradorFormacaoService colaboradorFormacaoService;
 
@@ -100,7 +100,8 @@ public class ColaboradorServiceImpl implements ColaboradorService {
 	@Override
 	public Colaborador getColaboradorByColaboradorPK(long colaboradorPK) {
 		
-		return colaboradorRepository.findOne(colaboradorPK);
+		Optional<Colaborador> colaborador = colaboradorRepository.findById(colaboradorPK);
+		return colaborador.get();
 	}
 
 	@Transactional
@@ -147,7 +148,7 @@ public class ColaboradorServiceImpl implements ColaboradorService {
 
 		Colaborador colaborador = this.getColaboradorByColaboradorPK(colaboradorId);
 		
-		colaboradorRepository.delete(colaborador.getPessoaPK());
+		colaboradorRepository.delete(colaborador);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Colaborador Delete " + 	"\n Usuário => " + username + 
@@ -308,10 +309,10 @@ public class ColaboradorServiceImpl implements ColaboradorService {
 
 			existeFormacao = false;
 
-			Pageable colaboradorProcessoPageable = new PageRequest(0, 200,Direction.ASC, "colaborador.pessoaNome","processo.processoNome");
+			Pageable colaboradorProcessoPageable = PageRequest.of(0, 200,Direction.ASC, "colaborador.pessoaNome","processo.processoNome");
 			List<ColaboradorProcesso> colaboradorProcessoList = colaboradorProcessoService.getByColaboradorPK(colaborador.getPessoaPK(), colaboradorProcessoPageable);
 
-			Pageable colaboradorFormacaoTopOne = new PageRequest(0, 1);
+			Pageable colaboradorFormacaoTopOne = PageRequest.of(0, 1);
 			List<ColaboradorFormacao> colaboradorFormacaoList = colaboradorFormacaoService.getMaxNivelByColaboradorPK(colaborador.getPessoaPK(),colaboradorFormacaoTopOne);
 
 			if ( ! colaboradorProcessoList.isEmpty()) {
@@ -320,7 +321,7 @@ public class ColaboradorServiceImpl implements ColaboradorService {
 					
 					ColaboradorProcesso colaboradorProcesso = (ColaboradorProcesso) iterator2.next();
 				
-					Pageable processoFormacaoTopOne = new PageRequest(0, 1);
+					Pageable processoFormacaoTopOne = PageRequest.of(0, 1);
 					List<ProcessoFormacao> processoFormacaoList = processoFormacaoService.getMaxNivelByProcessoPK(colaboradorProcesso.getProcesso().getProcessoPK(),processoFormacaoTopOne);
 
 					if (processoFormacaoList.isEmpty()) {
@@ -417,10 +418,10 @@ public class ColaboradorServiceImpl implements ColaboradorService {
 
 			existeCertificacao = false;
 
-			Pageable colaboradorProcessoPageable = new PageRequest(0, 200,Direction.ASC, "colaborador.pessoaNome","processo.processoNome");
+			Pageable colaboradorProcessoPageable = PageRequest.of(0, 200,Direction.ASC, "colaborador.pessoaNome","processo.processoNome");
 			List<ColaboradorProcesso> colaboradorProcessoList = colaboradorProcessoService.getByColaboradorPK(colaborador.getPessoaPK(), colaboradorProcessoPageable);
 
-			Pageable colaboradorCertificacaoPageable = new PageRequest(0, 200,Direction.ASC, "colaborador.pessoaNome","certificacao.certificacaoNome");
+			Pageable colaboradorCertificacaoPageable = PageRequest.of(0, 200,Direction.ASC, "colaborador.pessoaNome","certificacao.certificacaoNome");
 			List<ColaboradorCertificacao> colaboradorCertificacaoList = colaboradorCertificacaoService.getByColaboradorPK(colaborador.getPessoaPK(), colaboradorCertificacaoPageable);
 
 			if ( ! colaboradorProcessoList.isEmpty()) {
@@ -429,7 +430,7 @@ public class ColaboradorServiceImpl implements ColaboradorService {
 					
 					ColaboradorProcesso colaboradorProcesso = (ColaboradorProcesso) iterator2.next();
 				
-					Pageable processoCertificacaoPageable = new PageRequest(0, 200,Direction.ASC, "processo.processoNome","certificacao.certificacaoNome");
+					Pageable processoCertificacaoPageable = PageRequest.of(0, 200,Direction.ASC, "processo.processoNome","certificacao.certificacaoNome");
 					List<ProcessoCertificacao> processoCertificacaoList = processoCertificacaoService.getByProcessoPK(colaboradorProcesso.getProcesso().getProcessoPK(), processoCertificacaoPageable);
 
 					if (processoCertificacaoList.isEmpty()) {
@@ -527,10 +528,10 @@ public class ColaboradorServiceImpl implements ColaboradorService {
 
 			existeCurso = false;
 
-			Pageable colaboradorProcessoPageable = new PageRequest(0, 200,Direction.ASC, "colaborador.pessoaNome","processo.processoNome");
+			Pageable colaboradorProcessoPageable = PageRequest.of(0, 200,Direction.ASC, "colaborador.pessoaNome","processo.processoNome");
 			List<ColaboradorProcesso> colaboradorProcessoList = colaboradorProcessoService.getByColaboradorPK(colaborador.getPessoaPK(), colaboradorProcessoPageable);
 
-			Pageable colaboradorCursoPageable = new PageRequest(0, 200,Direction.ASC, "colaborador.pessoaNome","curso.cursoNome");
+			Pageable colaboradorCursoPageable = PageRequest.of(0, 200,Direction.ASC, "colaborador.pessoaNome","curso.cursoNome");
 			List<ColaboradorCurso> colaboradorCursoList = colaboradorCursoService.getByColaboradorPK(colaborador.getPessoaPK(), colaboradorCursoPageable);
 
 			if ( ! colaboradorProcessoList.isEmpty()) {
@@ -539,7 +540,7 @@ public class ColaboradorServiceImpl implements ColaboradorService {
 					
 					ColaboradorProcesso colaboradorProcesso = (ColaboradorProcesso) iterator2.next();
 				
-					Pageable processoCursoPageable = new PageRequest(0, 200,Direction.ASC, "processo.processoNome","curso.cursoNome");
+					Pageable processoCursoPageable = PageRequest.of(0, 200,Direction.ASC, "processo.processoNome","curso.cursoNome");
 					List<ProcessoCurso> processoCursoList = processoCursoService.getByProcessoPK(colaboradorProcesso.getProcesso().getProcessoPK(), processoCursoPageable);
 
 					if (processoCursoList.isEmpty()) {
@@ -638,10 +639,10 @@ public class ColaboradorServiceImpl implements ColaboradorService {
 
 			existeHabilidade = false;
 
-			Pageable colaboradorProcessoPageable = new PageRequest(0, 200,Direction.ASC, "colaborador.pessoaNome","processo.processoNome");
+			Pageable colaboradorProcessoPageable = PageRequest.of(0, 200,Direction.ASC, "colaborador.pessoaNome","processo.processoNome");
 			List<ColaboradorProcesso> colaboradorProcessoList = colaboradorProcessoService.getByColaboradorPK(colaborador.getPessoaPK(), colaboradorProcessoPageable);
 
-			Pageable colaboradorHabilidadePageable = new PageRequest(0, 200,Direction.ASC, "colaborador.pessoaNome","habilidade.habilidadeNome");
+			Pageable colaboradorHabilidadePageable = PageRequest.of(0, 200,Direction.ASC, "colaborador.pessoaNome","habilidade.habilidadeNome");
 			List<ColaboradorHabilidade> colaboradorHabilidadeList = colaboradorHabilidadeService.getByColaboradorPK(colaborador.getPessoaPK(), colaboradorHabilidadePageable);
 
 			if ( ! colaboradorProcessoList.isEmpty()) {
@@ -650,7 +651,7 @@ public class ColaboradorServiceImpl implements ColaboradorService {
 					
 					ColaboradorProcesso colaboradorProcesso = (ColaboradorProcesso) iterator2.next();
 				
-					Pageable processoHabilidadePageable = new PageRequest(0, 200,Direction.ASC, "processo.processoNome","habilidade.habilidadeNome");
+					Pageable processoHabilidadePageable = PageRequest.of(0, 200,Direction.ASC, "processo.processoNome","habilidade.habilidadeNome");
 					List<ProcessoHabilidade> processoHabilidadeList = processoHabilidadeService.getByProcessoPK(colaboradorProcesso.getProcesso().getProcessoPK(), processoHabilidadePageable);
 
 					if (processoHabilidadeList.isEmpty()) {

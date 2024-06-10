@@ -1,8 +1,10 @@
 package br.com.j4business.saga.elemento.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +48,8 @@ public class ElementoServiceImpl implements ElementoService {
 
 	@Override
 	public Elemento getElementoByElementoPK(long elementoPK) {
-		
-		return elementoRepository.findOne(elementoPK);
+		Optional<Elemento> elemento = elementoRepository.findById(elementoPK);
+		return elemento.get();
 	}
 
 	@Transactional
@@ -93,7 +95,7 @@ public class ElementoServiceImpl implements ElementoService {
 
 		Elemento elemento = this.getElementoByElementoPK(elementoId);
 		
-		elementoRepository.delete(elemento.getElementoPK());
+		elementoRepository.delete(elemento);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Elemento Delete " + "\n Usuário => " + username + 

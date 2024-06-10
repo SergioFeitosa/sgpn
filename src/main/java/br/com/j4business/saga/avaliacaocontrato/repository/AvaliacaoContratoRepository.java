@@ -3,8 +3,8 @@ package br.com.j4business.saga.avaliacaocontrato.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ import br.com.j4business.saga.avaliacao.model.Avaliacao;
 import br.com.j4business.saga.avaliacaocontrato.model.AvaliacaoContrato;
 
 @Repository("avaliacaoContratoRepository")
-public interface AvaliacaoContratoRepository extends PagingAndSortingRepository<AvaliacaoContrato, Long>{
+public interface AvaliacaoContratoRepository extends JpaRepository<AvaliacaoContrato, Long>{
 
 /*	 @Query("SELECT ea FROM AvaliacaoContrato ea where ea.contrato.contratoPK = :id") 
 	    List<AvaliacaoContrato> findByContratoPK(@Param("id") Long id);
@@ -22,7 +22,7 @@ public interface AvaliacaoContratoRepository extends PagingAndSortingRepository<
 	@Query("SELECT ep FROM AvaliacaoContrato ep INNER JOIN ep.contrato p WHERE p = :contrato")
 	public List<AvaliacaoContrato> findByContrato(@Param("contrato")Contrato contrato);
 
-	@Query("SELECT ep FROM AvaliacaoContrato ep INNER JOIN ep.contrato p INNER JOIN ep.avaliacao e WHERE p = :contrato AND s = :avaliacao")
+	@Query("SELECT ac FROM AvaliacaoContrato ac INNER JOIN ac.contrato c INNER JOIN ac.avaliacao a WHERE c = :contrato AND a = :avaliacao")
 	public AvaliacaoContrato findByAvaliacaoAndContrato( @Param("avaliacao") Avaliacao avaliacao, @Param("contrato")Contrato contrato);
 	
 	@Query("SELECT ep FROM AvaliacaoContrato ep")
@@ -76,5 +76,8 @@ public interface AvaliacaoContratoRepository extends PagingAndSortingRepository<
 	@Query("SELECT ep FROM AvaliacaoContrato ep INNER JOIN ep.questionario q WHERE q.questionarioNome like :questionarioNome%")
 	public List<AvaliacaoContrato> findByQuestionarioNome(@Param("questionarioNome")String questionarioNome,Pageable pageable);
 	
+	@Query("SELECT ac FROM AvaliacaoContrato ac WHERE ac.avaliacaoContratoPK = :avaliacaoContratoPK")
+	public AvaliacaoContrato findByAvaliacaocontratoPK(@Param("avaliacaoContratoPK") long avaliacaoContratoPK);
+
 
 }

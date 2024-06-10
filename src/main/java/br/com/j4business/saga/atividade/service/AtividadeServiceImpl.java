@@ -1,10 +1,11 @@
 package br.com.j4business.saga.atividade.service;
 
 import java.util.List;
+import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceException;
+import jakarta.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -51,7 +52,8 @@ public class AtividadeServiceImpl implements AtividadeService {
 	@Override
 	public Atividade getAtividadeByAtividadePK(long atividadePK) {
 		
-		return atividadeRepository.findOne(atividadePK);
+		Optional<Atividade> atividade = atividadeRepository.findById(atividadePK);
+		return atividade.get();
 	}
 
 	@Transactional
@@ -97,7 +99,7 @@ public class AtividadeServiceImpl implements AtividadeService {
 
 		Atividade atividade = this.getAtividadeByAtividadePK(atividadeId);
 		
-		atividadeRepository.delete(atividade.getAtividadePK());
+		atividadeRepository.delete(atividade);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Atividade Delete " + "\n Usuário => " + username + 

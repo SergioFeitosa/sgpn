@@ -12,7 +12,6 @@ import br.com.j4business.saga.colaborador.model.Colaborador;
 
 
 @Repository("colaboradorRepository")
-
 public interface ColaboradorRepository extends JpaRepository<Colaborador, Long>{
 
 	@Query("SELECT p FROM Colaborador p WHERE p.colaboradorApelido like :colaboradorApelido%")

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +17,14 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.j4business.saga.colaborador.model.ColaboradorForm;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.colaboradorcertificacao.model.ColaboradorCertificacao;
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
@@ -55,7 +54,7 @@ public class ColaboradorCursoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/colaboradorCursoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorCursoAdd")
 	public ModelAndView colaboradorCursoAdd(ColaboradorCursoForm colaboradorCursoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorCurso/colaboradorCursoAdd");
@@ -64,18 +63,18 @@ public class ColaboradorCursoController {
 		mv.addObject("colaboradorCursoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("colaboradorCursoStatusValues", AtributoStatus.values());
 
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable cursoPageable = new PageRequest(0, 200, Direction.ASC, "cursoNome");
+		Pageable cursoPageable = PageRequest.of(0, 200, Direction.ASC, "cursoNome");
 		mv.addObject("cursoPage", cursoService.getCursoAll(cursoPageable));
-		Pageable fornecedorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable fornecedorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("fornecedorPage", fornecedorService.getFornecedorAll(fornecedorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorCursoCreate", method = RequestMethod.POST)
+	@GetMapping(path = "/colaboradorCursoCreate")
 	public ModelAndView colaboradorCursoCreate(@Valid ColaboradorCursoForm colaboradorCursoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -109,7 +108,7 @@ public class ColaboradorCursoController {
 	}
 
 
-	@RequestMapping(path = "/colaboradorCursoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorCursoDelete/{id}")
 	public ModelAndView colaboradorCursoDelete(@PathVariable("id") long colaboradorCursoId, @Valid CursoForm cursoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/colaboradorCursoHome");
@@ -135,7 +134,7 @@ public class ColaboradorCursoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorCursoEdit/{colaboradorCursoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorCursoEdit/{colaboradorCursoPK}")
 	public ModelAndView colaboradorCursoEdit(@PathVariable("colaboradorCursoPK") Long colaboradorCursoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorCurso/colaboradorCursoEdit");
@@ -145,18 +144,18 @@ public class ColaboradorCursoController {
 		mv.addObject("colaboradorCursoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("colaboradorCursoStatusValues", AtributoStatus.values());
 
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable cursoPageable = new PageRequest(0, 200, Direction.ASC, "cursoNome");
+		Pageable cursoPageable = PageRequest.of(0, 200, Direction.ASC, "cursoNome");
 		mv.addObject("cursoPage", cursoService.getCursoAll(cursoPageable));
-		Pageable fornecedorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable fornecedorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("fornecedorPage", fornecedorService.getFornecedorAll(fornecedorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 	
-	@RequestMapping(path = "/colaboradorCursoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorCursoHome")
 	public ModelAndView colaboradorCursoHome(@Valid ColaboradorCursoByColaboradorForm colaboradorCursoByColaboradorForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorCurso/colaboradorCursoHome");
@@ -176,10 +175,10 @@ public class ColaboradorCursoController {
 
 		if (colaboradorCursoByColaboradorForm.getColaboradorCursoSortTipo().equalsIgnoreCase("ColaboradorNome")
 				|| colaboradorCursoByColaboradorForm.getColaboradorCursoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"colaborador.pessoaNome","curso.cursoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"colaborador.pessoaNome","curso.cursoNome"); 
 		
 		} else if (colaboradorCursoByColaboradorForm.getColaboradorCursoSortTipo().equalsIgnoreCase("CursoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"curso.cursoNome","colaborador.pessoaNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"curso.cursoNome","colaborador.pessoaNome"); 
 
 		}
 
@@ -202,7 +201,7 @@ public class ColaboradorCursoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorCursoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/colaboradorCursoSave")
 	public ModelAndView colaboradorCursoSave(@Valid ColaboradorCursoForm colaboradorCursoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -225,7 +224,7 @@ public class ColaboradorCursoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorCursoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorCursoRelMenu")
 	public ModelAndView colaboradorCursoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("colaboradorCurso/colaboradorCursoRelMenu");
@@ -234,18 +233,18 @@ public class ColaboradorCursoController {
 		return mv;
 	}
 
-	@RequestMapping("/colaboradorCursoRel001")
+	@GetMapping("/colaboradorCursoRel001")
 	public ModelAndView colaboradorCursoRel001() {
 
 		ModelAndView mv = new ModelAndView("colaboradorCurso/colaboradorCursoRel001");
-		Pageable colaboradorCursoPageable = new PageRequest(0, 200, Direction.ASC, "colaborador.pessoaNome","curso.cursoNome");
+		Pageable colaboradorCursoPageable = PageRequest.of(0, 200, Direction.ASC, "colaborador.pessoaNome","curso.cursoNome");
 		mv.addObject("colaboradorCursoPage", colaboradorCursoService.getColaboradorCursoAll(colaboradorCursoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorCursoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorCursoView/{id}")
 	public ModelAndView colaboradorCursoView(@PathVariable("id") Long colaboradorCursoId) {
 
 		ColaboradorCurso colaboradorCurso = colaboradorCursoService.getColaboradorCursoByColaboradorCursoPK(colaboradorCursoId);

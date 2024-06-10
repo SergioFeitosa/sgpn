@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,9 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -61,28 +61,28 @@ public class AvaliacaoResultadoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/avaliacaoResultadoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoResultadoAdd")
 	public ModelAndView avaliacaoResultadoAdd(AvaliacaoResultado avaliacaoResultado) {
 
 		ModelAndView mv = new ModelAndView("avaliacaoResultado/avaliacaoResultadoAdd");
 		mv.addObject("avaliacaoResultado", avaliacaoResultado);
 		mv.addObject("avaliacaoResultadoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("avaliacaoResultadoStatusValues", AtributoStatus.values());
-		Pageable avaliacaoPageable = new PageRequest(0, 200, Direction.ASC, "avaliacaoNome");
+		Pageable avaliacaoPageable = PageRequest.of(0, 200, Direction.ASC, "avaliacaoNome");
 		mv.addObject("avaliacaoPage", avaliacaoService.getAvaliacaoAll(avaliacaoPageable));
-		Pageable cenarioPageable = new PageRequest(0, 200, Direction.ASC, "cenarioNome");
+		Pageable cenarioPageable = PageRequest.of(0, 200, Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(cenarioPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable questionarioPageable = new PageRequest(0, 200, Direction.ASC, "questionarioNome");
+		Pageable questionarioPageable = PageRequest.of(0, 200, Direction.ASC, "questionarioNome");
 		mv.addObject("questionarioPage", questionarioService.getQuestionarioAll(questionarioPageable));
-		Pageable resultadoPageable = new PageRequest(0, 200, Direction.ASC, "resultadoNome");
+		Pageable resultadoPageable = PageRequest.of(0, 200, Direction.ASC, "resultadoNome");
 		mv.addObject("resultadoPage", resultadoService.getResultadoAll(resultadoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoResultadoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/avaliacaoResultadoCreate")
 	public ModelAndView avaliacaoResultadoCreate(AvaliacaoResultado avaliacaoResultado, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		
@@ -101,7 +101,7 @@ public class AvaliacaoResultadoController {
 	}
 
 
-	@RequestMapping(path = "/avaliacaoResultadoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoResultadoDelete/{id}")
 	public ModelAndView avaliacaoResultadoDelete(@PathVariable("id") long avaliacaoResultadoId, @Valid ResultadoForm resultadoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/avaliacaoResultadoHome");
@@ -126,7 +126,7 @@ public class AvaliacaoResultadoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoResultadoEdit/{avaliacaoResultadoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoResultadoEdit/{avaliacaoResultadoPK}")
 	public ModelAndView avaliacaoResultadoEdit(@PathVariable("avaliacaoResultadoPK") Long avaliacaoResultadoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("avaliacaoResultado/avaliacaoResultadoEdit");
@@ -134,22 +134,22 @@ public class AvaliacaoResultadoController {
 		mv.addObject("avaliacaoResultado", avaliacaoResultado);
 		mv.addObject("avaliacaoResultadoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("avaliacaoResultadoStatusValues", AtributoStatus.values());
-		Pageable avaliacaoPageable = new PageRequest(0, 200, Direction.ASC, "avaliacaoNome");
+		Pageable avaliacaoPageable = PageRequest.of(0, 200, Direction.ASC, "avaliacaoNome");
 		mv.addObject("avaliacaoPage", avaliacaoService.getAvaliacaoAll(avaliacaoPageable));
-		Pageable cenarioPageable = new PageRequest(0, 200, Direction.ASC, "cenarioNome");
+		Pageable cenarioPageable = PageRequest.of(0, 200, Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(cenarioPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable questionarioPageable = new PageRequest(0, 200, Direction.ASC, "questionarioNome");
+		Pageable questionarioPageable = PageRequest.of(0, 200, Direction.ASC, "questionarioNome");
 		mv.addObject("questionarioPage", questionarioService.getQuestionarioAll(questionarioPageable));
-		Pageable resultadoPageable = new PageRequest(0, 200, Direction.ASC, "resultadoNome");
+		Pageable resultadoPageable = PageRequest.of(0, 200, Direction.ASC, "resultadoNome");
 		mv.addObject("resultadoPage", resultadoService.getResultadoAll(resultadoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoResultadoQuestionario/{avaliacaoResultadoPK}/{questionarioPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoResultadoQuestionario/{avaliacaoResultadoPK}/{questionarioPK}")
 	public ModelAndView avaliacaoResultadoQuestionario(@PathVariable("avaliacaoResultadoPK") Long avaliacaoResultadoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK)
 						{
@@ -160,24 +160,24 @@ public class AvaliacaoResultadoController {
 		mv.addObject("avaliacaoResultadoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("avaliacaoResultadoStatusValues", AtributoStatus.values());
 		mv.addObject("colaboradorList", colaboradorService.getColaboradorAll());
-		Pageable avaliacaoPageable = new PageRequest(0, 200, Direction.ASC, "avaliacaoNome");
+		Pageable avaliacaoPageable = PageRequest.of(0, 200, Direction.ASC, "avaliacaoNome");
 		mv.addObject("avaliacaoPage", avaliacaoService.getAvaliacaoAll(avaliacaoPageable));
-		Pageable cenarioPageable = new PageRequest(0, 200, Direction.ASC, "cenarioNome");
+		Pageable cenarioPageable = PageRequest.of(0, 200, Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(cenarioPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable questionarioPageable = new PageRequest(0, 200, Direction.ASC, "questionarioNome");
+		Pageable questionarioPageable = PageRequest.of(0, 200, Direction.ASC, "questionarioNome");
 		mv.addObject("questionarioPage", questionarioService.getQuestionarioAll(questionarioPageable));
-		Pageable resultadoPageable = new PageRequest(0, 200, Direction.ASC, "resultadoNome");
+		Pageable resultadoPageable = PageRequest.of(0, 200, Direction.ASC, "resultadoNome");
 		mv.addObject("resultadoPage", resultadoService.getResultadoAll(resultadoPageable));
-		Pageable questaoPageable = new PageRequest(0, 200, Direction.ASC, "questaoSequencia");
+		Pageable questaoPageable = PageRequest.of(0, 200, Direction.ASC, "questaoSequencia");
 		mv.addObject("questaoPage", questionarioQuestaoService.getByQuestionarioPK(questionarioPK,questaoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoResultadoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoResultadoHome")
 	public ModelAndView avaliacaoResultadoHome(@Valid AvaliacaoResultado avaliacaoResultado, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("avaliacaoResultado/avaliacaoResultadoHome");
@@ -196,7 +196,7 @@ public class AvaliacaoResultadoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoResultadoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/avaliacaoResultadoSave")
 	public ModelAndView avaliacaoResultadoSave(@Valid AvaliacaoResultado avaliacaoResultado, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("redirect:/avaliacaoResultadoHome");
@@ -206,7 +206,7 @@ public class AvaliacaoResultadoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoResultadoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoResultadoRelMenu")
 	public ModelAndView avaliacaoResultadoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("avaliacaoResultado/avaliacaoResultadoRelMenu");
@@ -215,7 +215,7 @@ public class AvaliacaoResultadoController {
 		return mv;
 	}
 
-	@RequestMapping("/avaliacaoResultadoRel001")
+	@GetMapping("/avaliacaoResultadoRel001")
 	public ModelAndView avaliacaoResultadoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("avaliacaoResultado/avaliacaoResultadoRel001");
@@ -225,7 +225,7 @@ public class AvaliacaoResultadoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoResultadoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoResultadoView/{id}")
 	public ModelAndView avaliacaoResultadoView(@PathVariable("id") Long avaliacaoResultadoId) {
 
 		AvaliacaoResultado avaliacaoResultado = avaliacaoResultadoService.getAvaliacaoResultadoByAvaliacaoResultadoPK(avaliacaoResultadoId);

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,20 +17,20 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import br.com.j4business.saga.unidadeorganizacional.model.UnidadeorganizacionalForm;
-import br.com.j4business.saga.unidadeorganizacional.service.UnidadeorganizacionalService;
+
 import br.com.j4business.saga.UsuarioSeguranca;
-import br.com.j4business.saga.agendaevento.model.AgendaEvento;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
-import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.cenario.model.CenarioForm;
 import br.com.j4business.saga.cenario.service.CenarioService;
+import br.com.j4business.saga.colaborador.service.ColaboradorService;
+import br.com.j4business.saga.unidadeorganizacional.model.UnidadeorganizacionalForm;
+import br.com.j4business.saga.unidadeorganizacional.service.UnidadeorganizacionalService;
 import br.com.j4business.saga.unidadeorganizacionalcenario.model.UnidadeorganizacionalCenario;
 import br.com.j4business.saga.unidadeorganizacionalcenario.model.UnidadeorganizacionalCenarioByUnidadeorganizacionalForm;
 import br.com.j4business.saga.unidadeorganizacionalcenario.model.UnidadeorganizacionalCenarioForm;
@@ -54,7 +54,7 @@ public class UnidadeorganizacionalCenarioController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/unidadeorganizacionalCenarioAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalCenarioAdd")
 	public ModelAndView unidadeorganizacionalCenarioAdd(UnidadeorganizacionalCenarioForm unidadeorganizacionalCenarioForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("unidadeorganizacionalCenario/unidadeorganizacionalCenarioAdd");
@@ -62,18 +62,18 @@ public class UnidadeorganizacionalCenarioController {
 		mv.addObject("unidadeorganizacionalCenarioForm", unidadeorganizacionalCenarioForm);
 		mv.addObject("unidadeorganizacionalCenarioPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("unidadeorganizacionalCenarioStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable cenarioPageable = new PageRequest(0, 200, Direction.ASC, "cenarioNome");
+		Pageable cenarioPageable = PageRequest.of(0, 200, Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(cenarioPageable));
-		Pageable unidadeorganizacionalPageable = new PageRequest(0, 200, Direction.ASC, "unidadeorganizacionalNome");
+		Pageable unidadeorganizacionalPageable = PageRequest.of(0, 200, Direction.ASC, "unidadeorganizacionalNome");
 		mv.addObject("unidadeorganizacionalPage", unidadeorganizacionalService.getUnidadeorganizacionalAll(unidadeorganizacionalPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/unidadeorganizacionalCenarioCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/unidadeorganizacionalCenarioCreate")
 	public ModelAndView unidadeorganizacionalCenarioCreate(@Valid UnidadeorganizacionalCenarioForm unidadeorganizacionalCenarioForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -107,7 +107,7 @@ public class UnidadeorganizacionalCenarioController {
 	}
 
 
-	@RequestMapping(path = "/unidadeorganizacionalCenarioDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalCenarioDelete/{id}")
 	public ModelAndView unidadeorganizacionalCenarioDelete(@PathVariable("id") long unidadeorganizacionalCenarioId, @Valid CenarioForm cenarioForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/unidadeorganizacionalCenarioHome");
@@ -133,7 +133,7 @@ public class UnidadeorganizacionalCenarioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/unidadeorganizacionalCenarioEdit/{unidadeorganizacionalCenarioPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalCenarioEdit/{unidadeorganizacionalCenarioPK}")
 	public ModelAndView unidadeorganizacionalCenarioEdit(@PathVariable("unidadeorganizacionalCenarioPK") Long unidadeorganizacionalCenarioPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("unidadeorganizacionalCenario/unidadeorganizacionalCenarioEdit");
@@ -142,18 +142,18 @@ public class UnidadeorganizacionalCenarioController {
 		mv.addObject("unidadeorganizacionalCenarioForm", unidadeorganizacionalCenarioForm);
 		mv.addObject("unidadeorganizacionalCenarioPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("unidadeorganizacionalCenarioStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable cenarioPageable = new PageRequest(0, 200, Direction.ASC, "cenarioNome");
+		Pageable cenarioPageable = PageRequest.of(0, 200, Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(cenarioPageable));
-		Pageable unidadeorganizacionalPageable = new PageRequest(0, 200, Direction.ASC, "unidadeorganizacionalNome");
+		Pageable unidadeorganizacionalPageable = PageRequest.of(0, 200, Direction.ASC, "unidadeorganizacionalNome");
 		mv.addObject("unidadeorganizacionalPage", unidadeorganizacionalService.getUnidadeorganizacionalAll(unidadeorganizacionalPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/unidadeorganizacionalCenarioHome", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalCenarioHome")
 	public ModelAndView unidadeorganizacionalCenarioHome(@Valid UnidadeorganizacionalCenarioByUnidadeorganizacionalForm unidadeorganizacionalCenarioByUnidadeorganizacionalForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("unidadeorganizacionalCenario/unidadeorganizacionalCenarioHome");
@@ -173,10 +173,10 @@ public class UnidadeorganizacionalCenarioController {
 
 		if (unidadeorganizacionalCenarioByUnidadeorganizacionalForm.getUnidadeorganizacionalCenarioSortTipo().equalsIgnoreCase("UnidadeorganizacionalNome")
 				|| unidadeorganizacionalCenarioByUnidadeorganizacionalForm.getUnidadeorganizacionalCenarioSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"unidadeorganizacional.unidadeorganizacionalNome","cenario.cenarioNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"unidadeorganizacional.unidadeorganizacionalNome","cenario.cenarioNome"); 
 		
 		} else if (unidadeorganizacionalCenarioByUnidadeorganizacionalForm.getUnidadeorganizacionalCenarioSortTipo().equalsIgnoreCase("CenarioNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"cenario.cenarioNome","unidadeorganizacional.unidadeorganizacionalNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"cenario.cenarioNome","unidadeorganizacional.unidadeorganizacionalNome"); 
 
 		}
 
@@ -199,7 +199,7 @@ public class UnidadeorganizacionalCenarioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/unidadeorganizacionalCenarioSave", method = RequestMethod.POST)
+	@PostMapping(path = "/unidadeorganizacionalCenarioSave")
 	public ModelAndView unidadeorganizacionalCenarioSave(@Valid UnidadeorganizacionalCenarioForm unidadeorganizacionalCenarioForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -222,7 +222,7 @@ public class UnidadeorganizacionalCenarioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/unidadeorganizacionalCenarioRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalCenarioRelMenu")
 	public ModelAndView unidadeorganizacionalCenarioRelMenu() {
 
 		ModelAndView mv = new ModelAndView("unidadeorganizacionalCenario/unidadeorganizacionalCenarioRelMenu");
@@ -232,18 +232,18 @@ public class UnidadeorganizacionalCenarioController {
 		
 	}
 
-	@RequestMapping("/unidadeorganizacionalCenarioRel001")
+	@GetMapping("/unidadeorganizacionalCenarioRel001")
 	public ModelAndView unidadeorganizacionalCenarioRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("unidadeorganizacionalCenario/unidadeorganizacionalCenarioRel001");
-		Pageable unidadeorganizacionalCenarioPageable = new PageRequest(0, 200, Direction.ASC, "unidadeorganizacional.unidadeorganizacionalNome","cenario.cenarioNome");
+		Pageable unidadeorganizacionalCenarioPageable = PageRequest.of(0, 200, Direction.ASC, "unidadeorganizacional.unidadeorganizacionalNome","cenario.cenarioNome");
 		mv.addObject("unidadeorganizacionalCenarioPage", unidadeorganizacionalCenarioService.getUnidadeorganizacionalCenarioAll(unidadeorganizacionalCenarioPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/unidadeorganizacionalCenarioView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalCenarioView/{id}")
 	public ModelAndView unidadeorganizacionalCenarioView(@PathVariable("id") Long unidadeorganizacionalCenarioId) {
 
 		UnidadeorganizacionalCenario unidadeorganizacionalCenario = unidadeorganizacionalCenarioService.getUnidadeorganizacionalCenarioByUnidadeorganizacionalCenarioPK(unidadeorganizacionalCenarioId);

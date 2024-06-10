@@ -3,8 +3,8 @@ package br.com.j4business.saga.processocertificacao.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.processo.model.Processo;
 import br.com.j4business.saga.processocertificacao.model.ProcessoCertificacao;
 
 @Repository("processoCertificacaoRepository")
-public interface ProcessoCertificacaoRepository extends PagingAndSortingRepository<ProcessoCertificacao, Long>{
+public interface ProcessoCertificacaoRepository extends JpaRepository<ProcessoCertificacao, Long>{
 
 /*	 @Query("SELECT ea FROM ProcessoCertificacao ea where ea.certificacao.certificacaoPK = :id") 
 	    List<ProcessoCertificacao> findByCertificacaoPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface ProcessoCertificacaoRepository extends PagingAndSortingReposito
 	@Query("SELECT ep FROM ProcessoCertificacao ep INNER JOIN ep.certificacao p WHERE p = :certificacao")
 	public List<ProcessoCertificacao> findByCertificacao(@Param("certificacao")Certificacao certificacao);
 
-	@Query("SELECT ep FROM ProcessoCertificacao ep INNER JOIN ep.certificacao p INNER JOIN ep.processo e WHERE p = :certificacao AND s = :processo")
+	@Query("SELECT pc FROM ProcessoCertificacao pc INNER JOIN pc.certificacao c INNER JOIN pc.processo p WHERE c = :certificacao AND p = :processo")
 	public ProcessoCertificacao findByProcessoAndCertificacao( @Param("processo") Processo processo, @Param("certificacao")Certificacao certificacao);
 	
 	@Query("SELECT ep FROM ProcessoCertificacao ep")

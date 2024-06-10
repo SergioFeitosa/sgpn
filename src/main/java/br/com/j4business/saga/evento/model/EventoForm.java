@@ -1,12 +1,12 @@
 package br.com.j4business.saga.evento.model;
 
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
@@ -16,11 +16,11 @@ public class EventoForm {
 
 	private long eventoPK;
 	
-    @NotEmpty(message = "Nome é uma informação obrigatória.")
+    @NotBlank(message = "Nome é uma informação obrigatória.")
 	@Size(min = 3,max = 200, message = "O nome não pode ter menos que 3 e mais que 100 caracteres")
 	private String eventoNome;
 	
-    @NotEmpty(message = "Descrição é uma informação obrigatória.")
+    @NotBlank(message = "Descrição é uma informação obrigatória.")
 	@Size(min = 5,max = 200, message = "A descrição não pode ter menos que 5 e mais que 200 caracteres")
 	private String eventoDescricao;
 
@@ -28,11 +28,11 @@ public class EventoForm {
 	@Enumerated(EnumType.STRING)
 	private AtributoStatus eventoStatus;
 
-    @NotEmpty(message = "Responsável é uma informação obrigatória.")
+    @NotBlank(message = "Responsável é uma informação obrigatória.")
 	@NotNull(message = "Responsável é uma informação obrigatória.")
 	private String eventoResponsavel;
 
-    @NotEmpty(message = "Motivo da Operação é uma informação obrigatória.")
+    @NotBlank(message = "Motivo da Operação é uma informação obrigatória.")
 	@Size(min = 5,max = 200, message = "Motivo da Operação não pode ter menos que 5 e mais que 200 caracteres")
 	private String eventoMotivoOperacao;
 
@@ -48,7 +48,7 @@ public class EventoForm {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private String  eventoDataTermino;
 
-    @NotEmpty(message = "Fonte de origem do evento é uma informação obrigatória.")
+    @NotBlank(message = "Fonte de origem do evento é uma informação obrigatória.")
 	@Size(min = 5,max = 200, message = "Fonte de origem do evento não pode ter menos que 5 e mais que 200 caracteres")
 	private String eventoFonte;
 

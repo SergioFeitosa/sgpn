@@ -1,16 +1,15 @@
 package br.com.j4business.saga.empresa.model;
 
 
-import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.empresaprocesso.model.EmpresaProcesso;
@@ -18,7 +17,7 @@ import br.com.j4business.saga.pessoajuridica.model.PessoaJuridica;
 
 @Entity
 @Table(name = "empresa")
-public class Empresa  extends PessoaJuridica implements Serializable{ 
+public class Empresa  extends PessoaJuridica { 
 
 	private static final long serialVersionUID = -388580969043903416L;
 

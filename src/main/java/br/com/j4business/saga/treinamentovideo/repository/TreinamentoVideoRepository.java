@@ -3,8 +3,8 @@ package br.com.j4business.saga.treinamentovideo.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.treinamento.model.Treinamento;
 import br.com.j4business.saga.treinamentovideo.model.TreinamentoVideo;
 
 @Repository("treinamentoVideoRepository")
-public interface TreinamentoVideoRepository extends PagingAndSortingRepository<TreinamentoVideo, Long>{
+public interface TreinamentoVideoRepository extends JpaRepository<TreinamentoVideo, Long>{
 
 /*	 @Query("SELECT ea FROM TreinamentoVideo ea where ea.video.videoPK = :id") 
 	    List<TreinamentoVideo> findByVideoPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface TreinamentoVideoRepository extends PagingAndSortingRepository<T
 	@Query("SELECT ep FROM TreinamentoVideo ep INNER JOIN ep.video p WHERE p = :video")
 	public List<TreinamentoVideo> findByVideo(@Param("video")Video video);
 
-	@Query("SELECT ep FROM TreinamentoVideo ep INNER JOIN ep.video p INNER JOIN ep.treinamento e WHERE p = :video AND s = :treinamento")
+	@Query("SELECT tv FROM TreinamentoVideo tv INNER JOIN tv.video v INNER JOIN tv.treinamento t WHERE v = :video AND t = :treinamento")
 	public TreinamentoVideo findByTreinamentoAndVideo( @Param("treinamento") Treinamento treinamento, @Param("video")Video video);
 	
 	@Query("SELECT ep FROM TreinamentoVideo ep")

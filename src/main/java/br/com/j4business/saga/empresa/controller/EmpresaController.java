@@ -5,8 +5,8 @@ import java.util.Date;
 import java.util.EnumSet;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +18,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -49,7 +49,7 @@ public class EmpresaController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/empresaAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/empresaAdd")
 	public ModelAndView empresaAdd(EmpresaForm empresaForm, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("empresa/empresaAdd");
@@ -57,13 +57,13 @@ public class EmpresaController {
 		mv.addObject("empresaForm", empresaForm);
 		mv.addObject("empresaRamoValues", listarEmpresaRamos());
 		mv.addObject("empresaStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/empresaCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/empresaCreate")
 	public ModelAndView empresaCreate(@Valid EmpresaForm empresaForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -96,7 +96,7 @@ public class EmpresaController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/empresaDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/empresaDelete/{id}")
 	public ModelAndView empresaDelete(@PathVariable("id") long empresaPK, @Valid EmpresaForm empresaForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/empresaHome");
@@ -115,7 +115,7 @@ public class EmpresaController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/empresaEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/empresaEdit/{id}")
 	public ModelAndView empresaEdit(@PathVariable("id") Long empresaPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("empresa/empresaEdit");
@@ -126,16 +126,16 @@ public class EmpresaController {
 		mv.addObject("empresaRamoValues", listarEmpresaRamos());
 		mv.addObject("empresaStatusValues", AtributoStatus.values());
 		mv.addObject("colaboradorList", colaboradorService.getColaboradorAll());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable empresaProcessoPageable = new PageRequest(0, 200, Direction.ASC, "processo.processoNome");
+		Pageable empresaProcessoPageable = PageRequest.of(0, 200, Direction.ASC, "processo.processoNome");
 		mv.addObject("empresaProcessoPage", empresaProcessoService.getByEmpresaPK(empresaPK, empresaProcessoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping("/empresaHome")
+	@GetMapping("/empresaHome")
 	public ModelAndView empresaHome(@Valid EmpresaByEmpresaForm empresaByEmpresaForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("empresa/empresaHome");
@@ -153,10 +153,10 @@ public class EmpresaController {
 		}
 
 		if (empresaByEmpresaForm.getEmpresaSortTipo().equalsIgnoreCase("EmpresaNome") || empresaByEmpresaForm.getEmpresaSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "pessoaNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "pessoaNome");
 
 		} else if (empresaByEmpresaForm.getEmpresaSortTipo().equalsIgnoreCase("EmpresaNomeFantasia")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "empresaNomeFantasia");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "empresaNomeFantasia");
 
 		}
 
@@ -178,7 +178,7 @@ public class EmpresaController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/empresaRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/empresaRelMenu")
 	public ModelAndView empresaRelMenu() {
 
 		ModelAndView mv = new ModelAndView("empresa/empresaRelMenu");
@@ -188,11 +188,11 @@ public class EmpresaController {
 		
 	}
 
-	@RequestMapping("/empresaRel001")
+	@GetMapping("/empresaRel001")
 	public ModelAndView empresaRel001() {
 
 		ModelAndView mv = new ModelAndView("empresa/empresaRel001");
-		Pageable pageable = new PageRequest(0, 200 , Direction.ASC, "pessoaNome");
+		Pageable pageable = PageRequest.of(0, 200 , Direction.ASC, "pessoaNome");
 		mv.addObject("empresaPage", empresaService.getEmpresaAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
@@ -200,7 +200,7 @@ public class EmpresaController {
 	}
 
 
-	@RequestMapping(path = "/empresaSave", method = RequestMethod.POST)
+	@PostMapping(path = "/empresaSave")
 	public ModelAndView empresaSave(@Valid EmpresaForm empresaForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -223,7 +223,7 @@ public class EmpresaController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/empresaView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/empresaView/{id}")
 	public ModelAndView empresaView(@PathVariable("id") Long empresaId) {
 
 		Empresa empresa = empresaService.getEmpresaByEmpresaPK(empresaId);

@@ -6,16 +6,16 @@ import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.contrato.model.Contrato;
 import br.com.j4business.saga.contrato.service.ContratoService;
-import br.com.j4business.saga.contratoimagem.model.ContratoImagem;
 import br.com.j4business.saga.contratotexto.model.ContratoTexto;
 import br.com.j4business.saga.texto.model.Texto;
 import br.com.j4business.saga.texto.service.TextoService;
 import br.com.j4business.saga.contratotexto.model.ContratoTextoForm;
 import br.com.j4business.saga.contratotexto.repository.ContratoTextoRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
+
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -93,7 +93,8 @@ public class ContratoTextoServiceImpl implements ContratoTextoService {
 
 	@Override
 	public ContratoTexto getContratoTextoByContratoTextoPK(long contratoTextoPK) {
-		return contratoTextoRepository.findOne(contratoTextoPK);
+		Optional<ContratoTexto> contratoTexto = contratoTextoRepository.findById(contratoTextoPK);
+		return contratoTexto.get();
 	}
 
 	@Override
@@ -142,7 +143,7 @@ public class ContratoTextoServiceImpl implements ContratoTextoService {
 
 		ContratoTexto contratoTextoTemp = this.getContratoTextoByContratoTextoPK(contratoTextoPK);
 
-		contratoTextoRepository.delete(contratoTextoPK);
+		contratoTextoRepository.delete(contratoTextoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ContratoTexto Save " + "\n Usuário => " + username + 
@@ -156,7 +157,10 @@ public class ContratoTextoServiceImpl implements ContratoTextoService {
 		
 		List<ContratoTexto> contratoTextoList = contratoTextoRepository.findByTexto(texto);
 
-		contratoTextoRepository.delete(contratoTextoList);
+		for (ContratoTexto contratoTexto2 : contratoTextoList) {
+			contratoTextoRepository.delete(contratoTexto2);			
+		}
+
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

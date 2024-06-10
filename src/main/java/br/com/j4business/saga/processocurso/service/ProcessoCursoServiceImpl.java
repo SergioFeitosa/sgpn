@@ -1,26 +1,28 @@
 package br.com.j4business.saga.processocurso.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.processo.model.Processo;
-import br.com.j4business.saga.processo.service.ProcessoService;
-import br.com.j4business.saga.processocertificacao.model.ProcessoCertificacao;
-import br.com.j4business.saga.processocurso.model.ProcessoCurso;
 import br.com.j4business.saga.curso.model.Curso;
 import br.com.j4business.saga.curso.service.CursoService;
+import br.com.j4business.saga.processo.model.Processo;
+import br.com.j4business.saga.processo.service.ProcessoService;
+import br.com.j4business.saga.processocurso.model.ProcessoCurso;
 import br.com.j4business.saga.processocurso.model.ProcessoCursoForm;
 import br.com.j4business.saga.processocurso.repository.ProcessoCursoRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 @Service("processoCursoService")
 public class ProcessoCursoServiceImpl implements ProcessoCursoService {
@@ -83,7 +85,8 @@ public class ProcessoCursoServiceImpl implements ProcessoCursoService {
 
 	@Override
 	public ProcessoCurso getProcessoCursoByProcessoCursoPK(long processoCursoPK) {
-		return processoCursoRepository.findOne(processoCursoPK);
+		Optional<ProcessoCurso> processoCurso = processoCursoRepository.findById(processoCursoPK);
+		return processoCurso.get();
 	}
 
 	@Override
@@ -132,7 +135,7 @@ public class ProcessoCursoServiceImpl implements ProcessoCursoService {
 
 		ProcessoCurso processoCursoTemp = this.getProcessoCursoByProcessoCursoPK(processoCursoPK);
 
-		processoCursoRepository.delete(processoCursoPK);
+		processoCursoRepository.delete(processoCursoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ProcessoCurso Save " + "\n Usuário => " + username + 
@@ -146,7 +149,10 @@ public class ProcessoCursoServiceImpl implements ProcessoCursoService {
 		
 		List<ProcessoCurso> processoCursoList = processoCursoRepository.findByCurso(curso);
 
-		processoCursoRepository.delete(processoCursoList);
+		for (ProcessoCurso processoCurso2 : processoCursoList) {
+			
+			processoCursoRepository.delete(processoCurso2);
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

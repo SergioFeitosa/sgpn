@@ -3,8 +3,8 @@ package br.com.j4business.saga.elementoquestao.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.elemento.model.Elemento;
 import br.com.j4business.saga.elementoquestao.model.ElementoQuestao;
 
 @Repository("elementoQuestaoRepository")
-public interface ElementoQuestaoRepository extends PagingAndSortingRepository<ElementoQuestao, Long>{
+public interface ElementoQuestaoRepository extends JpaRepository<ElementoQuestao, Long>{
 
 /*	 @Query("SELECT ea FROM ElementoQuestao ea where ea.questao.questaoPK = :id") 
 	    List<ElementoQuestao> findByQuestaoPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface ElementoQuestaoRepository extends PagingAndSortingRepository<El
 	@Query("SELECT ep FROM ElementoQuestao ep INNER JOIN ep.questao p WHERE p = :questao")
 	public List<ElementoQuestao> findByQuestao(@Param("questao")Questao questao);
 
-	@Query("SELECT ep FROM ElementoQuestao ep INNER JOIN ep.questao p INNER JOIN ep.elemento e WHERE p = :questao AND s = :elemento")
+	@Query("SELECT eq FROM ElementoQuestao eq INNER JOIN eq.questao q INNER JOIN eq.elemento e WHERE q = :questao AND e = :elemento")
 	public ElementoQuestao findByElementoAndQuestao( @Param("elemento") Elemento elemento, @Param("questao")Questao questao);
 	
 	@Query("SELECT ep FROM ElementoQuestao ep")

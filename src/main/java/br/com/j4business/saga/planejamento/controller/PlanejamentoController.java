@@ -6,8 +6,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +19,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -60,7 +60,7 @@ public class PlanejamentoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/planejamentoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoAdd")
 	public ModelAndView planejamentoAdd(PlanejamentoForm planejamentoForm) {
 
 		ModelAndView mv = new ModelAndView("planejamento/planejamentoAdd");
@@ -70,13 +70,13 @@ public class PlanejamentoController {
 		mv.addObject("planejamentoAprovacaoValues", AtributoAprovacao.values());
 		mv.addObject("planejamentoCustoStatusValues", AtributoCusto.values());
 		mv.addObject("planejamentoPrazoStatusValues", AtributoPrazo.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/planejamentoCreate")
 	public ModelAndView planejamentoCreate(@Valid PlanejamentoForm planejamentoForm, BindingResult result, RedirectAttributes attributes) {
 
 		Calendar planejamentoDataPrevistaInicioCalendar = Calendar.getInstance();
@@ -147,7 +147,7 @@ public class PlanejamentoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoDelete/{id}")
 	public ModelAndView planejamentoDelete(@PathVariable("id") long planejamentoPK, @Valid PlanejamentoForm planejamentoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/planejamentoHome");
@@ -167,7 +167,7 @@ public class PlanejamentoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoEdit/{id}")
 	public ModelAndView planejamentoEdit(@PathVariable("id") Long planejamentoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("planejamento/planejamentoEdit");
@@ -178,20 +178,20 @@ public class PlanejamentoController {
 		mv.addObject("planejamentoAprovacaoValues", AtributoAprovacao.values());
 		mv.addObject("planejamentoCustoStatusValues", AtributoCusto.values());
 		mv.addObject("planejamentoPrazoStatusValues", AtributoPrazo.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable planejamentoAcaoPageable = new PageRequest(0, 200, Direction.ASC, "acao.acaoNome");
+		Pageable planejamentoAcaoPageable = PageRequest.of(0, 200, Direction.ASC, "acao.acaoNome");
 		mv.addObject("planejamentoAcaoPage", planejamentoAcaoService.getByPlanejamentoPK(planejamentoPK, planejamentoAcaoPageable));
-		Pageable planejamentoProcessoPageable = new PageRequest(0, 200, Direction.ASC, "processo.processoNome");
+		Pageable planejamentoProcessoPageable = PageRequest.of(0, 200, Direction.ASC, "processo.processoNome");
 		mv.addObject("planejamentoProcessoPage", planejamentoProcessoService.getByPlanejamentoPK(planejamentoPK, planejamentoProcessoPageable));
-		Pageable acaoPageable = new PageRequest(0, 200, Direction.ASC, "acaoNome");
+		Pageable acaoPageable = PageRequest.of(0, 200, Direction.ASC, "acaoNome");
 		mv.addObject("acaoPage", acaoService.getAcaoAll(acaoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoHome")
 	public ModelAndView planejamentoHome(@Valid PlanejamentoByPlanejamentoForm planejamentoByPlanejamentoForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("planejamento/planejamentoHome");
@@ -210,10 +210,10 @@ public class PlanejamentoController {
 		}
 
 		if (planejamentoByPlanejamentoForm.getPlanejamentoSortTipo().equalsIgnoreCase("PlanejamentoNome") || planejamentoByPlanejamentoForm.getPlanejamentoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "planejamentoNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "planejamentoNome");
 
 		} else if (planejamentoByPlanejamentoForm.getPlanejamentoSortTipo().equalsIgnoreCase("PlanejamentoDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "planejamentoDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "planejamentoDescricao");
 
 		}
 
@@ -235,7 +235,7 @@ public class PlanejamentoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoRelMenu")
 	public ModelAndView planejamentoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("planejamento/planejamentoRelMenu");
@@ -245,18 +245,18 @@ public class PlanejamentoController {
 		
 	}
 
-	@RequestMapping(path = "/planejamentoRel001", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoRel001")
 	public ModelAndView planejamentoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("planejamento/planejamentoRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "planejamentoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "planejamentoNome");
 		mv.addObject("planejamentoPage", planejamentoService.getPlanejamentoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/planejamentoSave")
 	public ModelAndView planejamentoSave(@Valid PlanejamentoForm planejamentoForm, BindingResult result, RedirectAttributes attributes) {
 
 		Calendar planejamentoDataPrevistaInicioCalendar = Calendar.getInstance();
@@ -318,7 +318,7 @@ public class PlanejamentoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoView/{id}")
 	public ModelAndView planejamentoView(@PathVariable("id") Long planejamentoId) {
 
 		Planejamento planejamento = planejamentoService.getPlanejamentoByPlanejamentoPK(planejamentoId);

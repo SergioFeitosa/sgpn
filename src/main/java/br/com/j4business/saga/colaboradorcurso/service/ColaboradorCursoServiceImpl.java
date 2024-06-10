@@ -4,7 +4,6 @@ import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.colaboradorcertificacao.model.ColaboradorCertificacao;
 import br.com.j4business.saga.curso.model.Curso;
 import br.com.j4business.saga.curso.service.CursoService;
 import br.com.j4business.saga.fornecedor.model.Fornecedor;
@@ -13,10 +12,10 @@ import br.com.j4business.saga.colaboradorcurso.model.ColaboradorCurso;
 import br.com.j4business.saga.colaboradorcurso.model.ColaboradorCursoForm;
 import br.com.j4business.saga.colaboradorcurso.repository.ColaboradorCursoRepository;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -85,7 +84,9 @@ public class ColaboradorCursoServiceImpl implements ColaboradorCursoService {
 
 	@Override
 	public ColaboradorCurso getColaboradorCursoByColaboradorCursoPK(long colaboradorCursoPK) {
-		return colaboradorCursoRepository.findOne(colaboradorCursoPK);
+		
+		Optional<ColaboradorCurso> colaboradorCurso = colaboradorCursoRepository.findById(colaboradorCursoPK);
+		return colaboradorCurso.get();
 	}
 
 	@Override
@@ -116,7 +117,7 @@ public class ColaboradorCursoServiceImpl implements ColaboradorCursoService {
 
 		ColaboradorCurso colaboradorCursoTemp = this.getColaboradorCursoByColaboradorCursoPK(colaboradorCursoPK);
 
-		colaboradorCursoRepository.delete(colaboradorCursoPK);
+		colaboradorCursoRepository.delete(colaboradorCursoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ColaboradorCurso Save " + "\n Usuário => " + username + 
@@ -130,7 +131,9 @@ public class ColaboradorCursoServiceImpl implements ColaboradorCursoService {
 		
 		List<ColaboradorCurso> colaboradorCursoList = colaboradorCursoRepository.findByCurso(curso);
 
-		colaboradorCursoRepository.delete(colaboradorCursoList);
+		for (ColaboradorCurso colaboradorCurso2 : colaboradorCursoList) {
+			colaboradorCursoRepository.delete(colaboradorCurso2);			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

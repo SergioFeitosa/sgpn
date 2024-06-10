@@ -16,8 +16,8 @@ import br.com.j4business.saga.agendacontrato.model.AgendaContrato;
 import br.com.j4business.saga.agendacontrato.model.AgendaContratoForm;
 import br.com.j4business.saga.agendacontrato.repository.AgendaContratoRepository;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -96,7 +97,7 @@ public class AgendaContratoServiceImpl implements AgendaContratoService {
 
 	@Override
 	public AgendaContrato getAgendaContratoByAgendaContratoPK(long agendaContratoPK) {
-		return agendaContratoRepository.findOne(agendaContratoPK);
+		return agendaContratoRepository.findByAgendaContratoPK(agendaContratoPK);
 	}
 
 	@Override
@@ -126,15 +127,19 @@ public class AgendaContratoServiceImpl implements AgendaContratoService {
 	@Transactional
 	public void delete(Long agendaContratoPK) {
 
-		AgendaContrato agendaContratoTemp = this.getAgendaContratoByAgendaContratoPK(agendaContratoPK);
+		Optional<AgendaContrato> agendaContratoSalvo = agendaContratoRepository.findById(agendaContratoPK);
 
-		agendaContratoRepository.delete(agendaContratoPK);
+		if (agendaContratoSalvo.isPresent()) {
+			agendaContratoRepository.delete(agendaContratoSalvo.get());
+		}
+
+		
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("AgendaContrato Save " + "\n Usuário => " + username + 
-										" // Id => "+agendaContratoTemp.getAgendaContratoPK() + 
-										" // Agenda Id => "+agendaContratoTemp.getAgenda().getAgendaPK() + 
-										" // Contrato Id => "+agendaContratoTemp.getContrato().getContratoPK()); 
+										" // Id => "+agendaContratoSalvo.get().getAgendaContratoPK() + 
+										" // Agenda Id => "+agendaContratoSalvo.get().getAgenda().getAgendaPK() + 
+										" // Contrato Id => "+agendaContratoSalvo.get().getContrato().getContratoPK()); 
     }
 
 	@Transactional
@@ -142,7 +147,11 @@ public class AgendaContratoServiceImpl implements AgendaContratoService {
 		
 		List<AgendaContrato> agendaContratos = agendaContratoRepository.findByContrato(contrato);
 
-		agendaContratoRepository.delete(agendaContratos);
+		for (AgendaContrato agendaContrato2 : agendaContratos) {
+
+			agendaContratoRepository.deleteById(agendaContrato2.getAgendaContratoPK());
+			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 
@@ -384,7 +393,6 @@ public class AgendaContratoServiceImpl implements AgendaContratoService {
 			try {
 				contratoDataTermino.setTime(sdf.parse(contrato.getContratoDataTermino()));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}// all done
 			

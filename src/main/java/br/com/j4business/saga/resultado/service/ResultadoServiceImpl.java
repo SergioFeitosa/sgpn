@@ -1,8 +1,10 @@
 package br.com.j4business.saga.resultado.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,8 @@ public class ResultadoServiceImpl implements ResultadoService {
 	@Override
 	public Resultado getResultadoByResultadoPK(long resultadoPK) {
 		
-		return resultadoRepository.findOne(resultadoPK);
+		Optional<Resultado> resultado = resultadoRepository.findById(resultadoPK);
+		return resultado.get();
 	}
 
 	@Transactional
@@ -93,7 +96,7 @@ public class ResultadoServiceImpl implements ResultadoService {
 
 		Resultado resultado = this.getResultadoByResultadoPK(resultadoId);
 		
-		resultadoRepository.delete(resultado.getResultadoPK());
+		resultadoRepository.delete(resultado);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Resultado Delete " + "\n Usuário => " + username + 

@@ -1,8 +1,10 @@
 package br.com.j4business.saga.logradourotipo.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,8 @@ public class LogradouroTipoServiceImpl implements LogradouroTipoService {
 	@Override
 	public LogradouroTipo getLogradouroTipoByLogradouroTipoPK(long logradouroTipoPK) {
 		
-		return logradouroTipoRepository.findOne(logradouroTipoPK);
+		Optional<LogradouroTipo> logradouroTipo =  logradouroTipoRepository.findById(logradouroTipoPK);
+		return logradouroTipo.get();
 	}
 
 	@Transactional
@@ -93,7 +96,7 @@ public class LogradouroTipoServiceImpl implements LogradouroTipoService {
 
 		LogradouroTipo logradouroTipo = this.getLogradouroTipoByLogradouroTipoPK(logradouroTipoId);
 		
-		logradouroTipoRepository.delete(logradouroTipo.getLogradouroTipoPK());
+		logradouroTipoRepository.delete(logradouroTipo);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("LogradouroTipo Delete " + "\n Usuário => " + username + 

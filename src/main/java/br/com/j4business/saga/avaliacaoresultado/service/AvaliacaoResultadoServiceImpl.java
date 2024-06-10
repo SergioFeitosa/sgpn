@@ -6,9 +6,10 @@ import br.com.j4business.saga.avaliacao.model.Avaliacao;
 import br.com.j4business.saga.avaliacaoresultado.model.AvaliacaoResultado;
 import br.com.j4business.saga.avaliacaoresultado.repository.AvaliacaoResultadoRepository;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -78,7 +79,10 @@ public class AvaliacaoResultadoServiceImpl implements AvaliacaoResultadoService 
 
 	@Override
 	public AvaliacaoResultado getAvaliacaoResultadoByAvaliacaoResultadoPK(long avaliacaoResultadoPK) {
-		return avaliacaoResultadoRepository.findOne(avaliacaoResultadoPK);
+
+		Optional<AvaliacaoResultado> avaliacaoResultado = avaliacaoResultadoRepository.findById(avaliacaoResultadoPK);
+
+		return avaliacaoResultado.get();
 	}
 
 	@Override
@@ -114,7 +118,7 @@ public class AvaliacaoResultadoServiceImpl implements AvaliacaoResultadoService 
 
 		AvaliacaoResultado avaliacaoResultadoTemp = this.getAvaliacaoResultadoByAvaliacaoResultadoPK(avaliacaoResultadoPK);
 
-		avaliacaoResultadoRepository.delete(avaliacaoResultadoPK);
+		avaliacaoResultadoRepository.delete(avaliacaoResultadoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("AvaliacaoResultado Save " + "\n Usuário => " + username + 
@@ -128,17 +132,16 @@ public class AvaliacaoResultadoServiceImpl implements AvaliacaoResultadoService 
 		
 		List<AvaliacaoResultado> avaliacaoResultados = avaliacaoResultadoRepository.findByResultado(resultado);
 
-		avaliacaoResultadoRepository.delete(avaliacaoResultados);
+		for (AvaliacaoResultado avaliacaoResultado2 : avaliacaoResultados) {
+			avaliacaoResultadoRepository.delete(avaliacaoResultado2);
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
-
 		avaliacaoResultados.forEach((AvaliacaoResultado avaliacaoResultado) -> {
-
 			logger.info("AvaliacaoResultado Delete2 " + "\n Usuário => " + username + 
 											" // Id => "+avaliacaoResultado.getAvaliacaoResultadoPK() + 
 											" // Avaliacao Id => "+avaliacaoResultado.getAvaliacao().getAvaliacaoPK() + 
 											" // Resultado Id => "+avaliacaoResultado.getResultado().getResultadoPK()); 
-
 		});
 		
     }

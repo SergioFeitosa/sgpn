@@ -1,27 +1,29 @@
 package br.com.j4business.saga.eventoprocesso.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.estruturafisicaunidadeorganizacional.model.EstruturafisicaUnidadeorganizacional;
-import br.com.j4business.saga.eventoprocesso.model.EventoProcesso;
-import br.com.j4business.saga.processo.model.Processo;
-import br.com.j4business.saga.processo.service.ProcessoService;
 import br.com.j4business.saga.evento.model.Evento;
 import br.com.j4business.saga.evento.service.EventoService;
 import br.com.j4business.saga.eventoprocesso.enumeration.EventoProcessoImpacto;
+import br.com.j4business.saga.eventoprocesso.model.EventoProcesso;
 import br.com.j4business.saga.eventoprocesso.model.EventoProcessoForm;
 import br.com.j4business.saga.eventoprocesso.repository.EventoProcessoRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import br.com.j4business.saga.processo.model.Processo;
+import br.com.j4business.saga.processo.service.ProcessoService;
 
 @Service("eventoProcessoService")
 public class EventoProcessoServiceImpl implements EventoProcessoService {
@@ -89,7 +91,8 @@ public class EventoProcessoServiceImpl implements EventoProcessoService {
 
 	@Override
 	public EventoProcesso getEventoProcessoByEventoProcessoPK(long eventoProcessoPK) {
-		return eventoProcessoRepository.findOne(eventoProcessoPK);
+		Optional<EventoProcesso> eventoProcesso = eventoProcessoRepository.findById(eventoProcessoPK);
+		return eventoProcesso.get();
 	}
 
 	@Override
@@ -138,7 +141,7 @@ public class EventoProcessoServiceImpl implements EventoProcessoService {
 
 		EventoProcesso eventoProcessoTemp = this.getEventoProcessoByEventoProcessoPK(eventoProcessoPK);
 
-		eventoProcessoRepository.delete(eventoProcessoPK);
+		eventoProcessoRepository.delete(eventoProcessoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("EventoProcesso Save " + "\n Usuário => " + username + 
@@ -152,7 +155,10 @@ public class EventoProcessoServiceImpl implements EventoProcessoService {
 		
 		List<EventoProcesso> eventoProcessoList = eventoProcessoRepository.findByProcesso(processo);
 
-		eventoProcessoRepository.delete(eventoProcessoList);
+		for (EventoProcesso eventoProcesso2 : eventoProcessoList) {
+			eventoProcessoRepository.delete(eventoProcesso2);
+			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

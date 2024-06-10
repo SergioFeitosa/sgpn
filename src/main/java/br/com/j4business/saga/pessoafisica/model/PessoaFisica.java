@@ -1,10 +1,9 @@
 package br.com.j4business.saga.pessoafisica.model;
 
-import java.io.Serializable;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -12,7 +11,7 @@ import br.com.j4business.saga.pessoa.model.Pessoa;
 
 @Entity
 @Table(name = "pessoafisica", uniqueConstraints=@UniqueConstraint(columnNames={"nr_pessoaCPF"}, name="pessoaCPF"))
-public class PessoaFisica extends Pessoa implements Serializable{
+public class PessoaFisica extends Pessoa {
 
 	private static final long serialVersionUID = 7403670427636861494L;
 

@@ -11,10 +11,11 @@ import br.com.j4business.saga.imagem.model.Imagem;
 import br.com.j4business.saga.imagem.service.ImagemService;
 import br.com.j4business.saga.contratoimagem.model.ContratoImagemForm;
 import br.com.j4business.saga.contratoimagem.repository.ContratoImagemRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
+
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,7 +93,8 @@ public class ContratoImagemServiceImpl implements ContratoImagemService {
 
 	@Override
 	public ContratoImagem getContratoImagemByContratoImagemPK(long contratoImagemPK) {
-		return contratoImagemRepository.findOne(contratoImagemPK);
+		Optional<ContratoImagem> contratoImagem = contratoImagemRepository.findById(contratoImagemPK);
+		return contratoImagem.get();
 	}
 
 	@Override
@@ -141,7 +143,7 @@ public class ContratoImagemServiceImpl implements ContratoImagemService {
 
 		ContratoImagem contratoImagemTemp = this.getContratoImagemByContratoImagemPK(contratoImagemPK);
 
-		contratoImagemRepository.delete(contratoImagemPK);
+		contratoImagemRepository.delete(contratoImagemTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ContratoImagem Save " + "\n Usuário => " + username + 
@@ -155,7 +157,10 @@ public class ContratoImagemServiceImpl implements ContratoImagemService {
 		
 		List<ContratoImagem> contratoImagemList = contratoImagemRepository.findByImagem(imagem);
 
-		contratoImagemRepository.delete(contratoImagemList);
+		for (ContratoImagem contratoImagem2 : contratoImagemList) {
+			contratoImagemRepository.delete(contratoImagem2);	
+		}
+		
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

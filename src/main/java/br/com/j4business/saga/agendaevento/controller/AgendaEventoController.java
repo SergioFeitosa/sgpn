@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,14 +17,15 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.j4business.saga.agenda.model.AgendaForm;
 import br.com.j4business.saga.agenda.service.AgendaService;
+import br.com.j4business.saga.agendaevento.model.AgendaEvento;
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
@@ -32,7 +33,6 @@ import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.evento.model.EventoForm;
 import br.com.j4business.saga.evento.service.EventoService;
 import br.com.j4business.saga.agendaevento.enumeration.AgendaEventoEnvio;
-import br.com.j4business.saga.agendaevento.model.AgendaEvento;
 import br.com.j4business.saga.agendaevento.model.AgendaEventoByAgendaForm;
 import br.com.j4business.saga.agendaevento.model.AgendaEventoForm;
 import br.com.j4business.saga.agendaevento.service.AgendaEventoService;
@@ -55,7 +55,7 @@ public class AgendaEventoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/agendaEventoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaEventoAdd")
 	public ModelAndView agendaEventoAdd(AgendaEventoForm agendaEventoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("agendaEvento/agendaEventoAdd");
@@ -65,17 +65,17 @@ public class AgendaEventoController {
 		mv.addObject("agendaEventoEnvioValues", AgendaEventoEnvio.values());
 		mv.addObject("agendaEventoStatusValues", AtributoStatus.values());
 
-		Pageable agendaPageable = new PageRequest(0, 200, Direction.ASC, "agendaNome");
+		Pageable agendaPageable = PageRequest.of(0, 200, Direction.ASC, "agendaNome");
 		mv.addObject("agendaPage", agendaService.getAgendaAll(agendaPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable eventoPageable = new PageRequest(0, 200, Direction.ASC, "eventoNome");
+		Pageable eventoPageable = PageRequest.of(0, 200, Direction.ASC, "eventoNome");
 		mv.addObject("eventoPage", eventoService.getEventoAll(eventoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/agendaEventoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/agendaEventoCreate")
 	public ModelAndView agendaEventoCreate(@Valid AgendaEventoForm agendaEventoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -108,7 +108,7 @@ public class AgendaEventoController {
 	}
 
 
-	@RequestMapping(path = "/agendaEventoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaEventoDelete/{id}")
 	public ModelAndView agendaEventoDelete(@PathVariable("id") long agendaEventoId, @Valid EventoForm eventoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/agendaEventoHome");
@@ -132,9 +132,10 @@ public class AgendaEventoController {
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
+
 	}
 
-	@RequestMapping(path = "/agendaEventoEdit/{agendaEventoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaEventoEdit/{agendaEventoPK}")
 	public ModelAndView agendaEventoEdit(@PathVariable("agendaEventoPK") Long agendaEventoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("agendaEvento/agendaEventoEdit");
@@ -145,18 +146,18 @@ public class AgendaEventoController {
 		mv.addObject("agendaEventoEnvioValues", AgendaEventoEnvio.values());
 		mv.addObject("agendaEventoStatusValues", AtributoStatus.values());
 
-		Pageable agendaPageable = new PageRequest(0, 200, Direction.ASC, "agendaNome");
+		Pageable agendaPageable = PageRequest.of(0, 200, Direction.ASC, "agendaNome");
 		mv.addObject("agendaPage", agendaService.getAgendaAll(agendaPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable eventoPageable = new PageRequest(0, 200, Direction.ASC, "eventoNome");
+		Pageable eventoPageable = PageRequest.of(0, 200, Direction.ASC, "eventoNome");
 		mv.addObject("eventoPage", eventoService.getEventoAll(eventoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/agendaEventoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaEventoHome")
 	public ModelAndView agendaEventoHome(@Valid AgendaEventoByAgendaForm agendaEventoByAgendaForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("agendaEvento/agendaEventoHome");
@@ -176,10 +177,10 @@ public class AgendaEventoController {
 
 		if (agendaEventoByAgendaForm.getAgendaEventoSortTipo().equalsIgnoreCase("AgendaNome")
 				|| agendaEventoByAgendaForm.getAgendaEventoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"agenda.agendaNome","evento.eventoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"agenda.agendaNome","evento.eventoNome"); 
 		
 		} else if (agendaEventoByAgendaForm.getAgendaEventoSortTipo().equalsIgnoreCase("EventoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"evento.eventoNome","agenda.agendaNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"evento.eventoNome","agenda.agendaNome"); 
 
 		}
 
@@ -202,7 +203,7 @@ public class AgendaEventoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/agendaEventoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/agendaEventoSave")
 	public ModelAndView agendaEventoSave(@Valid AgendaEventoForm agendaEventoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -226,7 +227,7 @@ public class AgendaEventoController {
 		
 	}
 
-	@RequestMapping(path = "/agendaEventoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaEventoRelMenu")
 	public ModelAndView agendaEventoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("agendaEvento/agendaEventoRelMenu");
@@ -236,17 +237,17 @@ public class AgendaEventoController {
 		
 	}
 
-	@RequestMapping("/agendaEventoRel001")
+	@GetMapping("/agendaEventoRel001")
 	public ModelAndView agendaEventoRel001() {
 
 		ModelAndView mv = new ModelAndView("agendaEvento/agendaEventoRel001");
-		Pageable agendaPageable = new PageRequest(0, 200, Direction.ASC, "agenda.agendaNome","evento.eventoNome");
+		Pageable agendaPageable = PageRequest.of(0, 200, Direction.ASC, "agenda.agendaNome","evento.eventoNome");
 		mv.addObject("agendaEventoPage", agendaEventoService.getAgendaEventoAll(agendaPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/agendaEventoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/agendaEventoView/{id}")
 	public ModelAndView agendaEventoView(@PathVariable("id") Long agendaEventoId) {
 
 		AgendaEvento agendaEvento = agendaEventoService.getAgendaEventoByAgendaEventoPK(agendaEventoId);

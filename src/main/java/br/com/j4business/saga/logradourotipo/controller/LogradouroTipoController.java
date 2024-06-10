@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -43,19 +43,19 @@ public class LogradouroTipoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/logradouroTipoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/logradouroTipoAdd")
 	public ModelAndView logradouroTipoAdd(LogradouroTipoForm logradouroTipoForm) {
 
 		ModelAndView mv = new ModelAndView("logradouroTipo/logradouroTipoAdd");
 		mv.addObject("logradouroTipoForm", logradouroTipoForm);
 		mv.addObject("logradouroTipoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/logradouroTipoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/logradouroTipoCreate")
 	public ModelAndView logradouroTipoCreate(@Valid LogradouroTipoForm logradouroTipoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -88,7 +88,7 @@ public class LogradouroTipoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/logradouroTipoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/logradouroTipoDelete/{id}")
 	public ModelAndView logradouroTipoDelete(@PathVariable("id") long logradouroTipoPK, @Valid LogradouroTipoForm logradouroTipoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/logradouroTipoHome");
@@ -108,7 +108,7 @@ public class LogradouroTipoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/logradouroTipoEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/logradouroTipoEdit/{id}")
 	public ModelAndView logradouroTipoEdit(@PathVariable("id") Long logradouroTipoId, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("logradouroTipo/logradouroTipoEdit");
@@ -116,14 +116,14 @@ public class LogradouroTipoController {
 		LogradouroTipoForm logradouroTipoForm = logradouroTipoService.converteLogradouroTipo(logradouroTipo);
 		mv.addObject("logradouroTipoForm", logradouroTipoForm);
 		mv.addObject("logradouroTipoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/logradouroTipoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/logradouroTipoHome")
 	public ModelAndView logradouroTipoHome(@Valid LogradouroTipoByLogradouroTipoForm logradouroTipoByLogradouroTipoForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("logradouroTipo/logradouroTipoHome");
@@ -142,10 +142,10 @@ public class LogradouroTipoController {
 		}
 
 		if (logradouroTipoByLogradouroTipoForm.getLogradouroTipoSortTipo().equalsIgnoreCase("LogradouroTipoNome") || logradouroTipoByLogradouroTipoForm.getLogradouroTipoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "logradouroTipoNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "logradouroTipoNome");
 
 		} else if (logradouroTipoByLogradouroTipoForm.getLogradouroTipoSortTipo().equalsIgnoreCase("LogradouroTipoDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "logradouroTipoDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "logradouroTipoDescricao");
 
 		}
 
@@ -167,7 +167,7 @@ public class LogradouroTipoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/logradouroTipoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/logradouroTipoRelMenu")
 	public ModelAndView logradouroTipoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("logradouroTipo/logradouroTipoRelMenu");
@@ -176,29 +176,29 @@ public class LogradouroTipoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/logradouroTipoRel001", method = RequestMethod.GET)
+	@GetMapping(path = "/logradouroTipoRel001")
 	public ModelAndView logradouroTipoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("logradouroTipo/logradouroTipoRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "logradouroTipoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "logradouroTipoNome");
 		mv.addObject("logradouroTipoPage", logradouroTipoService.getLogradouroTipoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/logradouroTipoRel002", method = RequestMethod.GET)
+	@GetMapping(path = "/logradouroTipoRel002")
 	public ModelAndView logradouroTipoRel002(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("logradouroTipo/logradouroTipoRel002");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "logradouroTipoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "logradouroTipoNome");
 		mv.addObject("logradouroTipos", logradouroTipoService.getLogradouroTipoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/logradouroTipoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/logradouroTipoSave")
 	public ModelAndView logradouroTipoSave(@Valid LogradouroTipoForm logradouroTipoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -221,7 +221,7 @@ public class LogradouroTipoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/logradouroTipoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/logradouroTipoView/{id}")
 	public ModelAndView logradouroTipoView(@PathVariable("id") Long logradouroTipoId) {
 
 		LogradouroTipo logradouroTipo = logradouroTipoService.getLogradouroTipoByLogradouroTipoPK(logradouroTipoId);

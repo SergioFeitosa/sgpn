@@ -3,8 +3,8 @@ package br.com.j4business.saga.colaboradorformacao.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaboradorformacao.model.ColaboradorFormacao;
 
 @Repository("colaboradorFormacaoRepository")
-public interface ColaboradorFormacaoRepository extends PagingAndSortingRepository<ColaboradorFormacao, Long>{
+public interface ColaboradorFormacaoRepository extends JpaRepository<ColaboradorFormacao, Long>{
 
 /*	 @Query("SELECT ea FROM ColaboradorFormacao ea where ea.formacao.formacaoPK = :id") 
 	    List<ColaboradorFormacao> findByFormacaoPK(@Param("id") Long id);

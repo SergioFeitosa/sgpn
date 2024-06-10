@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +17,15 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.acao.model.AcaoForm;
 import br.com.j4business.saga.acao.service.AcaoService;
-import br.com.j4business.saga.agendaevento.model.AgendaEvento;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.planejamento.model.PlanejamentoForm;
@@ -54,24 +53,24 @@ public class PlanejamentoAcaoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/planejamentoAcaoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoAcaoAdd")
 	public ModelAndView planejamentoAcaoAdd(PlanejamentoAcaoForm planejamentoAcaoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("planejamentoAcao/planejamentoAcaoAdd");
 		planejamentoAcaoForm = planejamentoAcaoService.planejamentoAcaoParametros(planejamentoAcaoForm);
 		mv.addObject("planejamentoAcaoForm", planejamentoAcaoForm);
 		mv.addObject("planejamentoAcaoStatusValues", AtributoStatus.values());
-		Pageable acaoPageable = new PageRequest(0, 200, Direction.ASC, "acaoNome");
+		Pageable acaoPageable = PageRequest.of(0, 200, Direction.ASC, "acaoNome");
 		mv.addObject("acaoPage", acaoService.getAcaoAll(acaoPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable planejamentoPageable = new PageRequest(0, 200, Direction.ASC, "planejamentoNome");
+		Pageable planejamentoPageable = PageRequest.of(0, 200, Direction.ASC, "planejamentoNome");
 		mv.addObject("planejamentoPage", planejamentoService.getPlanejamentoAll(planejamentoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoAcaoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/planejamentoAcaoCreate")
 	public ModelAndView planejamentoAcaoCreate(@Valid PlanejamentoAcaoForm planejamentoAcaoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -104,7 +103,7 @@ public class PlanejamentoAcaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoAcaoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoAcaoDelete/{id}")
 	public ModelAndView planejamentoAcaoDelete(@PathVariable("id") long planejamentoAcaoId, @Valid PlanejamentoForm planejamentoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/planejamentoAcaoHome");
@@ -130,7 +129,7 @@ public class PlanejamentoAcaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoAcaoEdit/{planejamentoAcaoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoAcaoEdit/{planejamentoAcaoPK}")
 	public ModelAndView planejamentoAcaoEdit(@PathVariable("planejamentoAcaoPK") Long planejamentoAcaoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("planejamentoAcao/planejamentoAcaoEdit");
@@ -138,11 +137,11 @@ public class PlanejamentoAcaoController {
 		PlanejamentoAcaoForm planejamentoAcaoForm = planejamentoAcaoService.convertePlanejamentoAcao(planejamentoAcao);
 		mv.addObject("planejamentoAcaoForm", planejamentoAcaoForm);
 		mv.addObject("planejamentoAcaoStatusValues", AtributoStatus.values());
-		Pageable acaoPageable = new PageRequest(0, 200, Direction.ASC, "acaoNome");
+		Pageable acaoPageable = PageRequest.of(0, 200, Direction.ASC, "acaoNome");
 		mv.addObject("acaoPage", acaoService.getAcaoAll(acaoPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable planejamentoPageable = new PageRequest(0, 200, Direction.ASC, "planejamentoNome");
+		Pageable planejamentoPageable = PageRequest.of(0, 200, Direction.ASC, "planejamentoNome");
 		mv.addObject("planejamentoPage", planejamentoService.getPlanejamentoAll(planejamentoPageable));
 		
 		planejamentoAcao.getPlanejamentoAcaoSequencia();
@@ -151,7 +150,7 @@ public class PlanejamentoAcaoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/planejamentoAcaoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoAcaoHome")
 	public ModelAndView planejamentoAcaoHome(@Valid PlanejamentoAcaoByPlanejamentoForm planejamentoAcaoByPlanejamentoForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("planejamentoAcao/planejamentoAcaoHome");
@@ -171,13 +170,13 @@ public class PlanejamentoAcaoController {
 
 		if (planejamentoAcaoByPlanejamentoForm.getPlanejamentoAcaoSortTipo().equalsIgnoreCase("PlanejamentoNome")
 				|| planejamentoAcaoByPlanejamentoForm.getPlanejamentoAcaoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"planejamento.planejamentoNome","planejamentoAcaoSequencia"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"planejamento.planejamentoNome","planejamentoAcaoSequencia"); 
 		
 		} else if (planejamentoAcaoByPlanejamentoForm.getPlanejamentoAcaoSortTipo().equalsIgnoreCase("AcaoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"acao.acaoNome","planejamentoAcaoSequencia"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"acao.acaoNome","planejamentoAcaoSequencia"); 
 
 		} else if (planejamentoAcaoByPlanejamentoForm.getPlanejamentoAcaoSortTipo().equalsIgnoreCase("Sequencia")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"planejamentoAcaoSequencia","planejamento.planejamentoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"planejamentoAcaoSequencia","planejamento.planejamentoNome"); 
 
 		}
 
@@ -203,7 +202,7 @@ public class PlanejamentoAcaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoAcaoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/planejamentoAcaoSave")
 	public ModelAndView planejamentoAcaoSave(@Valid PlanejamentoAcaoForm planejamentoAcaoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -227,7 +226,7 @@ public class PlanejamentoAcaoController {
 		
 	}
 
-	@RequestMapping(path = "/planejamentoAcaoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoAcaoRelMenu")
 	public ModelAndView planejamentoAcaoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("planejamentoAcao/planejamentoAcaoRelMenu");
@@ -236,18 +235,18 @@ public class PlanejamentoAcaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoAcaoRel001", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoAcaoRel001")
 	public ModelAndView planejamentoAcaoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("planejamentoAcao/planejamentoAcaoRel001");
-		Pageable planejamentoAcaoPageable = new PageRequest(0, 200, Direction.ASC, "planejamento.planejamentoNome","acao.acaoNome");
+		Pageable planejamentoAcaoPageable = PageRequest.of(0, 200, Direction.ASC, "planejamento.planejamentoNome","acao.acaoNome");
 		mv.addObject("planejamentoAcaoPage", planejamentoAcaoService.getPlanejamentoAcaoAll(planejamentoAcaoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoAcaoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoAcaoView/{id}")
 	public ModelAndView planejamentoAcaoView(@PathVariable("id") Long planejamentoAcaoId) {
 
 		PlanejamentoAcao planejamentoAcao = planejamentoAcaoService.getPlanejamentoAcaoByPlanejamentoAcaoPK(planejamentoAcaoId);

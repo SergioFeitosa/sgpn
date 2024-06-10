@@ -1,9 +1,10 @@
 package br.com.j4business.saga.avaliacao.service;
 
 import java.util.List;
+import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,7 +51,9 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
 	@Override
 	public Avaliacao getAvaliacaoByAvaliacaoPK(long avaliacaoPK) {
 		
-		return avaliacaoRepository.findOne(avaliacaoPK);
+		Optional<Avaliacao> avaliacao = avaliacaoRepository.findById(avaliacaoPK);
+
+		return avaliacao.get();
 	}
 
 	@Transactional
@@ -94,7 +97,7 @@ public class AvaliacaoServiceImpl implements AvaliacaoService {
 
 		Avaliacao avaliacao = this.getAvaliacaoByAvaliacaoPK(avaliacaoId);
 		
-		avaliacaoRepository.delete(avaliacao.getAvaliacaoPK());
+		avaliacaoRepository.delete(avaliacao);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Avaliacao Delete " + "\n Usuário => " + username + 

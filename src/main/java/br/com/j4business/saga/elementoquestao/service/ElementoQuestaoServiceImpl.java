@@ -12,9 +12,10 @@ import br.com.j4business.saga.elementoquestao.model.ElementoQuestao;
 import br.com.j4business.saga.elementoquestao.model.ElementoQuestaoForm;
 import br.com.j4business.saga.elementoquestao.repository.ElementoQuestaoRepository;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -83,7 +84,9 @@ public class ElementoQuestaoServiceImpl implements ElementoQuestaoService {
 
 	@Override
 	public ElementoQuestao getElementoQuestaoByElementoQuestaoPK(long elementoQuestaoPK) {
-		return elementoQuestaoRepository.findOne(elementoQuestaoPK);
+		
+		Optional<ElementoQuestao> elementoQuestao = elementoQuestaoRepository.findById(elementoQuestaoPK);
+		return elementoQuestao.get();
 	}
 
 	@Override
@@ -114,7 +117,7 @@ public class ElementoQuestaoServiceImpl implements ElementoQuestaoService {
 
 		ElementoQuestao elementoQuestaoTemp = this.getElementoQuestaoByElementoQuestaoPK(elementoQuestaoPK);
 
-		elementoQuestaoRepository.delete(elementoQuestaoPK);
+		elementoQuestaoRepository.delete(elementoQuestaoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ElementoQuestao Save " + "\n Usuário => " + username + 
@@ -128,7 +131,9 @@ public class ElementoQuestaoServiceImpl implements ElementoQuestaoService {
 		
 		List<ElementoQuestao> elementoQuestaoList = elementoQuestaoRepository.findByQuestao(questao);
 
-		elementoQuestaoRepository.delete(elementoQuestaoList);
+		for (ElementoQuestao elementoQuestao2 : elementoQuestaoList) {
+			elementoQuestaoRepository.delete(elementoQuestao2);			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

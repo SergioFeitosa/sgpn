@@ -1,15 +1,14 @@
 package br.com.j4business.saga.colaboradorcurso.model;
 
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
 public class ColaboradorCursoForm {
 
@@ -17,11 +16,11 @@ public class ColaboradorCursoForm {
 	private long cursoPK;
 	private long colaboradorPK;
 	
-    @NotEmpty(message = "Nome do curso é uma informação obrigatória.")
+    @NotBlank(message = "Nome do curso é uma informação obrigatória.")
 	@NotNull
 	private String cursoNome;
 	
-    @NotEmpty(message = "Nome da Colaborador é uma informação obrigatória.")
+    @NotBlank(message = "Nome da Colaborador é uma informação obrigatória.")
 	@NotNull
 	private String colaboradorNome;
 	
@@ -32,11 +31,11 @@ public class ColaboradorCursoForm {
 	@Enumerated(EnumType.STRING)
 	private AtributoStatus colaboradorCursoStatus;
 
-    @NotEmpty(message = "Responsável é uma informação obrigatória.")
+    @NotBlank(message = "Responsável é uma informação obrigatória.")
 	@NotNull
 	private String colaboradorCursoResponsavel;
 
-    @NotEmpty(message = "Motivo da Operação é uma informação obrigatória.")
+    @NotBlank(message = "Motivo da Operação é uma informação obrigatória.")
 	@Size(min = 5,max = 200, message = "Motivo da Operação não pode ter menos que 5 e mais que 200 caracteres")
 	private String colaboradorCursoMotivoOperacao;
 
@@ -52,7 +51,7 @@ public class ColaboradorCursoForm {
     @DateTimeFormat(pattern = "dd/MM/yyyy")
     private String  colaboradorCursoDataValidade;
 
-    @NotEmpty(message = "Capacitador é uma informação obrigatória.")
+    @NotBlank(message = "Capacitador é uma informação obrigatória.")
 	@NotNull(message = "Capacitador é uma informação obrigatória.")
 	private String capacitador;
 

@@ -1,7 +1,7 @@
 package br.com.j4business.saga.fundacao.constraints;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 import br.com.j4business.saga.evento.model.EventoForm;
 

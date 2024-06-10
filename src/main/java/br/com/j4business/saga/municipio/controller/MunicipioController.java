@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,9 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -42,20 +42,20 @@ public class MunicipioController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/municipioAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/municipioAdd")
 	public ModelAndView municipioAdd(MunicipioForm municipioForm) {
 
 		ModelAndView mv = new ModelAndView("municipio/municipioAdd");
 		municipioForm = municipioService.municipioParametros(municipioForm);
 		mv.addObject("municipioForm", municipioForm);
 		mv.addObject("municipioStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/municipioCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/municipioCreate")
 	public ModelAndView municipioCreate(@Valid MunicipioForm municipioForm, BindingResult result, RedirectAttributes attributes) {
 
 		Municipio municipio = null;
@@ -76,7 +76,7 @@ public class MunicipioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/municipioDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/municipioDelete/{id}")
 	public ModelAndView municipioDelete(@PathVariable("id") long municipioPK, @Valid MunicipioForm municipioForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/municipioHome");
@@ -97,7 +97,7 @@ public class MunicipioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/municipioEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/municipioEdit/{id}")
 	public ModelAndView municipioEdit(@PathVariable("id") Long municipioId, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("municipio/municipioEdit");
@@ -105,14 +105,14 @@ public class MunicipioController {
 		MunicipioForm municipioForm = municipioService.converteMunicipio(municipio);
 		mv.addObject("municipioForm", municipioForm);
 		mv.addObject("municipioStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/municipioHome", method = RequestMethod.GET)
+	@GetMapping(path = "/municipioHome")
 	public ModelAndView municipioHome(@Valid MunicipioByMunicipioForm municipioByMunicipioForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		
@@ -131,13 +131,13 @@ public class MunicipioController {
 		}
 
 		if (municipioByMunicipioForm.getMunicipioSortTipo().equalsIgnoreCase("MunicipioNome") || municipioByMunicipioForm.getMunicipioSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "municipioNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "municipioNome");
 
 		} else if (municipioByMunicipioForm.getMunicipioSortTipo().equalsIgnoreCase("MunicipioCEP")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "municipioCEP");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "municipioCEP");
 
 		} else if (municipioByMunicipioForm.getMunicipioSortTipo().equalsIgnoreCase("MunicipioUF")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "municipioUF");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "municipioUF");
 
 		}
 
@@ -163,7 +163,7 @@ public class MunicipioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/municipioSave", method = RequestMethod.POST)
+	@PostMapping(path = "/municipioSave")
 	public ModelAndView municipioSave(@Valid MunicipioForm municipioForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -177,7 +177,7 @@ public class MunicipioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/municipioRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/municipioRelMenu")
 	public ModelAndView municipioRelMenu() {
 
 		ModelAndView mv = new ModelAndView("municipio/municipioRelMenu");
@@ -186,18 +186,18 @@ public class MunicipioController {
 		return mv;
 	}
 
-	@RequestMapping("/municipioRel001")
+	@GetMapping("/municipioRel001")
 	public ModelAndView municipioRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("municipio/municipioRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "municipioNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "municipioNome");
 		mv.addObject("municipioPage", municipioService.getMunicipioAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/municipioView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/municipioView/{id}")
 	public ModelAndView municipioView(@PathVariable("id") Long municipioId) {
 
 		Municipio municipio = municipioService.getMunicipioByMunicipioPK(municipioId);

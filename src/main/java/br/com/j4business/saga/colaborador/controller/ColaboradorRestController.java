@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,17 +20,17 @@ public class ColaboradorRestController {
 	@Autowired
 	private ColaboradorService colaboradorService;
 
-	@RequestMapping(path = "/colaboradores", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradores")
 	public List<Colaborador> getAllColaboradors() {
 		return colaboradorService.getColaboradorAll();
 	}
 
-	@RequestMapping(value = "/colaborador/{colaboradorPK}", method = RequestMethod.GET)
+	@GetMapping(value = "/colaborador/{colaboradorPK}")
 	public Colaborador getColaboradorById(@PathVariable("colaboradorPK") long colaboradorPK) {
 		return colaboradorService.getColaboradorByColaboradorPK(colaboradorPK);
 	}
 
-	@RequestMapping(value = "/deleteColaborador/{colaboradorPK}", method = RequestMethod.GET)
+	@DeleteMapping(value = "/deleteColaborador/{colaboradorPK}")
 	@ResponseBody
 	public String deleteColaborador(@PathVariable("colaboradorPK") Long colaboradorPK) {
 		colaboradorService.delete(colaboradorPK);
@@ -38,7 +38,7 @@ public class ColaboradorRestController {
 
 	}
 
-	@RequestMapping(value = "/getColaboradorAll", method = RequestMethod.GET)
+	@GetMapping(value = "/getColaboradorAll")
 	public ColaboradorResponse getColaboradorAll() {
 
 		List<Colaborador> colaboradorList = new ArrayList<Colaborador>();

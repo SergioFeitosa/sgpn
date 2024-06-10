@@ -3,8 +3,8 @@ package br.com.j4business.saga.avaliacaoprocesso.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ import br.com.j4business.saga.avaliacao.model.Avaliacao;
 import br.com.j4business.saga.avaliacaoprocesso.model.AvaliacaoProcesso;
 
 @Repository("avaliacaoProcessoRepository")
-public interface AvaliacaoProcessoRepository extends PagingAndSortingRepository<AvaliacaoProcesso, Long>{
+public interface AvaliacaoProcessoRepository extends JpaRepository<AvaliacaoProcesso, Long>{
 
 /*	 @Query("SELECT ea FROM AvaliacaoProcesso ea where ea.processo.processoPK = :id") 
 	    List<AvaliacaoProcesso> findByProcessoPK(@Param("id") Long id);
@@ -22,7 +22,7 @@ public interface AvaliacaoProcessoRepository extends PagingAndSortingRepository<
 	@Query("SELECT ep FROM AvaliacaoProcesso ep INNER JOIN ep.processo p WHERE p = :processo")
 	public List<AvaliacaoProcesso> findByProcesso(@Param("processo")Processo processo);
 
-	@Query("SELECT ep FROM AvaliacaoProcesso ep INNER JOIN ep.processo p INNER JOIN ep.avaliacao e WHERE p = :processo AND s = :avaliacao")
+	@Query("SELECT ap FROM AvaliacaoProcesso ap INNER JOIN ap.processo p INNER JOIN ap.avaliacao a WHERE p = :processo AND a = :avaliacao")
 	public AvaliacaoProcesso findByAvaliacaoAndProcesso( @Param("avaliacao") Avaliacao avaliacao, @Param("processo")Processo processo);
 	
 	@Query("SELECT ep FROM AvaliacaoProcesso ep")

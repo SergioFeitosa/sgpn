@@ -1,8 +1,10 @@
 package br.com.j4business.saga.treinamento.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,7 +52,8 @@ public class TreinamentoServiceImpl implements TreinamentoService {
 	@Override
 	public Treinamento getTreinamentoByTreinamentoPK(long treinamentoPK) {
 		
-		return treinamentoRepository.findOne(treinamentoPK);
+		Optional<Treinamento> treinamento = treinamentoRepository.findById(treinamentoPK);
+		return treinamento.get();
 	}
 
 	@Transactional
@@ -97,7 +100,7 @@ public class TreinamentoServiceImpl implements TreinamentoService {
 
 		Treinamento treinamento = this.getTreinamentoByTreinamentoPK(treinamentoId);
 		
-		treinamentoRepository.delete(treinamento.getTreinamentoPK());
+		treinamentoRepository.delete(treinamento);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Treinamento Delete " + "\n Usuário => " + username + 

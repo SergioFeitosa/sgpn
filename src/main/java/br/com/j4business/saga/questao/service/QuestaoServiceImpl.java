@@ -1,8 +1,10 @@
 package br.com.j4business.saga.questao.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +54,8 @@ public class QuestaoServiceImpl implements QuestaoService {
 	@Override
 	public Questao getQuestaoByQuestaoPK(long questaoPK) {
 		
-		return questaoRepository.findOne(questaoPK);
+		Optional<Questao> questao = questaoRepository.findById(questaoPK);
+		return questao.get();
 	}
 
 	@Transactional
@@ -98,7 +101,7 @@ public class QuestaoServiceImpl implements QuestaoService {
 
 		Questao questao = this.getQuestaoByQuestaoPK(questaoId);
 		
-		questaoRepository.delete(questao.getQuestaoPK());
+		questaoRepository.delete(questao);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Questao Delete " + "\n Usuário => " + username + 

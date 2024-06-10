@@ -1,23 +1,25 @@
 package br.com.j4business.saga.servico.service;
 
-import java.util.Iterator;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.servico.model.Servico;
 import br.com.j4business.saga.processoatividade.model.ProcessoAtividade;
 import br.com.j4business.saga.processoatividade.service.ProcessoAtividadeService;
-import br.com.j4business.saga.questionarioquestao.model.QuestionarioQuestao;
+import br.com.j4business.saga.servico.model.Servico;
 import br.com.j4business.saga.servico.model.ServicoForm;
 import br.com.j4business.saga.servico.repository.ServicoRepository;
 import br.com.j4business.saga.servicoprocesso.model.ServicoProcesso;
@@ -59,7 +61,8 @@ public class ServicoServiceImpl implements ServicoService {
 	@Override
 	public Servico getServicoByServicoPK(long servicoPK) {
 		
-		return servicoRepository.findOne(servicoPK);
+		Optional<Servico> servico = servicoRepository.findById(servicoPK);
+		return servico.get();
 	}
 
 	@Transactional
@@ -105,7 +108,7 @@ public class ServicoServiceImpl implements ServicoService {
 
 		Servico servico = this.getServicoByServicoPK(servicoId);
 		
-		servicoRepository.delete(servico.getServicoPK());
+		servicoRepository.delete(servico);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Servico Delete " + "\n Usuário => " + username + 

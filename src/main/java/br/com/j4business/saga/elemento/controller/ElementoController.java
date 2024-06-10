@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -47,20 +47,20 @@ public class ElementoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/elementoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/elementoAdd")
 	public ModelAndView elementoAdd(ElementoForm elementoForm) {
 
 		ModelAndView mv = new ModelAndView("elemento/elementoAdd");
 		elementoForm = elementoService.elementoParametros(elementoForm);
 		mv.addObject("elementoForm", elementoForm);
 		mv.addObject("elementoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/elementoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/elementoCreate")
 	public ModelAndView elementoCreate(@Valid ElementoForm elementoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -93,7 +93,7 @@ public class ElementoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/elementoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/elementoDelete/{id}")
 	public ModelAndView elementoDelete(@PathVariable("id") long elementoPK, @Valid ElementoForm elementoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/elementoHome");
@@ -113,7 +113,7 @@ public class ElementoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/elementoEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/elementoEdit/{id}")
 	public ModelAndView elementoEdit(@PathVariable("id") Long elementoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("elemento/elementoEdit");
@@ -121,9 +121,9 @@ public class ElementoController {
 		ElementoForm elementoForm = elementoService.converteElemento(elemento);
 		mv.addObject("elementoForm", elementoForm);
 		mv.addObject("elementoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable elementoQuestaoPageable = new PageRequest(0, 200, Direction.ASC, "questao.questaoNome");
+		Pageable elementoQuestaoPageable = PageRequest.of(0, 200, Direction.ASC, "questao.questaoNome");
 		mv.addObject("elementoQuestaoPage", elementoQuestaoService.getByElementoPK(elementoPK, elementoQuestaoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
@@ -131,7 +131,7 @@ public class ElementoController {
 		return mv;
 	}
 
-	@RequestMapping("/elementoHome")
+	@GetMapping("/elementoHome")
 	public ModelAndView elementoHome(@Valid ElementoByElementoForm elementoByElementoForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("elemento/elementoHome");
@@ -150,10 +150,10 @@ public class ElementoController {
 		}
 
 		if (elementoByElementoForm.getElementoSortTipo().equalsIgnoreCase("ElementoNome") || elementoByElementoForm.getElementoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "elementoNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "elementoNome");
 
 		} else if (elementoByElementoForm.getElementoSortTipo().equalsIgnoreCase("ElementoDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "elementoDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "elementoDescricao");
 
 		}
 
@@ -175,7 +175,7 @@ public class ElementoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/elementoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/elementoSave")
 	public ModelAndView elementoSave(@Valid ElementoForm elementoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -198,7 +198,7 @@ public class ElementoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/elementoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/elementoRelMenu")
 	public ModelAndView elementoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("elemento/elementoRelMenu");
@@ -208,29 +208,29 @@ public class ElementoController {
 		
 	}
 
-	@RequestMapping("/elementoRel001")
+	@GetMapping("/elementoRel001")
 	public ModelAndView elementoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("elemento/elementoRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "elementoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "elementoNome");
 		mv.addObject("elementoPage", elementoService.getElementoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping("/elementoRel002")
+	@GetMapping("/elementoRel002")
 	public ModelAndView elementoRel002(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("elemento/elementoRel002");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "elementoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "elementoNome");
 		mv.addObject("elementoPage", elementoService.getElementoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/elementoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/elementoView/{id}")
 	public ModelAndView elementoView(@PathVariable("id") Long elementoId) {
 
 		Elemento elemento = elementoService.getElementoByElementoPK(elementoId);

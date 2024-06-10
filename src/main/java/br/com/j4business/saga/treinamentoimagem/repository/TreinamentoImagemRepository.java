@@ -3,8 +3,8 @@ package br.com.j4business.saga.treinamentoimagem.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.treinamento.model.Treinamento;
 import br.com.j4business.saga.treinamentoimagem.model.TreinamentoImagem;
 
 @Repository("treinamentoImagemRepository")
-public interface TreinamentoImagemRepository extends PagingAndSortingRepository<TreinamentoImagem, Long>{
+public interface TreinamentoImagemRepository extends JpaRepository<TreinamentoImagem, Long>{
 
 /*	 @Query("SELECT ea FROM TreinamentoImagem ea where ea.imagem.imagemPK = :id") 
 	    List<TreinamentoImagem> findByImagemPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface TreinamentoImagemRepository extends PagingAndSortingRepository<
 	@Query("SELECT ep FROM TreinamentoImagem ep INNER JOIN ep.imagem p WHERE p = :imagem")
 	public List<TreinamentoImagem> findByImagem(@Param("imagem")Imagem imagem);
 
-	@Query("SELECT ep FROM TreinamentoImagem ep INNER JOIN ep.imagem p INNER JOIN ep.treinamento e WHERE p = :imagem AND s = :treinamento")
+	@Query("SELECT ti FROM TreinamentoImagem ti INNER JOIN ti.imagem i INNER JOIN ti.treinamento t WHERE i = :imagem AND t = :treinamento")
 	public TreinamentoImagem findByTreinamentoAndImagem( @Param("treinamento") Treinamento treinamento, @Param("imagem")Imagem imagem);
 	
 	@Query("SELECT ep FROM TreinamentoImagem ep")

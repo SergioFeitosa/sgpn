@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -47,22 +47,22 @@ public class QuestaoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/questaoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/questaoAdd")
 	public ModelAndView questaoAdd(QuestaoForm questaoForm) {
 
 		ModelAndView mv = new ModelAndView("questao/questaoAdd");
 		questaoForm = questaoService.questaoParametros(questaoForm);
 		mv.addObject("questaoForm", questaoForm);
 		mv.addObject("questaoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable elementoPageable = new PageRequest(0, 200, Direction.ASC, "elementoNome");
+		Pageable elementoPageable = PageRequest.of(0, 200, Direction.ASC, "elementoNome");
 		mv.addObject("elementoPage", elementoService.getElementoAll(elementoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/questaoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/questaoCreate")
 	public ModelAndView questaoCreate(@Valid QuestaoForm questaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -95,7 +95,7 @@ public class QuestaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/questaoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/questaoDelete/{id}")
 	public ModelAndView questaoDelete(@PathVariable("id") long questaoPK, @Valid QuestaoForm questaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/questaoHome");
@@ -115,7 +115,7 @@ public class QuestaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/questaoEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/questaoEdit/{id}")
 	public ModelAndView questaoEdit(@PathVariable("id") Long questaoId, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("questao/questaoEdit");
@@ -123,16 +123,16 @@ public class QuestaoController {
 		QuestaoForm questaoForm = questaoService.converteQuestao(questao);
 		mv.addObject("questaoForm", questaoForm);
 		mv.addObject("questaoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable elementoPageable = new PageRequest(0, 200, Direction.ASC, "elementoNome");
+		Pageable elementoPageable = PageRequest.of(0, 200, Direction.ASC, "elementoNome");
 		mv.addObject("elementoPage", elementoService.getElementoAll(elementoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/questaoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/questaoHome")
 	public ModelAndView questaoHome(@Valid QuestaoByQuestaoForm questaoByQuestaoForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("questao/questaoHome");
@@ -151,10 +151,10 @@ public class QuestaoController {
 		}
 
 		if (questaoByQuestaoForm.getQuestaoSortTipo().equalsIgnoreCase("QuestaoNome") || questaoByQuestaoForm.getQuestaoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "questaoNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "questaoNome");
 
 		} else if (questaoByQuestaoForm.getQuestaoSortTipo().equalsIgnoreCase("QuestaoDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "questaoDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "questaoDescricao");
 
 		}
 
@@ -176,7 +176,7 @@ public class QuestaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/questaoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/questaoRelMenu")
 	public ModelAndView questaoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("questao/questaoRelMenu");
@@ -186,18 +186,18 @@ public class QuestaoController {
 		
 	}
 
-	@RequestMapping(path = "/questaoRel001", method = RequestMethod.GET)
+	@GetMapping(path = "/questaoRel001")
 	public ModelAndView questaoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("questao/questaoRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "questaoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "questaoNome");
 		mv.addObject("questaoPage", questaoService.getQuestaoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/questaoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/questaoSave")
 	public ModelAndView questaoSave(@Valid QuestaoForm questaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -220,7 +220,7 @@ public class QuestaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/questaoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/questaoView/{id}")
 	public ModelAndView questaoView(@PathVariable("id") Long questaoId) {
 
 		Questao questao = questaoService.getQuestaoByQuestaoPK(questaoId);

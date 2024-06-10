@@ -1,12 +1,12 @@
 package br.com.j4business.saga.agendaevento.model;
 
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.j4business.saga.agendaevento.enumeration.AgendaEventoEnvio;
@@ -18,11 +18,11 @@ public class AgendaEventoForm {
 	private long eventoPK;
 	private long agendaPK;
 	
-    @NotEmpty(message = "Nome do evento é uma informação obrigatória.")
+    @NotBlank(message = "Nome do evento é uma informação obrigatória.")
 	@NotNull(message = "Nome do evento é uma informação obrigatória.")
 	private String eventoNome;
 	
-    @NotEmpty(message = "Nome da Agenda é uma informação obrigatória.")
+    @NotBlank(message = "Nome da Agenda é uma informação obrigatória.")
 	@NotNull(message = "Nome da Agenda é uma informação obrigatória.")
 	private String agendaNome;
 	
@@ -33,11 +33,11 @@ public class AgendaEventoForm {
 	@Enumerated(EnumType.STRING)
 	private AtributoStatus agendaEventoStatus;
 
-    @NotEmpty(message = "Responsável é uma informação obrigatória.")
+    @NotBlank(message = "Responsável é uma informação obrigatória.")
 	@NotNull(message = "Responsável pela Agenda/Evento é uma informação obrigatória.")
 	private String agendaEventoResponsavel;
 
-    @NotEmpty(message = "Motivo da Operação é uma informação obrigatória.")
+    @NotBlank(message = "Motivo da Operação é uma informação obrigatória.")
 	@Size(min = 5,max = 200, message = "Motivo da Operação não pode ter menos que 5 e mais que 200 caracteres")
 	private String agendaEventoMotivoOperacao;
 
@@ -65,27 +65,27 @@ public class AgendaEventoForm {
 	@Enumerated(EnumType.STRING)
 	private AgendaEventoEnvio agendaEventoAlertaSuperiorTerceiroEnvio;
 
-    @NotEmpty(message = "Texto da Mensagem do Primeiro Envio de Alerta é uma informação obrigatória.")
+    @NotBlank(message = "Texto da Mensagem do Primeiro Envio de Alerta é uma informação obrigatória.")
 	@Size(min = 5,max = 50, message = "Texto da Mensagem do Primeiro Envio de Alerta não pode ter menos que 5 e mais que 50 caracteres")
 	private String AgendaEventoAlertaMensagemPrimeiroEnvio;
 
-    @NotEmpty(message = "Texto da Mensagem do Segundo Envio de Alerta é uma informação obrigatória.")
+    @NotBlank(message = "Texto da Mensagem do Segundo Envio de Alerta é uma informação obrigatória.")
 	@Size(min = 5,max = 50, message = "Texto da Mensagem do Segundo Envio de Alerta não pode ter menos que 5 e mais que 50 caracteres")
 	private String AgendaEventoAlertaMensagemSegundoEnvio;
 
-    @NotEmpty(message = "Texto da Mensagem do Terceiro Envio de Alerta é uma informação obrigatória.")
+    @NotBlank(message = "Texto da Mensagem do Terceiro Envio de Alerta é uma informação obrigatória.")
 	@Size(min = 5,max = 50, message = "Texto da Mensagem do Terceiro Envio de Alerta não pode ter menos que 5 e mais que 50 caracteres")
 	private String AgendaEventoAlertaMensagemTerceiroEnvio;
 
-    @NotEmpty(message = "Nº de dias de antecedência do Primeiro Envio de Alerta é uma informação obrigatória.")
+    @NotBlank(message = "Nº de dias de antecedência do Primeiro Envio de Alerta é uma informação obrigatória.")
 	@Size(min = 1,max = 3, message = "Nº de dias de antecedência do Primeiro Envio de Alerta não pode ter menos que 1 e mais que 3 caracteres")
 	private String AgendaEventoAlertaDiaPrimeiroEnvio;
 
-    @NotEmpty(message = "Nº de dias de antecedência do Segundo Envio de Alerta é uma informação obrigatória.")
+    @NotBlank(message = "Nº de dias de antecedência do Segundo Envio de Alerta é uma informação obrigatória.")
 	@Size(min = 1,max = 3, message = "Nº de dias de antecedência do Segundo Envio de Alerta não pode ter menos que 1 e mais que 3 caracteres")
 	private String AgendaEventoAlertaDiaSegundoEnvio;
 
-    @NotEmpty(message = "Nº de dias de antecedência do Terceiro Envio de Alerta é uma informação obrigatória.")
+    @NotBlank(message = "Nº de dias de antecedência do Terceiro Envio de Alerta é uma informação obrigatória.")
 	@Size(min = 1,max = 3, message = "Nº de dias de antecedência do Terceiro Envio de Alerta não pode ter menos que 1 e mais que 3 caracteres")
 	private String AgendaEventoAlertaDiaTerceiroEnvio;
 
@@ -113,27 +113,27 @@ public class AgendaEventoForm {
 	@Enumerated(EnumType.STRING)
 	private AgendaEventoEnvio agendaEventoCobrancaSuperiorTerceiroEnvio;
 
-    @NotEmpty(message = "Texto da Mensagem do Primeiro Envio de Cobrança é uma informação obrigatória.")
+    @NotBlank(message = "Texto da Mensagem do Primeiro Envio de Cobrança é uma informação obrigatória.")
 	@Size(min = 5,max = 50, message = "Texto da Mensagem do Primeiro Envio de Cobrança não pode ter menos que 5 e mais que 50 caracteres")
 	private String AgendaEventoCobrancaMensagemPrimeiroEnvio;
 
-    @NotEmpty(message = "Texto da Mensagem do Segundo Envio de Cobrança é uma informação obrigatória.")
+    @NotBlank(message = "Texto da Mensagem do Segundo Envio de Cobrança é uma informação obrigatória.")
 	@Size(min = 5,max = 50, message = "Texto da Mensagem do Segundo Envio de Cobrança não pode ter menos que 5 e mais que 50 caracteres")
 	private String AgendaEventoCobrancaMensagemSegundoEnvio;
 
-    @NotEmpty(message = "Texto da Mensagem do Terceiro Envio de Cobrança é uma informação obrigatória.")
+    @NotBlank(message = "Texto da Mensagem do Terceiro Envio de Cobrança é uma informação obrigatória.")
 	@Size(min = 5,max = 50, message = "Texto da Mensagem do Terceiro Envio de Cobrança não pode ter menos que 5 e mais que 50 caracteres")
 	private String AgendaEventoCobrancaMensagemTerceiroEnvio;
 
-    @NotEmpty(message = "Nº de dias de antecedência do Primeiro Envio é uma informação obrigatória.")
+    @NotBlank(message = "Nº de dias de antecedência do Primeiro Envio é uma informação obrigatória.")
 	@Size(min = 1,max = 3, message = "Nº de dias de antecedência do Primeiro Envio de Cobrança não pode ter menos que 1 e mais que 3 caracteres")
 	private String AgendaEventoCobrancaDiaPrimeiroEnvio;
 
-    @NotEmpty(message = "Nº de dias de antecedência do Segundo Envio é uma informação obrigatória.")
+    @NotBlank(message = "Nº de dias de antecedência do Segundo Envio é uma informação obrigatória.")
 	@Size(min = 1,max = 3, message = "Nº de dias de antecedência do Segundo Envio de Cobrança não pode ter menos que 1 e mais que 3 caracteres")
 	private String AgendaEventoCobrancaDiaSegundoEnvio;
 
-    @NotEmpty(message = "Nº de dias de antecedência do Terceiro Envio é uma informação obrigatória.")
+    @NotBlank(message = "Nº de dias de antecedência do Terceiro Envio é uma informação obrigatória.")
 	@Size(min = 1,max = 3, message = "Nº de dias de antecedência do Terceiro Envio de Cobrança não pode ter menos que 1 e mais que 3 caracteres")
 	private String AgendaEventoCobrancaDiaTerceiroEnvio;
 

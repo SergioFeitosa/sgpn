@@ -1,27 +1,28 @@
 package br.com.j4business.saga.processoimagem.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.processo.model.Processo;
-import br.com.j4business.saga.processo.service.ProcessoService;
-import br.com.j4business.saga.processohabilidade.model.ProcessoHabilidade;
 import br.com.j4business.saga.imagem.model.Imagem;
 import br.com.j4business.saga.imagem.service.ImagemService;
+import br.com.j4business.saga.processo.model.Processo;
+import br.com.j4business.saga.processo.service.ProcessoService;
 import br.com.j4business.saga.processoimagem.model.ProcessoImagem;
 import br.com.j4business.saga.processoimagem.model.ProcessoImagemForm;
 import br.com.j4business.saga.processoimagem.repository.ProcessoImagemRepository;
-
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 @Service("processoImagemService")
 public class ProcessoImagemServiceImpl implements ProcessoImagemService {
@@ -94,7 +95,8 @@ public class ProcessoImagemServiceImpl implements ProcessoImagemService {
 
 	@Override
 	public ProcessoImagem getProcessoImagemByProcessoImagemPK(long processoImagemPK) {
-		return processoImagemRepository.findOne(processoImagemPK);
+		Optional<ProcessoImagem> processoImagem = processoImagemRepository.findById(processoImagemPK);
+		return processoImagem.get();
 	}
 
 	@Override
@@ -143,7 +145,7 @@ public class ProcessoImagemServiceImpl implements ProcessoImagemService {
 
 		ProcessoImagem processoImagemTemp = this.getProcessoImagemByProcessoImagemPK(processoImagemPK);
 
-		processoImagemRepository.delete(processoImagemPK);
+		processoImagemRepository.delete(processoImagemTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ProcessoImagem Save " + "\n Usuário => " + username + 
@@ -157,7 +159,10 @@ public class ProcessoImagemServiceImpl implements ProcessoImagemService {
 		
 		List<ProcessoImagem> processoImagemList = processoImagemRepository.findByImagem(imagem);
 
-		processoImagemRepository.delete(processoImagemList);
+		for (ProcessoImagem processoImagem2 : processoImagemList) {
+			processoImagemRepository.delete(processoImagem2);
+			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

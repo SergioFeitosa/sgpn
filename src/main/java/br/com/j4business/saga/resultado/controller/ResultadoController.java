@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -43,21 +43,21 @@ public class ResultadoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/resultadoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/resultadoAdd")
 	public ModelAndView resultadoAdd(ResultadoForm resultadoForm) {
 
 		ModelAndView mv = new ModelAndView("resultado/resultadoAdd");
 		resultadoForm = resultadoService.resultadoParametros(resultadoForm);
 		mv.addObject("resultadoForm", resultadoForm);
 		mv.addObject("resultadoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/resultadoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/resultadoCreate")
 	public ModelAndView resultadoCreate(@Valid ResultadoForm resultadoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -90,7 +90,7 @@ public class ResultadoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/resultadoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/resultadoDelete/{id}")
 	public ModelAndView resultadoDelete(@PathVariable("id") long resultadoPK, @Valid ResultadoForm resultadoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/resultadoHome");
@@ -111,7 +111,7 @@ public class ResultadoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/resultadoEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/resultadoEdit/{id}")
 	public ModelAndView resultadoEdit(@PathVariable("id") Long resultadoId, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("resultado/resultadoEdit");
@@ -119,14 +119,14 @@ public class ResultadoController {
 		ResultadoForm resultadoForm = resultadoService.converteResultado(resultado);
 		mv.addObject("resultadoForm", resultadoForm);
 		mv.addObject("resultadoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping("/resultadoHome")
+	@GetMapping("/resultadoHome")
 	public ModelAndView resultadoHome(@Valid ResultadoByResultadoForm resultadoByResultadoForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("resultado/resultadoHome");
@@ -145,10 +145,10 @@ public class ResultadoController {
 		}
 
 		if (resultadoByResultadoForm.getResultadoSortTipo().equalsIgnoreCase("ResultadoNome") || resultadoByResultadoForm.getResultadoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "resultadoNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "resultadoNome");
 
 		} else if (resultadoByResultadoForm.getResultadoSortTipo().equalsIgnoreCase("ResultadoDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "resultadoDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "resultadoDescricao");
 
 		}
 
@@ -170,7 +170,7 @@ public class ResultadoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/resultadoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/resultadoSave")
 	public ModelAndView resultadoSave(@Valid ResultadoForm resultadoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -193,7 +193,7 @@ public class ResultadoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/resultadoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/resultadoRelMenu")
 	public ModelAndView resultadoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("resultado/resultadoRelMenu");
@@ -202,29 +202,29 @@ public class ResultadoController {
 		return mv;
 	}
 
-	@RequestMapping("/resultadoRel001")
+	@GetMapping("/resultadoRel001")
 	public ModelAndView resultadoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("resultado/resultadoRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "resultadoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "resultadoNome");
 		mv.addObject("resultadoPage", resultadoService.getResultadoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping("/resultadoRel002")
+	@GetMapping("/resultadoRel002")
 	public ModelAndView resultadoRel002(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("resultado/resultadoRel002");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "resultadoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "resultadoNome");
 		mv.addObject("resultadoPage", resultadoService.getResultadoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/resultadoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/resultadoView/{id}")
 	public ModelAndView resultadoView(@PathVariable("id") Long resultadoId) {
 
 		Resultado resultado = resultadoService.getResultadoByResultadoPK(resultadoId);

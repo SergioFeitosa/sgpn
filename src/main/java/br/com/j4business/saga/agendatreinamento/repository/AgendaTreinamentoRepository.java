@@ -3,8 +3,8 @@ package br.com.j4business.saga.agendatreinamento.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.agenda.model.Agenda;
 import br.com.j4business.saga.agendatreinamento.model.AgendaTreinamento;
 
 @Repository("agendaTreinamentoRepository")
-public interface AgendaTreinamentoRepository extends PagingAndSortingRepository<AgendaTreinamento, Long>{
+public interface AgendaTreinamentoRepository extends JpaRepository<AgendaTreinamento, Long>{
 
 /*	 @Query("SELECT ea FROM AgendaTreinamento ea where ea.treinamento.treinamentoPK = :id") 
 	    List<AgendaTreinamento> findByTreinamentoPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface AgendaTreinamentoRepository extends PagingAndSortingRepository<
 	@Query("SELECT ep FROM AgendaTreinamento ep INNER JOIN ep.treinamento p WHERE p = :treinamento")
 	public List<AgendaTreinamento> findByTreinamento(@Param("treinamento")Treinamento treinamento);
 
-	@Query("SELECT ep FROM AgendaTreinamento ep INNER JOIN ep.treinamento p INNER JOIN ep.agenda e WHERE p = :treinamento AND s = :agenda")
+	@Query("SELECT at FROM AgendaTreinamento at INNER JOIN at.treinamento t INNER JOIN at.agenda a WHERE t = :treinamento AND a = :agenda")
 	public AgendaTreinamento findByAgendaAndTreinamento( @Param("agenda") Agenda agenda, @Param("treinamento")Treinamento treinamento);
 	
 	@Query("SELECT ep FROM AgendaTreinamento ep")
@@ -51,5 +51,7 @@ public interface AgendaTreinamentoRepository extends PagingAndSortingRepository<
 	@Query("SELECT ep FROM AgendaTreinamento ep INNER JOIN ep.treinamento p WHERE p.treinamentoNome like :treinamentoNome%")
 	public List<AgendaTreinamento> findByTreinamentoNome(@Param("treinamentoNome")String treinamentoNome);
 	
+	@Query("SELECT at FROM AgendaTreinamento at WHERE at.agendaTreinamentoPK = :agendaTreinamentoPK")
+	public AgendaTreinamento findByAgendaTreinamentoPK(@Param("agendaTreinamentoPK") long agendaTreinamentoPK);
 
 }

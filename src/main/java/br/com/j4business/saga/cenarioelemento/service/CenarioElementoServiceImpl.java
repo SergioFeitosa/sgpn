@@ -12,10 +12,10 @@ import br.com.j4business.saga.cenarioelemento.model.CenarioElemento;
 import br.com.j4business.saga.cenarioelemento.model.CenarioElementoForm;
 import br.com.j4business.saga.cenarioelemento.repository.CenarioElementoRepository;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -84,7 +84,9 @@ public class CenarioElementoServiceImpl implements CenarioElementoService {
 
 	@Override
 	public CenarioElemento getCenarioElementoByCenarioElementoPK(long cenarioElementoPK) {
-		return cenarioElementoRepository.findOne(cenarioElementoPK);
+
+		Optional<CenarioElemento> cenarioElemento = cenarioElementoRepository.findById(cenarioElementoPK);
+		return cenarioElemento.get();
 	}
 
 	@Override
@@ -116,7 +118,7 @@ public class CenarioElementoServiceImpl implements CenarioElementoService {
 
 		CenarioElemento cenarioElementoTemp = this.getCenarioElementoByCenarioElementoPK(cenarioElementoPK);
 
-		cenarioElementoRepository.delete(cenarioElementoPK);
+		cenarioElementoRepository.delete(cenarioElementoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("CenarioElemento Save " + "\n Usuário => " + username + 
@@ -130,7 +132,9 @@ public class CenarioElementoServiceImpl implements CenarioElementoService {
 		
 		List<CenarioElemento> cenarioElementos = cenarioElementoRepository.findByElemento(elemento);
 
-		cenarioElementoRepository.delete(cenarioElementos);
+		for (CenarioElemento cenarioElemento2 : cenarioElementos) {
+			cenarioElementoRepository.delete(cenarioElemento2);
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

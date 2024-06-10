@@ -1,20 +1,22 @@
 package br.com.j4business.saga.processo.service;
 
-import java.util.Iterator;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.planejamentoprocesso.model.PlanejamentoProcesso;
 import br.com.j4business.saga.processo.model.Processo;
 import br.com.j4business.saga.processo.model.ProcessoForm;
 import br.com.j4business.saga.processo.repository.ProcessoRepository;
@@ -54,7 +56,8 @@ public class ProcessoServiceImpl implements ProcessoService {
 	@Override
 	public Processo getProcessoByProcessoPK(long processoPK) {
 		
-		return processoRepository.findOne(processoPK);
+		Optional<Processo> processo = processoRepository.findById(processoPK);
+		return processo.get();
 	}
 
 	@Transactional
@@ -100,7 +103,7 @@ public class ProcessoServiceImpl implements ProcessoService {
 
 		Processo processo = this.getProcessoByProcessoPK(processoId);
 		
-		processoRepository.delete(processo.getProcessoPK());
+		processoRepository.delete(processo);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Processo Delete " + "\n Usuário => " + username + 

@@ -1,26 +1,28 @@
 package br.com.j4business.saga.ocorrenciaatendimento.service;
 
-import br.com.j4business.saga.UsuarioSeguranca;
-import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
-import br.com.j4business.saga.colaborador.model.Colaborador;
-import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.fornecedorprocesso.model.FornecedorProcesso;
-import br.com.j4business.saga.ocorrenciaatendimento.model.OcorrenciaAtendimento;
-import br.com.j4business.saga.atendimento.model.Atendimento;
-import br.com.j4business.saga.atendimento.service.AtendimentoService;
-import br.com.j4business.saga.ocorrencia.model.Ocorrencia;
-import br.com.j4business.saga.ocorrencia.service.OcorrenciaService;
-import br.com.j4business.saga.ocorrenciaatendimento.model.OcorrenciaAtendimentoForm;
-import br.com.j4business.saga.ocorrenciaatendimento.repository.OcorrenciaAtendimentoRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
 import java.util.List;
-import org.apache.logging.log4j.Logger;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
 import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import br.com.j4business.saga.UsuarioSeguranca;
+import br.com.j4business.saga.atendimento.model.Atendimento;
+import br.com.j4business.saga.atendimento.service.AtendimentoService;
+import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
+import br.com.j4business.saga.colaborador.model.Colaborador;
+import br.com.j4business.saga.colaborador.service.ColaboradorService;
+import br.com.j4business.saga.ocorrencia.model.Ocorrencia;
+import br.com.j4business.saga.ocorrencia.service.OcorrenciaService;
+import br.com.j4business.saga.ocorrenciaatendimento.model.OcorrenciaAtendimento;
+import br.com.j4business.saga.ocorrenciaatendimento.model.OcorrenciaAtendimentoForm;
+import br.com.j4business.saga.ocorrenciaatendimento.repository.OcorrenciaAtendimentoRepository;
 
 @Service("ocorrenciaAtendimentoService")
 public class OcorrenciaAtendimentoServiceImpl implements OcorrenciaAtendimentoService {
@@ -83,7 +85,8 @@ public class OcorrenciaAtendimentoServiceImpl implements OcorrenciaAtendimentoSe
 
 	@Override
 	public OcorrenciaAtendimento getOcorrenciaAtendimentoByOcorrenciaAtendimentoPK(long ocorrenciaAtendimentoPK) {
-		return ocorrenciaAtendimentoRepository.findOne(ocorrenciaAtendimentoPK);
+		Optional<OcorrenciaAtendimento> ocorrenciaAtendimento =  ocorrenciaAtendimentoRepository.findById(ocorrenciaAtendimentoPK);
+		return ocorrenciaAtendimento.get();
 	}
 
 	@Override
@@ -134,7 +137,7 @@ public class OcorrenciaAtendimentoServiceImpl implements OcorrenciaAtendimentoSe
 
 		OcorrenciaAtendimento ocorrenciaAtendimentoTemp = this.getOcorrenciaAtendimentoByOcorrenciaAtendimentoPK(ocorrenciaAtendimentoPK);
 
-		ocorrenciaAtendimentoRepository.delete(ocorrenciaAtendimentoPK);
+		ocorrenciaAtendimentoRepository.delete(ocorrenciaAtendimentoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("OcorrenciaAtendimento Save " + "\n Usuário => " + username + 
@@ -149,7 +152,9 @@ public class OcorrenciaAtendimentoServiceImpl implements OcorrenciaAtendimentoSe
 		
 		List<OcorrenciaAtendimento> ocorrenciaAtendimentoList = ocorrenciaAtendimentoRepository.findByAtendimento(atendimento);
 
-		ocorrenciaAtendimentoRepository.delete(ocorrenciaAtendimentoList);
+		for (OcorrenciaAtendimento ocorrenciaAtendimento2 : ocorrenciaAtendimentoList) {
+			ocorrenciaAtendimentoRepository.delete(ocorrenciaAtendimento2);			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

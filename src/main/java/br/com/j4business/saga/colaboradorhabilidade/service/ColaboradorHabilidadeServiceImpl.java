@@ -4,7 +4,6 @@ import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.colaboradorfuncao.model.ColaboradorFuncao;
 import br.com.j4business.saga.habilidade.model.Habilidade;
 import br.com.j4business.saga.habilidade.service.HabilidadeService;
 import br.com.j4business.saga.colaboradorhabilidade.model.ColaboradorHabilidade;
@@ -13,10 +12,10 @@ import br.com.j4business.saga.colaboradorhabilidade.repository.ColaboradorHabili
 import br.com.j4business.saga.fornecedor.model.Fornecedor;
 import br.com.j4business.saga.fornecedor.service.FornecedorService;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -86,7 +85,9 @@ public class ColaboradorHabilidadeServiceImpl implements ColaboradorHabilidadeSe
 
 	@Override
 	public ColaboradorHabilidade getColaboradorHabilidadeByColaboradorHabilidadePK(long colaboradorHabilidadePK) {
-		return colaboradorHabilidadeRepository.findOne(colaboradorHabilidadePK);
+		
+		Optional<ColaboradorHabilidade>colaboradorHabilidade = colaboradorHabilidadeRepository.findById(colaboradorHabilidadePK);
+		return colaboradorHabilidade.get();
 	}
 
 	@Override
@@ -117,7 +118,7 @@ public class ColaboradorHabilidadeServiceImpl implements ColaboradorHabilidadeSe
 
 		ColaboradorHabilidade colaboradorHabilidadeTemp = this.getColaboradorHabilidadeByColaboradorHabilidadePK(colaboradorHabilidadePK);
 
-		colaboradorHabilidadeRepository.delete(colaboradorHabilidadePK);
+		colaboradorHabilidadeRepository.delete(colaboradorHabilidadeTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ColaboradorHabilidade Save " + "\n Usuário => " + username + 
@@ -131,7 +132,11 @@ public class ColaboradorHabilidadeServiceImpl implements ColaboradorHabilidadeSe
 		
 		List<ColaboradorHabilidade> colaboradorHabilidadeList = colaboradorHabilidadeRepository.findByHabilidade(habilidade);
 
-		colaboradorHabilidadeRepository.delete(colaboradorHabilidadeList);
+		for (ColaboradorHabilidade colaboradorHabilidade2 : colaboradorHabilidadeList) {
+			colaboradorHabilidadeRepository.delete(colaboradorHabilidade2);	
+		}
+
+		
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

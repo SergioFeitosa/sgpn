@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,25 +17,24 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes; 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.j4business.saga.processo.model.ProcessoForm;
-import br.com.j4business.saga.processo.service.ProcessoService;
-import br.com.j4business.saga.processocurso.model.ProcessoCurso;
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.texto.model.TextoForm;
-import br.com.j4business.saga.texto.service.TextoService;
+import br.com.j4business.saga.processo.model.ProcessoForm;
+import br.com.j4business.saga.processo.service.ProcessoService;
 import br.com.j4business.saga.processotexto.model.ProcessoTexto;
 import br.com.j4business.saga.processotexto.model.ProcessoTextoByProcessoForm;
 import br.com.j4business.saga.processotexto.model.ProcessoTextoForm;
 import br.com.j4business.saga.processotexto.service.ProcessoTextoService;
+import br.com.j4business.saga.texto.model.TextoForm;
+import br.com.j4business.saga.texto.service.TextoService;
 
 @Controller
 public class ProcessoTextoController {
@@ -55,7 +54,7 @@ public class ProcessoTextoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/processoTextoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/processoTextoAdd")
 	public ModelAndView processoTextoAdd(ProcessoTextoForm processoTextoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoTexto/processoTextoAdd");
@@ -63,18 +62,18 @@ public class ProcessoTextoController {
 		mv.addObject("processoTextoForm", processoTextoForm);
 		mv.addObject("processoTextoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("processoTextoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable textoPageable = new PageRequest(0, 200, Direction.ASC, "textoNome");
+		Pageable textoPageable = PageRequest.of(0, 200, Direction.ASC, "textoNome");
 		mv.addObject("textoPage", textoService.getTextoAll(textoPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoTextoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/processoTextoCreate")
 	public ModelAndView processoTextoCreate(@Valid ProcessoTextoForm processoTextoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -121,7 +120,7 @@ public class ProcessoTextoController {
 	}
 
 
-	@RequestMapping(path = "/processoTextoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/processoTextoDelete/{id}")
 	public ModelAndView processoTextoDelete(@PathVariable("id") long processoTextoId, @Valid TextoForm textoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/processoTextoHome");
@@ -147,7 +146,7 @@ public class ProcessoTextoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoTextoEdit/{processoTextoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/processoTextoEdit/{processoTextoPK}")
 	public ModelAndView processoTextoEdit(@PathVariable("processoTextoPK") Long processoTextoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoTexto/processoTextoEdit");
@@ -156,18 +155,18 @@ public class ProcessoTextoController {
 		mv.addObject("processoTextoForm", processoTextoForm);
 		mv.addObject("processoTextoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("processoTextoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable textoPageable = new PageRequest(0, 200, Direction.ASC, "textoNome");
+		Pageable textoPageable = PageRequest.of(0, 200, Direction.ASC, "textoNome");
 		mv.addObject("textoPage", textoService.getTextoAll(textoPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/processoTextoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/processoTextoHome")
 	public ModelAndView processoTextoHome(@Valid ProcessoTextoByProcessoForm processoTextoByProcessoForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoTexto/processoTextoHome");
@@ -187,10 +186,10 @@ public class ProcessoTextoController {
 
 		if (processoTextoByProcessoForm.getProcessoTextoSortTipo().equalsIgnoreCase("ProcessoNome")
 				|| processoTextoByProcessoForm.getProcessoTextoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","texto.textoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","texto.textoNome"); 
 		
 		} else if (processoTextoByProcessoForm.getProcessoTextoSortTipo().equalsIgnoreCase("TextoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"texto.textoNome","processo.processoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"texto.textoNome","processo.processoNome"); 
 
 		}
 
@@ -213,7 +212,7 @@ public class ProcessoTextoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoTextoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/processoTextoSave")
 	public ModelAndView processoTextoSave(@Valid ProcessoTextoForm processoTextoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -245,7 +244,7 @@ public class ProcessoTextoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoTextoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/processoTextoRelMenu")
 	public ModelAndView processoTextoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("processoTexto/processoTextoRelMenu");
@@ -255,18 +254,18 @@ public class ProcessoTextoController {
 		
 	}
 
-	@RequestMapping("/processoTextoRel001")
+	@GetMapping("/processoTextoRel001")
 	public ModelAndView processoTextoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("processoTexto/processoTextoRel001");
-		Pageable processoTextoPageable = new PageRequest(0, 200, Direction.ASC, "processo.processoNome","texto.textoNome");
+		Pageable processoTextoPageable = PageRequest.of(0, 200, Direction.ASC, "processo.processoNome","texto.textoNome");
 		mv.addObject("processoTextoPage", processoTextoService.getProcessoTextoAll(processoTextoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/processoTextoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/processoTextoView/{id}")
 	public ModelAndView processoTextoView(@PathVariable("id") Long processoTextoId) {
 
 		ProcessoTexto processoTexto = processoTextoService.getProcessoTextoByProcessoTextoPK(processoTextoId);

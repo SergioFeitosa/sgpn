@@ -3,8 +3,8 @@ package br.com.j4business.saga.contratoimagem.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.contrato.model.Contrato;
 import br.com.j4business.saga.contratoimagem.model.ContratoImagem;
 
 @Repository("contratoImagemRepository")
-public interface ContratoImagemRepository extends PagingAndSortingRepository<ContratoImagem, Long>{
+public interface ContratoImagemRepository extends JpaRepository<ContratoImagem, Long>{
 
 /*	 @Query("SELECT ea FROM ContratoImagem ea where ea.imagem.imagemPK = :id") 
 	    List<ContratoImagem> findByImagemPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface ContratoImagemRepository extends PagingAndSortingRepository<Con
 	@Query("SELECT ep FROM ContratoImagem ep INNER JOIN ep.imagem p WHERE p = :imagem")
 	public List<ContratoImagem> findByImagem(@Param("imagem")Imagem imagem);
 
-	@Query("SELECT ep FROM ContratoImagem ep INNER JOIN ep.imagem p INNER JOIN ep.contrato e WHERE p = :imagem AND s = :contrato")
+	@Query("SELECT ci FROM ContratoImagem ci INNER JOIN ci.imagem i INNER JOIN ci.contrato c WHERE i = :imagem AND c = :contrato")
 	public ContratoImagem findByContratoAndImagem( @Param("contrato") Contrato contrato, @Param("imagem")Imagem imagem);
 	
 	@Query("SELECT ep FROM ContratoImagem ep")

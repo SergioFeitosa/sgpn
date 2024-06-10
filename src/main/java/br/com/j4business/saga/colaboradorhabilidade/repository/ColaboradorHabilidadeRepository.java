@@ -3,8 +3,8 @@ package br.com.j4business.saga.colaboradorhabilidade.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaboradorhabilidade.model.ColaboradorHabilidade;
 
 @Repository("colaboradorHabilidadeRepository")
-public interface ColaboradorHabilidadeRepository extends PagingAndSortingRepository<ColaboradorHabilidade, Long>{
+public interface ColaboradorHabilidadeRepository extends JpaRepository<ColaboradorHabilidade, Long>{
 
 /*	 @Query("SELECT ea FROM ColaboradorHabilidade ea where ea.habilidade.habilidadePK = :id") 
 	    List<ColaboradorHabilidade> findByHabilidadePK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface ColaboradorHabilidadeRepository extends PagingAndSortingReposit
 	@Query("SELECT ep FROM ColaboradorHabilidade ep INNER JOIN ep.habilidade p WHERE p = :habilidade")
 	public List<ColaboradorHabilidade> findByHabilidade(@Param("habilidade")Habilidade habilidade);
 
-	@Query("SELECT ep FROM ColaboradorHabilidade ep INNER JOIN ep.habilidade p INNER JOIN ep.colaborador e WHERE p = :habilidade AND s = :colaborador")
+	@Query("SELECT ch FROM ColaboradorHabilidade ch INNER JOIN ch.habilidade h INNER JOIN ch.colaborador c WHERE h = :habilidade AND c = :colaborador")
 	public ColaboradorHabilidade findByColaboradorAndHabilidade( @Param("colaborador") Colaborador colaborador, @Param("habilidade")Habilidade habilidade);
 	
 	@Query("SELECT ep FROM ColaboradorHabilidade ep")

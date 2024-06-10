@@ -4,23 +4,110 @@ import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityConfiguration;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
-@Order(SecurityProperties.ACCESS_OVERRIDE_ORDER)
-public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+@EnableMethodSecurity(prePostEnabled = true)
+@Order(SecurityProperties.BASIC_AUTH_ORDER)
+public class WebSecurityConfig extends WebSecurityConfiguration {
 
 	@Autowired
 	DataSource dataSource;
 
+	@Bean
+	PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
+
+	
+	
+	@EnableWebSecurity
+	public class SecurityConfig {
+	
+		@Autowired
+		public void configureGlobal(AuthenticationManagerBuilder auth) 
+		  throws Exception {
+			auth.inMemoryAuthentication().withUser("user")
+			  .password(passwordEncoder().encode("password")).roles("USER");
+		}
+	}
+
+	@Bean
+	SecurityFilterChain web(HttpSecurity http) throws Exception {
+		http
+			.formLogin(form -> form
+				.loginPage("/login")
+				.usernameParameter("username")
+				.passwordParameter("password")
+			.permitAll())
+			.authorizeHttpRequests((authorize) -> authorize
+				.requestMatchers("/endpoint").hasAuthority("USER")
+				.anyRequest().authenticated());
+
+		return http.build();
+	}
+	
+	
+	@Bean
+    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
+	http
+		.authorizeHttpRequests((authorize) -> authorize
+			.requestMatchers("/acao*").hasAuthority("hasAnyRole('ROLE_PLANEJAMENTO','ROLE_ADMIN')")
+			.requestMatchers("/agenda*").hasAuthority("hasAnyRole('ROLE_AGENDA','ROLE_ADMIN')")
+			.requestMatchers("/atendimento*").hasAuthority("hasAnyRole('ROLE_OCORRENCIA','ROLE_ADMIN')")
+			.requestMatchers("/atividade*").hasAuthority("hasAnyRole('ROLE_PROCESSO','ROLE_ADMIN')")
+			.requestMatchers("/atributo*").hasAuthority("hasAnyRole('ROLE_ATRIBUTO','ROLE_ADMIN')")
+			.requestMatchers("/avaliacao*").hasAuthority("hasAnyRole('ROLE_AVALIACAO','ROLE_ADMIN')")
+			.requestMatchers("/bairro*").hasAuthority("hasAnyRole('ROLE_ENDERECO','ROLE_ADMIN')")
+			.requestMatchers("/cenario*").hasAuthority("hasAnyRole('ROLE_CENARIO','ROLE_ADMIN')")
+			.requestMatchers("/certificacao*").hasAuthority("hasAnyRole('ROLE_CAPACITACAO','ROLE_ADMIN')")
+			.requestMatchers("/colaborador*").hasAuthority("hasAnyRole('ROLE_COLABORADOR','ROLE_ADMIN')")
+			.requestMatchers("/contrato*").hasAuthority("hasAnyRole('ROLE_CONTRATO','ROLE_ADMIN')")
+			.requestMatchers("/curso*").hasAuthority("hasAnyRole('ROLE_CAPACITACAO','ROLE_ADMIN')")
+			.requestMatchers("/detalhe*").hasAuthority("hasAnyRole('ROLE_ATRIBUTO','ROLE_ADMIN')")
+			.requestMatchers("/elemento*").hasAuthority("hasAnyRole('ROLE_CENARIO','ROLE_ADMIN')")
+			.requestMatchers("/email*").hasAuthority("hasAnyRole('ROLE_EMAIL','ROLE_ADMIN')")
+			.requestMatchers("/empresa*").hasAuthority("hasAnyRole('ROLE_EMPRESA','ROLE_ADMIN')")
+			.requestMatchers("/estado*").hasAuthority("hasAnyRole('ROLE_ENDERECO','ROLE_ADMIN')")
+			.requestMatchers("/estruturafisica*").hasAuthority("hasAnyRole('ROLE_ESTRUTURAFISICA','ROLE_ADMIN')")
+			.requestMatchers("/evento*").hasAuthority("hasAnyRole('ROLE_EVENTO','ROLE_ADMIN')")
+			.requestMatchers("/formacao*").hasAuthority("hasAnyRole('ROLE_CAPACITACAO','ROLE_ADMIN')")
+			.requestMatchers("/fornecedor*").hasAuthority("hasAnyRole('ROLE_FORNECEDOR','ROLE_ADMIN')")
+			.requestMatchers("/funcao*").hasAuthority("hasAnyRole('ROLE_COLABORADOR','ROLE_ADMIN')")
+			.requestMatchers("/habilidade*").hasAuthority("hasAnyRole('ROLE_CAPACITACAO','ROLE_ADMIN')")
+			.requestMatchers("/logradouro*").hasAuthority("hasAnyRole('ROLE_ENDERECO','ROLE_ADMIN')")
+			.requestMatchers("/municipio*").hasAuthority("hasAnyRole('ROLE_ENDERECO','ROLE_ADMIN')")
+			.requestMatchers("/ocorrencia*").hasAuthority("hasAnyRole('ROLE_OCORRENCIA','ROLE_ADMIN')")
+			.requestMatchers("/pais*").hasAuthority("hasAnyRole('ROLE_ENDERECO','ROLE_ADMIN')")
+			.requestMatchers("/perfil*").hasAuthority("hasAnyRole('ROLE_USUARIO','ROLE_ADMIN')")
+			.requestMatchers("/planejamento*").hasAuthority("hasAnyRole('ROLE_PLANEJAMENTO','ROLE_ADMIN')")
+			.requestMatchers("/processo*").hasAuthority("hasAnyRole('ROLE_PROCESSO','ROLE_ADMIN')")
+			.requestMatchers("/questao*").hasAuthority("hasAnyRole('ROLE_AVALIACAO','ROLE_ADMIN')")
+			.requestMatchers("/questionario*").hasAuthority("hasAnyRole('ROLE_AVALIACAO','ROLE_ADMIN')")
+			.requestMatchers("/servico*").hasAuthority("hasAnyRole('ROLE_PROCESSO','ROLE_ADMIN')")
+			.requestMatchers("/tipo*").hasAuthority("hasAnyRole('ROLE_ENDERECO','ROLE_ADMIN')")
+			.requestMatchers("/treinamento*").hasAuthority("hasAnyRole('ROLE_CAPACITACAO','ROLE_ADMIN','ROLE_VIDEO')")
+			.requestMatchers("/unidadeorganizacional*").hasAuthority("hasAnyRole('ROLE_ESTRUTURAFISICA','ROLE_ADMIN')")
+			.requestMatchers("/usuario*").hasAuthority("hasAnyRole('ROLE_USUARIO','ROLE_ADMIN')")
+			.requestMatchers("/video*").hasAuthority("hasAnyRole('ROLE_VIDEO','ROLE_ADMIN')")
+			.anyRequest().authenticated()
+		);
+	return http.build();
+}
+
+	/*
 	@Autowired
 	public void configAuthentication(AuthenticationManagerBuilder auth) throws Exception {
 		auth
@@ -88,5 +175,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	.and()
 		.csrf();
 	}
-	
+
+	*/
 }

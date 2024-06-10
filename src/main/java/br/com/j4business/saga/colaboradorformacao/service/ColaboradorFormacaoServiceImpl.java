@@ -4,7 +4,6 @@ import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.colaboradorcurso.model.ColaboradorCurso;
 import br.com.j4business.saga.formacao.model.Formacao;
 import br.com.j4business.saga.formacao.service.FormacaoService;
 import br.com.j4business.saga.fornecedor.model.Fornecedor;
@@ -13,10 +12,10 @@ import br.com.j4business.saga.colaboradorformacao.model.ColaboradorFormacao;
 import br.com.j4business.saga.colaboradorformacao.model.ColaboradorFormacaoForm;
 import br.com.j4business.saga.colaboradorformacao.repository.ColaboradorFormacaoRepository;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -85,7 +84,8 @@ public class ColaboradorFormacaoServiceImpl implements ColaboradorFormacaoServic
 
 	@Override
 	public ColaboradorFormacao getColaboradorFormacaoByColaboradorFormacaoPK(long colaboradorFormacaoPK) {
-		return colaboradorFormacaoRepository.findOne(colaboradorFormacaoPK);
+		Optional<ColaboradorFormacao> colaboradorFormacao =  colaboradorFormacaoRepository.findById(colaboradorFormacaoPK);
+		return colaboradorFormacao.get();
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class ColaboradorFormacaoServiceImpl implements ColaboradorFormacaoServic
 
 		ColaboradorFormacao colaboradorFormacaoTemp = this.getColaboradorFormacaoByColaboradorFormacaoPK(colaboradorFormacaoPK);
 
-		colaboradorFormacaoRepository.delete(colaboradorFormacaoPK);
+		colaboradorFormacaoRepository.delete(colaboradorFormacaoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ColaboradorFormacao Save " + "\n Usuário => " + username + 
@@ -137,7 +137,9 @@ public class ColaboradorFormacaoServiceImpl implements ColaboradorFormacaoServic
 		
 		List<ColaboradorFormacao> colaboradorFormacaoList = colaboradorFormacaoRepository.findByFormacao(formacao);
 
-		colaboradorFormacaoRepository.delete(colaboradorFormacaoList);
+		for (ColaboradorFormacao colaboradorFormacao2 : colaboradorFormacaoList) {
+			colaboradorFormacaoRepository.delete(colaboradorFormacao2);
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

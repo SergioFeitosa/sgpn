@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,20 +17,20 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import br.com.j4business.saga.fornecedor.model.FornecedorForm;
-import br.com.j4business.saga.fornecedor.service.FornecedorService;
+
 import br.com.j4business.saga.UsuarioSeguranca;
-import br.com.j4business.saga.agendaevento.model.AgendaEvento;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.contrato.model.ContratoForm;
 import br.com.j4business.saga.contrato.service.ContratoService;
+import br.com.j4business.saga.fornecedor.model.FornecedorForm;
+import br.com.j4business.saga.fornecedor.service.FornecedorService;
 import br.com.j4business.saga.fornecedorcontrato.model.FornecedorContrato;
 import br.com.j4business.saga.fornecedorcontrato.model.FornecedorContratoByFornecedorForm;
 import br.com.j4business.saga.fornecedorcontrato.model.FornecedorContratoForm;
@@ -54,7 +54,7 @@ public class FornecedorContratoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/fornecedorContratoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/fornecedorContratoAdd")
 	public ModelAndView fornecedorContratoAdd(FornecedorContratoForm fornecedorContratoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("fornecedorContrato/fornecedorContratoAdd");
@@ -62,17 +62,17 @@ public class FornecedorContratoController {
 		mv.addObject("fornecedorContratoForm", fornecedorContratoForm);
 		mv.addObject("fornecedorContratoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("fornecedorContratoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable contratoPageable = new PageRequest(0, 200, Direction.ASC, "contratoNome");
+		Pageable contratoPageable = PageRequest.of(0, 200, Direction.ASC, "contratoNome");
 		mv.addObject("contratoPage", contratoService.getContratoAll(contratoPageable));
-		Pageable fornecedorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable fornecedorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("fornecedorPage", fornecedorService.getFornecedorAll(fornecedorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/fornecedorContratoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/fornecedorContratoCreate")
 	public ModelAndView fornecedorContratoCreate(@Valid FornecedorContratoForm fornecedorContratoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -106,7 +106,7 @@ public class FornecedorContratoController {
 	}
 
 
-	@RequestMapping(path = "/fornecedorContratoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/fornecedorContratoDelete/{id}")
 	public ModelAndView fornecedorContratoDelete(@PathVariable("id") long fornecedorContratoId, @Valid ContratoForm contratoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/fornecedorContratoHome");
@@ -132,7 +132,7 @@ public class FornecedorContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/fornecedorContratoEdit/{fornecedorContratoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/fornecedorContratoEdit/{fornecedorContratoPK}")
 	public ModelAndView fornecedorContratoEdit(@PathVariable("fornecedorContratoPK") Long fornecedorContratoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("fornecedorContrato/fornecedorContratoEdit");
@@ -141,18 +141,18 @@ public class FornecedorContratoController {
 		mv.addObject("fornecedorContratoForm", fornecedorContratoForm);
 		mv.addObject("fornecedorContratoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("fornecedorContratoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable contratoPageable = new PageRequest(0, 200, Direction.ASC, "contratoNome");
+		Pageable contratoPageable = PageRequest.of(0, 200, Direction.ASC, "contratoNome");
 		mv.addObject("contratoPage", contratoService.getContratoAll(contratoPageable));
-		Pageable fornecedorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable fornecedorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("fornecedorPage", fornecedorService.getFornecedorAll(fornecedorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/fornecedorContratoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/fornecedorContratoHome")
 	public ModelAndView fornecedorContratoHome(@Valid FornecedorContratoByFornecedorForm fornecedorContratoByFornecedorForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("fornecedorContrato/fornecedorContratoHome");
@@ -172,10 +172,10 @@ public class FornecedorContratoController {
 
 		if (fornecedorContratoByFornecedorForm.getFornecedorContratoSortTipo().equalsIgnoreCase("FornecedorNome")
 				|| fornecedorContratoByFornecedorForm.getFornecedorContratoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"fornecedor.pessoaNome","contrato.contratoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"fornecedor.pessoaNome","contrato.contratoNome"); 
 		
 		} else if (fornecedorContratoByFornecedorForm.getFornecedorContratoSortTipo().equalsIgnoreCase("ContratoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"contrato.contratoNome","fornecedor.pessoaNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"contrato.contratoNome","fornecedor.pessoaNome"); 
 
 		}
 
@@ -198,7 +198,7 @@ public class FornecedorContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/fornecedorContratoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/fornecedorContratoSave")
 	public ModelAndView fornecedorContratoSave(@Valid FornecedorContratoForm fornecedorContratoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -221,7 +221,7 @@ public class FornecedorContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/fornecedorContratoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/fornecedorContratoRelMenu")
 	public ModelAndView fornecedorContratoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("fornecedorContrato/fornecedorContratoRelMenu");
@@ -231,18 +231,18 @@ public class FornecedorContratoController {
 		
 	}
 
-	@RequestMapping("/fornecedorContratoRel001")
+	@GetMapping("/fornecedorContratoRel001")
 	public ModelAndView fornecedorContratoRel001() {
 
 		ModelAndView mv = new ModelAndView("fornecedorContrato/fornecedorContratoRel001");
-		Pageable fornecedorContratoPageable = new PageRequest(0, 200, Direction.ASC,"fornecedor.pessoaNome","contrato.contratoNome");
+		Pageable fornecedorContratoPageable = PageRequest.of(0, 200, Direction.ASC,"fornecedor.pessoaNome","contrato.contratoNome");
 		mv.addObject("fornecedorContratoPage", fornecedorContratoService.getFornecedorContratoAll(fornecedorContratoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/fornecedorContratoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/fornecedorContratoView/{id}")
 	public ModelAndView fornecedorContratoView(@PathVariable("id") Long fornecedorContratoId) {
 
 		FornecedorContrato fornecedorContrato = fornecedorContratoService.getFornecedorContratoByFornecedorContratoPK(fornecedorContratoId);

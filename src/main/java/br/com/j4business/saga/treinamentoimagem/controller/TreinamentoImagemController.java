@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +17,20 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes; 
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.j4business.saga.treinamento.model.TreinamentoForm;
-import br.com.j4business.saga.treinamento.service.TreinamentoService;
 import br.com.j4business.saga.UsuarioSeguranca;
-import br.com.j4business.saga.agendaevento.model.AgendaEvento;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.imagem.model.ImagemForm;
 import br.com.j4business.saga.imagem.service.ImagemService;
+import br.com.j4business.saga.treinamento.model.TreinamentoForm;
+import br.com.j4business.saga.treinamento.service.TreinamentoService;
 import br.com.j4business.saga.treinamentoimagem.model.TreinamentoImagem;
 import br.com.j4business.saga.treinamentoimagem.model.TreinamentoImagemByTreinamentoForm;
 import br.com.j4business.saga.treinamentoimagem.model.TreinamentoImagemForm;
@@ -55,7 +54,7 @@ public class TreinamentoImagemController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/treinamentoImagemAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoImagemAdd")
 	public ModelAndView treinamentoImagemAdd(TreinamentoImagemForm treinamentoImagemForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("treinamentoImagem/treinamentoImagemAdd");
@@ -63,18 +62,18 @@ public class TreinamentoImagemController {
 		mv.addObject("treinamentoImagemForm", treinamentoImagemForm);
 		mv.addObject("treinamentoImagemPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("treinamentoImagemStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable imagemPageable = new PageRequest(0, 200, Direction.ASC, "imagemNome");
+		Pageable imagemPageable = PageRequest.of(0, 200, Direction.ASC, "imagemNome");
 		mv.addObject("imagemPage", imagemService.getImagemAll(imagemPageable));
-		Pageable treinamentoPageable = new PageRequest(0, 200, Direction.ASC, "treinamentoNome");
+		Pageable treinamentoPageable = PageRequest.of(0, 200, Direction.ASC, "treinamentoNome");
 		mv.addObject("treinamentoPage", treinamentoService.getTreinamentoAll(treinamentoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/treinamentoImagemCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/treinamentoImagemCreate")
 	public ModelAndView treinamentoImagemCreate(@Valid TreinamentoImagemForm treinamentoImagemForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -121,7 +120,7 @@ public class TreinamentoImagemController {
 	}
 
 
-	@RequestMapping(path = "/treinamentoImagemDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoImagemDelete/{id}")
 	public ModelAndView treinamentoImagemDelete(@PathVariable("id") long treinamentoImagemId, @Valid ImagemForm imagemForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/treinamentoImagemHome");
@@ -147,7 +146,7 @@ public class TreinamentoImagemController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/treinamentoImagemEdit/{treinamentoImagemPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoImagemEdit/{treinamentoImagemPK}")
 	public ModelAndView treinamentoImagemEdit(@PathVariable("treinamentoImagemPK") Long treinamentoImagemPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("treinamentoImagem/treinamentoImagemEdit");
@@ -156,18 +155,18 @@ public class TreinamentoImagemController {
 		mv.addObject("treinamentoImagemForm", treinamentoImagemForm);
 		mv.addObject("treinamentoImagemPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("treinamentoImagemStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable imagemPageable = new PageRequest(0, 200, Direction.ASC, "imagemNome");
+		Pageable imagemPageable = PageRequest.of(0, 200, Direction.ASC, "imagemNome");
 		mv.addObject("imagemPage", imagemService.getImagemAll(imagemPageable));
-		Pageable treinamentoPageable = new PageRequest(0, 200, Direction.ASC, "treinamentoNome");
+		Pageable treinamentoPageable = PageRequest.of(0, 200, Direction.ASC, "treinamentoNome");
 		mv.addObject("treinamentoPage", treinamentoService.getTreinamentoAll(treinamentoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/treinamentoImagemHome", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoImagemHome")
 	public ModelAndView treinamentoImagemHome(@Valid TreinamentoImagemByTreinamentoForm treinamentoImagemByTreinamentoForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("treinamentoImagem/treinamentoImagemHome");
@@ -187,10 +186,10 @@ public class TreinamentoImagemController {
 
 		if (treinamentoImagemByTreinamentoForm.getTreinamentoImagemSortTipo().equalsIgnoreCase("TreinamentoNome")
 				|| treinamentoImagemByTreinamentoForm.getTreinamentoImagemSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"treinamento.treinamentoNome","imagem.imagemNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"treinamento.treinamentoNome","imagem.imagemNome"); 
 		
 		} else if (treinamentoImagemByTreinamentoForm.getTreinamentoImagemSortTipo().equalsIgnoreCase("ImagemNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"imagem.imagemNome","treinamento.treinamentoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"imagem.imagemNome","treinamento.treinamentoNome"); 
 
 		}
 
@@ -213,7 +212,7 @@ public class TreinamentoImagemController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/treinamentoImagemSave", method = RequestMethod.POST)
+	@PostMapping(path = "/treinamentoImagemSave")
 	public ModelAndView treinamentoImagemSave(@Valid TreinamentoImagemForm treinamentoImagemForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -245,7 +244,7 @@ public class TreinamentoImagemController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/treinamentoImagemRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoImagemRelMenu")
 	public ModelAndView treinamentoImagemRelMenu() {
 
 		ModelAndView mv = new ModelAndView("treinamentoImagem/treinamentoImagemRelMenu");
@@ -255,18 +254,18 @@ public class TreinamentoImagemController {
 		
 	}
 
-	@RequestMapping("/treinamentoImagemRel001")
+	@GetMapping("/treinamentoImagemRel001")
 	public ModelAndView treinamentoImagemRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("treinamentoImagem/treinamentoImagemRel001");
-		Pageable treinamentoImagemPageable = new PageRequest(0, 200, Direction.ASC, "treinamento.treinamentoNome","imagem.imagemNome");
+		Pageable treinamentoImagemPageable = PageRequest.of(0, 200, Direction.ASC, "treinamento.treinamentoNome","imagem.imagemNome");
 		mv.addObject("treinamentoImagemPage", treinamentoImagemService.getTreinamentoImagemAll(treinamentoImagemPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/treinamentoImagemView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/treinamentoImagemView/{id}")
 	public ModelAndView treinamentoImagemView(@PathVariable("id") Long treinamentoImagemId) {
 
 		TreinamentoImagem treinamentoImagem = treinamentoImagemService.getTreinamentoImagemByTreinamentoImagemPK(treinamentoImagemId);

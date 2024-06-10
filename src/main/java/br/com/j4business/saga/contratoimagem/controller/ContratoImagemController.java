@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +17,15 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes; 
 
 import br.com.j4business.saga.contrato.model.ContratoForm;
 import br.com.j4business.saga.contrato.service.ContratoService;
 import br.com.j4business.saga.UsuarioSeguranca;
-import br.com.j4business.saga.agendaevento.model.AgendaEvento;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
@@ -55,7 +54,7 @@ public class ContratoImagemController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/contratoImagemAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/contratoImagemAdd")
 	public ModelAndView contratoImagemAdd(ContratoImagemForm contratoImagemForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("contratoImagem/contratoImagemAdd");
@@ -63,18 +62,18 @@ public class ContratoImagemController {
 		mv.addObject("contratoImagemForm", contratoImagemForm);
 		mv.addObject("contratoImagemPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("contratoImagemStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable imagemPageable = new PageRequest(0, 200, Direction.ASC, "imagemNome");
+		Pageable imagemPageable = PageRequest.of(0, 200, Direction.ASC, "imagemNome");
 		mv.addObject("imagemPage", imagemService.getImagemAll(imagemPageable));
-		Pageable contratoPageable = new PageRequest(0, 200, Direction.ASC, "contratoNome");
+		Pageable contratoPageable = PageRequest.of(0, 200, Direction.ASC, "contratoNome");
 		mv.addObject("contratoPage", contratoService.getContratoAll(contratoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/contratoImagemCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/contratoImagemCreate")
 	public ModelAndView contratoImagemCreate(@Valid ContratoImagemForm contratoImagemForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -121,7 +120,7 @@ public class ContratoImagemController {
 	}
 
 
-	@RequestMapping(path = "/contratoImagemDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/contratoImagemDelete/{id}")
 	public ModelAndView contratoImagemDelete(@PathVariable("id") long contratoImagemId, @Valid ImagemForm imagemForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/contratoImagemHome");
@@ -147,7 +146,7 @@ public class ContratoImagemController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/contratoImagemEdit/{contratoImagemPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/contratoImagemEdit/{contratoImagemPK}")
 	public ModelAndView contratoImagemEdit(@PathVariable("contratoImagemPK") Long contratoImagemPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("contratoImagem/contratoImagemEdit");
@@ -156,18 +155,18 @@ public class ContratoImagemController {
 		mv.addObject("contratoImagemForm", contratoImagemForm);
 		mv.addObject("contratoImagemPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("contratoImagemStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable imagemPageable = new PageRequest(0, 200, Direction.ASC, "imagemNome");
+		Pageable imagemPageable = PageRequest.of(0, 200, Direction.ASC, "imagemNome");
 		mv.addObject("imagemPage", imagemService.getImagemAll(imagemPageable));
-		Pageable contratoPageable = new PageRequest(0, 200, Direction.ASC, "contratoNome");
+		Pageable contratoPageable = PageRequest.of(0, 200, Direction.ASC, "contratoNome");
 		mv.addObject("contratoPage", contratoService.getContratoAll(contratoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/contratoImagemHome", method = RequestMethod.GET)
+	@GetMapping(path = "/contratoImagemHome")
 	public ModelAndView contratoImagemHome(@Valid ContratoImagemByContratoForm contratoImagemByContratoForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("contratoImagem/contratoImagemHome");
@@ -187,10 +186,10 @@ public class ContratoImagemController {
 
 		if (contratoImagemByContratoForm.getContratoImagemSortTipo().equalsIgnoreCase("ContratoNome")
 				|| contratoImagemByContratoForm.getContratoImagemSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"contrato.contratoNome","imagem.imagemNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"contrato.contratoNome","imagem.imagemNome"); 
 		
 		} else if (contratoImagemByContratoForm.getContratoImagemSortTipo().equalsIgnoreCase("ImagemNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"imagem.imagemNome","contrato.contratoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"imagem.imagemNome","contrato.contratoNome"); 
 
 		}
 
@@ -213,7 +212,7 @@ public class ContratoImagemController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/contratoImagemSave", method = RequestMethod.POST)
+	@PostMapping(path = "/contratoImagemSave")
 	public ModelAndView contratoImagemSave(@Valid ContratoImagemForm contratoImagemForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -245,7 +244,7 @@ public class ContratoImagemController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/contratoImagemRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/contratoImagemRelMenu")
 	public ModelAndView contratoImagemRelMenu() {
 
 		ModelAndView mv = new ModelAndView("contratoImagem/contratoImagemRelMenu");
@@ -255,18 +254,18 @@ public class ContratoImagemController {
 		
 	}
 
-	@RequestMapping("/contratoImagemRel001")
+	@GetMapping("/contratoImagemRel001")
 	public ModelAndView contratoImagemRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("contratoImagem/contratoImagemRel001");
-		Pageable contratoImagemPageable = new PageRequest(0, 200, Direction.ASC, "contrato.contratoNome","imagem.imagemNome");
+		Pageable contratoImagemPageable = PageRequest.of(0, 200, Direction.ASC, "contrato.contratoNome","imagem.imagemNome");
 		mv.addObject("contratoImagemPage", contratoImagemService.getContratoImagemAll(contratoImagemPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/contratoImagemView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/contratoImagemView/{id}")
 	public ModelAndView contratoImagemView(@PathVariable("id") Long contratoImagemId) {
 
 		ContratoImagem contratoImagem = contratoImagemService.getContratoImagemByContratoImagemPK(contratoImagemId);

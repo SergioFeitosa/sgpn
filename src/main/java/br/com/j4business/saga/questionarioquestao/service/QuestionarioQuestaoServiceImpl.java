@@ -1,26 +1,28 @@
 package br.com.j4business.saga.questionarioquestao.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.processovideo.model.ProcessoVideo;
-import br.com.j4business.saga.questionarioquestao.model.QuestionarioQuestao;
 import br.com.j4business.saga.questao.model.Questao;
 import br.com.j4business.saga.questao.service.QuestaoService;
 import br.com.j4business.saga.questionario.model.Questionario;
 import br.com.j4business.saga.questionario.service.QuestionarioService;
+import br.com.j4business.saga.questionarioquestao.model.QuestionarioQuestao;
 import br.com.j4business.saga.questionarioquestao.model.QuestionarioQuestaoForm;
 import br.com.j4business.saga.questionarioquestao.repository.QuestionarioQuestaoRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 @Service("questionarioQuestaoService")
 public class QuestionarioQuestaoServiceImpl implements QuestionarioQuestaoService {
@@ -88,7 +90,8 @@ public class QuestionarioQuestaoServiceImpl implements QuestionarioQuestaoServic
 
 	@Override
 	public QuestionarioQuestao getQuestionarioQuestaoByQuestionarioQuestaoPK(long questionarioQuestaoPK) {
-		return questionarioQuestaoRepository.findOne(questionarioQuestaoPK);
+		Optional<QuestionarioQuestao> questionarioQuestao = questionarioQuestaoRepository.findById(questionarioQuestaoPK);
+		return questionarioQuestao.get();
 	}
 
 	@Override
@@ -139,7 +142,7 @@ public class QuestionarioQuestaoServiceImpl implements QuestionarioQuestaoServic
 
 		QuestionarioQuestao questionarioQuestaoTemp = this.getQuestionarioQuestaoByQuestionarioQuestaoPK(questionarioQuestaoPK);
 
-		questionarioQuestaoRepository.delete(questionarioQuestaoPK);
+		questionarioQuestaoRepository.delete(questionarioQuestaoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("QuestionarioQuestao Save " + "\n Usuário => " + username + 
@@ -153,8 +156,9 @@ public class QuestionarioQuestaoServiceImpl implements QuestionarioQuestaoServic
 	public void deleteByQuestao(Questao questao) {
 		
 		List<QuestionarioQuestao> questionarioQuestaoList = questionarioQuestaoRepository.findByQuestao(questao);
-
-		questionarioQuestaoRepository.delete(questionarioQuestaoList);
+		for (QuestionarioQuestao questionarioQuestao2 : questionarioQuestaoList) {
+			questionarioQuestaoRepository.delete(questionarioQuestao2);
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

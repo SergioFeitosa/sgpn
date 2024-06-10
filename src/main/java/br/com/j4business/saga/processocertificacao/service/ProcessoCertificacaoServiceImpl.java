@@ -1,26 +1,28 @@
 package br.com.j4business.saga.processocertificacao.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
-import br.com.j4business.saga.processo.model.Processo;
-import br.com.j4business.saga.processo.service.ProcessoService;
-import br.com.j4business.saga.processoatividade.model.ProcessoAtividade;
-import br.com.j4business.saga.processocertificacao.model.ProcessoCertificacao;
 import br.com.j4business.saga.certificacao.model.Certificacao;
 import br.com.j4business.saga.certificacao.service.CertificacaoService;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
+import br.com.j4business.saga.processo.model.Processo;
+import br.com.j4business.saga.processo.service.ProcessoService;
+import br.com.j4business.saga.processocertificacao.model.ProcessoCertificacao;
 import br.com.j4business.saga.processocertificacao.model.ProcessoCertificacaoForm;
 import br.com.j4business.saga.processocertificacao.repository.ProcessoCertificacaoRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 @Service("processoCertificacaoService")
 public class ProcessoCertificacaoServiceImpl implements ProcessoCertificacaoService {
@@ -84,7 +86,8 @@ public class ProcessoCertificacaoServiceImpl implements ProcessoCertificacaoServ
 
 	@Override
 	public ProcessoCertificacao getProcessoCertificacaoByProcessoCertificacaoPK(long processoCertificacaoPK) {
-		return processoCertificacaoRepository.findOne(processoCertificacaoPK);
+		Optional<ProcessoCertificacao> processoCertificacao = processoCertificacaoRepository.findById(processoCertificacaoPK);
+		return processoCertificacao.get();
 	}
 
 	@Override
@@ -134,7 +137,7 @@ public class ProcessoCertificacaoServiceImpl implements ProcessoCertificacaoServ
 
 		ProcessoCertificacao processoCertificacaoTemp = this.getProcessoCertificacaoByProcessoCertificacaoPK(processoCertificacaoPK);
 
-		processoCertificacaoRepository.delete(processoCertificacaoPK);
+		processoCertificacaoRepository.delete(processoCertificacaoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ProcessoCertificacao Save " + "\n Usuário => " + username + 
@@ -147,8 +150,10 @@ public class ProcessoCertificacaoServiceImpl implements ProcessoCertificacaoServ
 	public void deleteByCertificacao(Certificacao certificacao) {
 		
 		List<ProcessoCertificacao> processoCertificacaoList = processoCertificacaoRepository.findByCertificacao(certificacao);
-
-		processoCertificacaoRepository.delete(processoCertificacaoList);
+		for (ProcessoCertificacao processoCertificacao2 : processoCertificacaoList) {
+			processoCertificacaoRepository.delete(processoCertificacao2);
+			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

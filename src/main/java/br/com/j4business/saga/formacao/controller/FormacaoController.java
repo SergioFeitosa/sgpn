@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -43,20 +43,20 @@ public class FormacaoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/formacaoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/formacaoAdd")
 	public ModelAndView formacaoAdd(FormacaoForm formacaoForm) {
 
 		ModelAndView mv = new ModelAndView("formacao/formacaoAdd");
 		formacaoForm = formacaoService.formacaoParametros(formacaoForm);
 		mv.addObject("formacaoForm", formacaoForm);
 		mv.addObject("formacaoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/formacaoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/formacaoCreate")
 	public ModelAndView formacaoCreate(@Valid FormacaoForm formacaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -89,7 +89,7 @@ public class FormacaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/formacaoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/formacaoDelete/{id}")
 	public ModelAndView formacaoDelete(@PathVariable("id") long formacaoPK, @Valid FormacaoForm formacaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/formacaoHome");
@@ -110,7 +110,7 @@ public class FormacaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/formacaoEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/formacaoEdit/{id}")
 	public ModelAndView formacaoEdit(@PathVariable("id") Long formacaoId, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("formacao/formacaoEdit");
@@ -118,14 +118,14 @@ public class FormacaoController {
 		FormacaoForm formacaoForm = formacaoService.converteFormacao(formacao);
 		mv.addObject("formacaoForm", formacaoForm);
 		mv.addObject("formacaoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/formacaoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/formacaoHome")
 	public ModelAndView formacaoHome(@Valid FormacaoByFormacaoForm formacaoByFormacaoForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("formacao/formacaoHome");
@@ -144,10 +144,10 @@ public class FormacaoController {
 		}
 
 		if (formacaoByFormacaoForm.getFormacaoSortTipo().equalsIgnoreCase("FormacaoNome") || formacaoByFormacaoForm.getFormacaoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "formacaoNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "formacaoNome");
 
 		} else if (formacaoByFormacaoForm.getFormacaoSortTipo().equalsIgnoreCase("FormacaoDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "formacaoDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "formacaoDescricao");
 
 		}
 
@@ -169,7 +169,7 @@ public class FormacaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/formacaoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/formacaoRelMenu")
 	public ModelAndView formacaoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("formacao/formacaoRelMenu");
@@ -179,18 +179,18 @@ public class FormacaoController {
 		
 	}
 
-	@RequestMapping(path = "/formacaoRel001", method = RequestMethod.GET)
+	@GetMapping(path = "/formacaoRel001")
 	public ModelAndView formacaoRel001() {
 
 		ModelAndView mv = new ModelAndView("formacao/formacaoRel001");
-		Pageable formacaoPageable = new PageRequest(0, 200 , Direction.ASC, "formacaoNome");
+		Pageable formacaoPageable = PageRequest.of(0, 200 , Direction.ASC, "formacaoNome");
 		mv.addObject("formacaoPage", formacaoService.getFormacaoAll(formacaoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/formacaoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/formacaoSave")
 	public ModelAndView formacaoSave(@Valid FormacaoForm formacaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -213,7 +213,7 @@ public class FormacaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/formacaoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/formacaoView/{id}")
 	public ModelAndView formacaoView(@PathVariable("id") Long formacaoId) {
 
 		Formacao formacao = formacaoService.getFormacaoByFormacaoPK(formacaoId);

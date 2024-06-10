@@ -1,5 +1,17 @@
 package br.com.j4business.saga.treinamentovideo.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
@@ -7,19 +19,10 @@ import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.treinamento.model.Treinamento;
 import br.com.j4business.saga.treinamento.service.TreinamentoService;
 import br.com.j4business.saga.treinamentovideo.model.TreinamentoVideo;
-import br.com.j4business.saga.video.model.Video;
-import br.com.j4business.saga.video.service.VideoService;
 import br.com.j4business.saga.treinamentovideo.model.TreinamentoVideoForm;
 import br.com.j4business.saga.treinamentovideo.repository.TreinamentoVideoRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import br.com.j4business.saga.video.model.Video;
+import br.com.j4business.saga.video.service.VideoService;
 
 @Service("treinamentoVideoService")
 public class TreinamentoVideoServiceImpl implements TreinamentoVideoService {
@@ -92,7 +95,8 @@ public class TreinamentoVideoServiceImpl implements TreinamentoVideoService {
 
 	@Override
 	public TreinamentoVideo getTreinamentoVideoByTreinamentoVideoPK(long treinamentoVideoPK) {
-		return treinamentoVideoRepository.findOne(treinamentoVideoPK);
+		Optional<TreinamentoVideo> treinamentoVideo = treinamentoVideoRepository.findById(treinamentoVideoPK);
+		return treinamentoVideo.get();
 	}
 
 	@Override
@@ -141,7 +145,7 @@ public class TreinamentoVideoServiceImpl implements TreinamentoVideoService {
 
 		TreinamentoVideo treinamentoVideoTemp = this.getTreinamentoVideoByTreinamentoVideoPK(treinamentoVideoPK);
 
-		treinamentoVideoRepository.delete(treinamentoVideoPK);
+		treinamentoVideoRepository.delete(treinamentoVideoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("TreinamentoVideo Save " + "\n Usuário => " + username + 
@@ -154,8 +158,9 @@ public class TreinamentoVideoServiceImpl implements TreinamentoVideoService {
 	public void deleteByVideo(Video video) {
 		
 		List<TreinamentoVideo> treinamentoVideoList = treinamentoVideoRepository.findByVideo(video);
-
-		treinamentoVideoRepository.delete(treinamentoVideoList);
+		for (TreinamentoVideo treinamentoVideo2 : treinamentoVideoList) {
+			treinamentoVideoRepository.delete(treinamentoVideo2);			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

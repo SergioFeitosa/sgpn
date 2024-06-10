@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,16 +17,15 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.j4business.saga.colaborador.model.ColaboradorForm;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.UsuarioSeguranca;
-import br.com.j4business.saga.agendaevento.model.AgendaEvento;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.certificacao.model.CertificacaoForm;
@@ -55,7 +54,7 @@ public class ColaboradorCertificacaoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/colaboradorCertificacaoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorCertificacaoAdd")
 	public ModelAndView colaboradorCertificacaoAdd(ColaboradorCertificacaoForm colaboradorCertificacaoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorCertificacao/colaboradorCertificacaoAdd");
@@ -64,17 +63,17 @@ public class ColaboradorCertificacaoController {
 		mv.addObject("colaboradorCertificacaoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("colaboradorCertificacaoStatusValues", AtributoStatus.values());
 
-		Pageable certificacaoPageable = new PageRequest(0, 200, Direction.ASC, "certificacaoNome");
+		Pageable certificacaoPageable = PageRequest.of(0, 200, Direction.ASC, "certificacaoNome");
 		mv.addObject("certificacaoPage", certificacaoService.getCertificacaoAll(certificacaoPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable fornecedorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable fornecedorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("fornecedorPage", fornecedorService.getFornecedorAll(fornecedorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorCertificacaoCreate", method = RequestMethod.POST)
+	@GetMapping(path = "/colaboradorCertificacaoCreate")
 	public ModelAndView colaboradorCertificacaoCreate(@Valid ColaboradorCertificacaoForm colaboradorCertificacaoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		
@@ -109,7 +108,7 @@ public class ColaboradorCertificacaoController {
 	}
 
 
-	@RequestMapping(path = "/colaboradorCertificacaoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorCertificacaoDelete/{id}")
 	public ModelAndView colaboradorCertificacaoDelete(@PathVariable("id") long colaboradorCertificacaoId, @Valid CertificacaoForm certificacaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/colaboradorCertificacaoHome");
@@ -134,7 +133,7 @@ public class ColaboradorCertificacaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorCertificacaoEdit/{colaboradorCertificacaoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorCertificacaoEdit/{colaboradorCertificacaoPK}")
 	public ModelAndView colaboradorCertificacaoEdit(@PathVariable("colaboradorCertificacaoPK") Long colaboradorCertificacaoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorCertificacao/colaboradorCertificacaoEdit");
@@ -144,18 +143,18 @@ public class ColaboradorCertificacaoController {
 		mv.addObject("colaboradorCertificacaoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("colaboradorCertificacaoStatusValues", AtributoStatus.values());
 
-		Pageable certificacaoPageable = new PageRequest(0, 200, Direction.ASC, "certificacaoNome");
+		Pageable certificacaoPageable = PageRequest.of(0, 200, Direction.ASC, "certificacaoNome");
 		mv.addObject("certificacaoPage", certificacaoService.getCertificacaoAll(certificacaoPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable fornecedorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable fornecedorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("fornecedorPage", fornecedorService.getFornecedorAll(fornecedorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/colaboradorCertificacaoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorCertificacaoHome")
 	public ModelAndView colaboradorCertificacaoHome(@Valid ColaboradorCertificacaoByColaboradorForm colaboradorCertificacaoByColaboradorForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorCertificacao/colaboradorCertificacaoHome");
@@ -175,10 +174,10 @@ public class ColaboradorCertificacaoController {
 
 		if (colaboradorCertificacaoByColaboradorForm.getColaboradorCertificacaoSortTipo().equalsIgnoreCase("ColaboradorNome")
 				|| colaboradorCertificacaoByColaboradorForm.getColaboradorCertificacaoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"colaborador.pessoaNome","certificacao.certificacaoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"colaborador.pessoaNome","certificacao.certificacaoNome"); 
 		
 		} else if (colaboradorCertificacaoByColaboradorForm.getColaboradorCertificacaoSortTipo().equalsIgnoreCase("CertificacaoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"certificacao.certificacaoNome","colaborador.pessoaNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"certificacao.certificacaoNome","colaborador.pessoaNome"); 
 
 		}
 
@@ -201,7 +200,7 @@ public class ColaboradorCertificacaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorCertificacaoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/colaboradorCertificacaoSave")
 	public ModelAndView colaboradorCertificacaoSave(@Valid ColaboradorCertificacaoForm colaboradorCertificacaoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -225,7 +224,7 @@ public class ColaboradorCertificacaoController {
 		
 	}
 
-	@RequestMapping(path = "/colaboradorCertificacaoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorCertificacaoRelMenu")
 	public ModelAndView colaboradorCertificacaoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("colaboradorCertificacao/colaboradorCertificacaoRelMenu");
@@ -235,19 +234,19 @@ public class ColaboradorCertificacaoController {
 		
 	}
 
-	@RequestMapping("/colaboradorCertificacaoRel001")
+	@GetMapping("/colaboradorCertificacaoRel001")
 	public ModelAndView colaboradorCertificacaoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorCertificacao/colaboradorCertificacaoRel001");
 
-		Pageable certificacaoPageable = new PageRequest(0, 200, Direction.ASC, "colaborador.pessoaNome","certificacao.certificacaoNome");
+		Pageable certificacaoPageable = PageRequest.of(0, 200, Direction.ASC, "colaborador.pessoaNome","certificacao.certificacaoNome");
 		mv.addObject("colaboradorCertificacaoPage", colaboradorCertificacaoService.getColaboradorCertificacaoAll(certificacaoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorCertificacaoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorCertificacaoView/{id}")
 	public ModelAndView colaboradorCertificacaoView(@PathVariable("id") Long colaboradorCertificacaoId) {
 
 		ColaboradorCertificacao colaboradorCertificacao = colaboradorCertificacaoService.getColaboradorCertificacaoByColaboradorCertificacaoPK(colaboradorCertificacaoId);

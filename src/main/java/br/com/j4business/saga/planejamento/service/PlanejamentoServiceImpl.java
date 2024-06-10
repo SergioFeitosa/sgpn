@@ -1,16 +1,19 @@
 package br.com.j4business.saga.planejamento.service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.acao.model.Acao;
 import br.com.j4business.saga.acao.service.AcaoService;
@@ -18,13 +21,12 @@ import br.com.j4business.saga.atributo.enumeration.AtributoAprovacao;
 import br.com.j4business.saga.atributo.enumeration.AtributoCusto;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrazo;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
-import br.com.j4business.saga.planejamento.model.Planejamento;
-import br.com.j4business.saga.planejamento.model.PlanejamentoAcaoBean;
-import br.com.j4business.saga.planejamento.repository.PlanejamentoRepository;
-import br.com.j4business.saga.servicoprocesso.model.ServicoProcesso;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
+import br.com.j4business.saga.planejamento.model.Planejamento;
+import br.com.j4business.saga.planejamento.model.PlanejamentoAcaoBean;
 import br.com.j4business.saga.planejamento.model.PlanejamentoForm;
+import br.com.j4business.saga.planejamento.repository.PlanejamentoRepository;
 
 @Service("planejamentoService")
 public class PlanejamentoServiceImpl implements PlanejamentoService {
@@ -59,7 +61,8 @@ public class PlanejamentoServiceImpl implements PlanejamentoService {
 	@Override
 	public Planejamento getPlanejamentoByPlanejamentoPK(long planejamentoPK) {
 		
-		return planejamentoRepository.findOne(planejamentoPK);
+		Optional<Planejamento> planejamento = planejamentoRepository.findById(planejamentoPK);
+		return planejamento.get();
 	}
 
 	@Transactional
@@ -105,7 +108,7 @@ public class PlanejamentoServiceImpl implements PlanejamentoService {
 
 		Planejamento planejamento = this.getPlanejamentoByPlanejamentoPK(planejamentoId);
 		
-		planejamentoRepository.delete(planejamento.getPlanejamentoPK());
+		planejamentoRepository.delete(planejamento);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Planejamento Delete " + "\n Usuário => " + username + 

@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -90,7 +90,7 @@ public class AvaliacaoProcessoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/avaliacaoProcessoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoAdd")
 	public ModelAndView avaliacaoProcessoAdd(AvaliacaoProcessoForm avaliacaoProcessoForm) {
 
 		ModelAndView mv = new ModelAndView("avaliacaoProcesso/avaliacaoProcessoAdd");
@@ -98,26 +98,26 @@ public class AvaliacaoProcessoController {
 		mv.addObject("avaliacaoProcessoForm", avaliacaoProcessoForm);
 		mv.addObject("avaliacaoProcessoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("avaliacaoProcessoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
-		Pageable cenarioPageable = new PageRequest(0, 200, Direction.ASC, "cenarioNome");
+		Pageable cenarioPageable = PageRequest.of(0, 200, Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(cenarioPageable));
-		Pageable questionarioPageable = new PageRequest(0, 200, Direction.ASC, "questionarioNome");
+		Pageable questionarioPageable = PageRequest.of(0, 200, Direction.ASC, "questionarioNome");
 		mv.addObject("questionarioPage", questionarioService.getQuestionarioAll(questionarioPageable));
-		Pageable avaliacaoPageable = new PageRequest(0, 200, Direction.ASC, "avaliacaoNome");
+		Pageable avaliacaoPageable = PageRequest.of(0, 200, Direction.ASC, "avaliacaoNome");
 		mv.addObject("avaliacaoPage", avaliacaoService.getAvaliacaoAll(avaliacaoPageable));
-		Pageable unidadeorganizacionalPageable = new PageRequest(0, 200, Direction.ASC, "unidadeorganizacional.unidadeorganizacionalNome");
+		Pageable unidadeorganizacionalPageable = PageRequest.of(0, 200, Direction.ASC, "unidadeorganizacional.unidadeorganizacionalNome");
 		mv.addObject("unidadeorganizacionalProcessoPage", unidadeorganizacionalProcessoService.getUnidadeorganizacionalProcessoAll(unidadeorganizacionalPageable));
-		Pageable estruturafisicaUnidadeorganizacionalPageable = new PageRequest(0, 200, Direction.ASC, "estruturafisica.estruturafisicaNome");
+		Pageable estruturafisicaUnidadeorganizacionalPageable = PageRequest.of(0, 200, Direction.ASC, "estruturafisica.estruturafisicaNome");
 		mv.addObject("estruturafisicaUnidadeorganizacionalPage", estruturafisicaUnidadeorganizacionalService.getByEstruturafisicaUnidadeorganizacionalAll(estruturafisicaUnidadeorganizacionalPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoProcessoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/avaliacaoProcessoCreate")
 	public ModelAndView avaliacaoProcessoCreate(@Valid AvaliacaoProcessoForm avaliacaoProcessoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		AvaliacaoProcesso avaliacaoProcesso = null;
@@ -141,7 +141,7 @@ public class AvaliacaoProcessoController {
 	}
 
 
-	@RequestMapping(path = "/avaliacaoProcessoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDelete/{id}")
 	public ModelAndView avaliacaoProcessoDelete(@PathVariable("id") long avaliacaoProcessoId, @Valid ProcessoForm processoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/avaliacaoProcessoHome");
@@ -166,7 +166,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoProcessoEdit/{avaliacaoProcessoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoEdit/{avaliacaoProcessoPK}")
 	public ModelAndView avaliacaoProcessoEdit(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("avaliacaoProcesso/avaliacaoProcessoEdit");
@@ -175,27 +175,27 @@ public class AvaliacaoProcessoController {
 		mv.addObject("avaliacaoProcessoForm", avaliacaoProcessoForm);
 		mv.addObject("avaliacaoProcessoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("avaliacaoProcessoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
-		Pageable cenarioPageable = new PageRequest(0, 200, Direction.ASC, "cenarioNome");
+		Pageable cenarioPageable = PageRequest.of(0, 200, Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(cenarioPageable));
-		Pageable questionarioPageable = new PageRequest(0, 200, Direction.ASC, "questionarioNome");
+		Pageable questionarioPageable = PageRequest.of(0, 200, Direction.ASC, "questionarioNome");
 		mv.addObject("questionarioPage", questionarioService.getQuestionarioAll(questionarioPageable));
-		Pageable avaliacaoPageable = new PageRequest(0, 200, Direction.ASC, "avaliacaoNome");
+		Pageable avaliacaoPageable = PageRequest.of(0, 200, Direction.ASC, "avaliacaoNome");
 		mv.addObject("avaliacaoPage", avaliacaoService.getAvaliacaoAll(avaliacaoPageable));
 
-		Pageable unidadeorganizacionalPageable = new PageRequest(0, 200, Direction.ASC, "unidadeorganizacional.unidadeorganizacionalNome");
+		Pageable unidadeorganizacionalPageable = PageRequest.of(0, 200, Direction.ASC, "unidadeorganizacional.unidadeorganizacionalNome");
 		mv.addObject("unidadeorganizacionalProcessoPage", unidadeorganizacionalProcessoService.getUnidadeorganizacionalProcessoAll(unidadeorganizacionalPageable));
-		Pageable estruturafisicaUnidadeorganizacionalPageable = new PageRequest(0, 200, Direction.ASC, "estruturafisica.estruturafisicaNome");
+		Pageable estruturafisicaUnidadeorganizacionalPageable = PageRequest.of(0, 200, Direction.ASC, "estruturafisica.estruturafisicaNome");
 		mv.addObject("estruturafisicaUnidadeorganizacionalPage", estruturafisicaUnidadeorganizacionalService.getByEstruturafisicaUnidadeorganizacionalAll(estruturafisicaUnidadeorganizacionalPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboard/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboard/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboard(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -316,7 +316,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenario/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenario/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenario(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -362,7 +362,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioAmbienteMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioAmbienteMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioAmbienteMensal(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -382,7 +382,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioAmbienteBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioAmbienteBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioAmbienteBimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -402,7 +402,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioAmbienteTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioAmbienteTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioAmbienteTrimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -422,7 +422,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioAmbienteSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioAmbienteSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioAmbienteSemestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -442,7 +442,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioAmbienteAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioAmbienteAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioAmbienteAnual(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -462,7 +462,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioDesempenhoMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioDesempenhoMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioDesempenhoMensal(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -482,7 +482,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioDesempenhoBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioDesempenhoBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioDesempenhoBimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -502,7 +502,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioDesempenhoTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioDesempenhoTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioDesempenhoTrimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -522,7 +522,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioDesempenhoSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioDesempenhoSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioDesempenhoSemestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -542,7 +542,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioDesempenhoAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioDesempenhoAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioDesempenhoAnual(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -562,7 +562,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioFinanceiroMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioFinanceiroMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioFinanceiroMensal(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -582,7 +582,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioFinanceiroBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioFinanceiroBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioFinanceiroBimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -602,7 +602,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioFinanceiroTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioFinanceiroTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioFinanceiroTrimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -622,7 +622,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioFinanceiroSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioFinanceiroSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioFinanceiroSemestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -642,7 +642,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioFinanceiroAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioFinanceiroAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioFinanceiroAnual(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -662,7 +662,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioLogisticaMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioLogisticaMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioLogisticaMensal(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -682,7 +682,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioLogisticaBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioLogisticaBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioLogisticaBimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -702,7 +702,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioLogisticaTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioLogisticaTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioLogisticaTrimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -722,7 +722,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioLogisticaSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioLogisticaSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioLogisticaSemestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -742,7 +742,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioLogisticaAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioLogisticaAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioLogisticaAnual(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -762,7 +762,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioMobiliaMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioMobiliaMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioMobiliaMensal(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -782,7 +782,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioMobiliaBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioMobiliaBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioMobiliaBimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -802,7 +802,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioMobiliaTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioMobiliaTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioMobiliaTrimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -822,7 +822,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioMobiliaSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioMobiliaSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioMobiliaSemestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -842,7 +842,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioMobiliaAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioMobiliaAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioMobiliaAnual(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -862,7 +862,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioPessoalMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioPessoalMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioPessoalMensal(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -882,7 +882,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioPessoalBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioPessoalBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioPessoalBimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -902,7 +902,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioPessoalTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioPessoalTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioPessoalTrimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -922,7 +922,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioPessoalSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioPessoalSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioPessoalSemestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -942,7 +942,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioPessoalAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioPessoalAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioPessoalAnual(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -962,7 +962,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioSegurancaMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioSegurancaMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioSegurancaMensal(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -982,7 +982,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioSegurancaBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioSegurancaBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioSegurancaBimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1002,7 +1002,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioSegurancaTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioSegurancaTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioSegurancaTrimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1022,7 +1022,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioSegurancaSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioSegurancaSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioSegurancaSemestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1042,7 +1042,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioSegurancaAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioSegurancaAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioSegurancaAnual(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1062,7 +1062,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioSustentabilidadeMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioSustentabilidadeMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioSustentabilidadeMensal(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1082,7 +1082,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioSustentabilidadeBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioSustentabilidadeBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioSustentabilidadeBimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1102,7 +1102,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioSustentabilidadeTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioSustentabilidadeTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioSustentabilidadeTrimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1122,7 +1122,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioSustentabilidadeSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioSustentabilidadeSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioSustentabilidadeSemestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1142,7 +1142,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioSustentabilidadeAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioSustentabilidadeAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioSustentabilidadeAnual(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1162,7 +1162,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioTecnologiaMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioTecnologiaMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioTecnologiaMensal(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1182,7 +1182,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioTecnologiaBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioTecnologiaBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioTecnologiaBimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1202,7 +1202,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioTecnologiaTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioTecnologiaTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioTecnologiaTrimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1222,7 +1222,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioTecnologiaSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioTecnologiaSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioTecnologiaSemestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1242,7 +1242,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioTecnologiaAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioTecnologiaAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioTecnologiaAnual(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1264,7 +1264,7 @@ public class AvaliacaoProcessoController {
 	
 	
 	
-	@RequestMapping(path = "/avaliacaoProcessoDashboardMenu/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardMenu/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardMenu(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1280,7 +1280,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoQuestionario/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoQuestionario/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoQuestionario(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1316,7 +1316,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoProcessoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoHome")
 	public ModelAndView avaliacaoProcessoHome(@Valid AvaliacaoProcessoByAvaliacaoForm avaliacaoProcessoByAvaliacaoForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("avaliacaoProcesso/avaliacaoProcessoHome");
@@ -1343,16 +1343,16 @@ public class AvaliacaoProcessoController {
 
 		if (avaliacaoProcessoByAvaliacaoForm.getAvaliacaoProcessoSortTipo().equalsIgnoreCase("AvaliacaoNome")
 				|| avaliacaoProcessoByAvaliacaoForm.getAvaliacaoProcessoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"avaliacao.avaliacaoNome","processo.processoNome","questionario.questionarioNome","avaliacaoProcessoPeriodo"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"avaliacao.avaliacaoNome","processo.processoNome","questionario.questionarioNome","avaliacaoProcessoPeriodo"); 
 		
 		} else if (avaliacaoProcessoByAvaliacaoForm.getAvaliacaoProcessoSortTipo().equalsIgnoreCase("ProcessoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","avaliacao.avaliacaoNome","questionario.questionarioNome","avaliacaoProcessoPeriodo"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","avaliacao.avaliacaoNome","questionario.questionarioNome","avaliacaoProcessoPeriodo"); 
 
 		} else if (avaliacaoProcessoByAvaliacaoForm.getAvaliacaoProcessoSortTipo().equalsIgnoreCase("QuestionarioNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"questionario.questionarioNome","processo.processoNome","avaliacao.avaliacaoNome","avaliacaoProcessoPeriodo"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"questionario.questionarioNome","processo.processoNome","avaliacao.avaliacaoNome","avaliacaoProcessoPeriodo"); 
 
 		} else if (avaliacaoProcessoByAvaliacaoForm.getAvaliacaoProcessoSortTipo().equalsIgnoreCase("PeriodoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"avaliacaoProcessoPeriodo","questionario.questionarioNome","processo.processoNome","avaliacao.avaliacaoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"avaliacaoProcessoPeriodo","questionario.questionarioNome","processo.processoNome","avaliacao.avaliacaoNome"); 
 
 		}
 
@@ -1384,7 +1384,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoProcessoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/avaliacaoProcessoSave")
 	public ModelAndView avaliacaoProcessoSave(@Valid AvaliacaoProcessoForm avaliacaoProcessoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -1399,7 +1399,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoProcessoQuestionario", method = RequestMethod.POST)
+	@PostMapping(path = "/avaliacaoProcessoQuestionario")
 	public ModelAndView avaliacaoProcessoQuestionario(AvaliacaoProcessoForm avaliacaoProcessoForm, RedirectAttributes attributes,Pageable pageable) {
 
 
@@ -1440,7 +1440,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoProcessoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoRelMenu")
 	public ModelAndView avaliacaoProcessoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("avaliacaoProcesso/avaliacaoProcessoRelMenu");
@@ -1449,18 +1449,18 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping("/avaliacaoProcessoRel001")
+	@GetMapping("/avaliacaoProcessoRel001")
 	public ModelAndView avaliacaoProcessoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("avaliacaoProcesso/avaliacaoProcessoRel001");
-		Pageable avaliacaoProcessoPageable = new PageRequest(0, 200, Direction.ASC, "avaliacao.avaliacaoNome","processo.processoNome");
+		Pageable avaliacaoProcessoPageable = PageRequest.of(0, 200, Direction.ASC, "avaliacao.avaliacaoNome","processo.processoNome");
 		mv.addObject("avaliacaoProcessoPage", avaliacaoProcessoService.getAvaliacaoProcessoAll(avaliacaoProcessoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoProcessoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoView/{id}")
 	public ModelAndView avaliacaoProcessoView(@PathVariable("id") Long avaliacaoProcessoId) {
 
 		AvaliacaoProcesso avaliacaoProcesso = avaliacaoProcessoService.getAvaliacaoProcessoByAvaliacaoProcessoPK(avaliacaoProcessoId);
@@ -1477,7 +1477,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioAreaTecnicaMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioAreaTecnicaMensal/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioAreaTecnicaMensal(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1497,7 +1497,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioAreaTecnicaBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioAreaTecnicaBimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioAreaTecnicaBimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1517,7 +1517,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioAreaTecnicaTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioAreaTecnicaTrimestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioAreaTecnicaTrimestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1537,7 +1537,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioAreaTecnicaSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioAreaTecnicaSemestral/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioAreaTecnicaSemestral(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,
@@ -1557,7 +1557,7 @@ public class AvaliacaoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoProcessoDashboardCenarioAreaTecnicaAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoProcessoDashboardCenarioAreaTecnicaAnual/{avaliacaoProcessoPK}/{questionarioPK}/{processoPK}/{estruturafisicaPK}/{unidadeorganizacionalPK}")
 	public ModelAndView avaliacaoProcessoDashboardCenarioAreaTecnicaAnual(@PathVariable("avaliacaoProcessoPK") Long avaliacaoProcessoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK,
 													  @PathVariable("processoPK") Long processoPK,

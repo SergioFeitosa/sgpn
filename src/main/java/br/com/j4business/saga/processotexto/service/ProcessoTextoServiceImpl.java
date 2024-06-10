@@ -1,27 +1,28 @@
 package br.com.j4business.saga.processotexto.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.processo.model.Processo;
 import br.com.j4business.saga.processo.service.ProcessoService;
-import br.com.j4business.saga.processoimagem.model.ProcessoImagem;
-import br.com.j4business.saga.texto.model.Texto;
-import br.com.j4business.saga.texto.service.TextoService;
 import br.com.j4business.saga.processotexto.model.ProcessoTexto;
 import br.com.j4business.saga.processotexto.model.ProcessoTextoForm;
 import br.com.j4business.saga.processotexto.repository.ProcessoTextoRepository;
-
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import br.com.j4business.saga.texto.model.Texto;
+import br.com.j4business.saga.texto.service.TextoService;
 
 @Service("processoTextoService")
 public class ProcessoTextoServiceImpl implements ProcessoTextoService {
@@ -94,7 +95,8 @@ public class ProcessoTextoServiceImpl implements ProcessoTextoService {
 
 	@Override
 	public ProcessoTexto getProcessoTextoByProcessoTextoPK(long processoTextoPK) {
-		return processoTextoRepository.findOne(processoTextoPK);
+		Optional<ProcessoTexto> processoTexto = processoTextoRepository.findById(processoTextoPK);
+		return processoTexto.get();
 	}
 
 	@Override
@@ -143,7 +145,7 @@ public class ProcessoTextoServiceImpl implements ProcessoTextoService {
 
 		ProcessoTexto processoTextoTemp = this.getProcessoTextoByProcessoTextoPK(processoTextoPK);
 
-		processoTextoRepository.delete(processoTextoPK);
+		processoTextoRepository.delete(processoTextoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ProcessoTexto Save " + "\n Usuário => " + username + 
@@ -156,8 +158,10 @@ public class ProcessoTextoServiceImpl implements ProcessoTextoService {
 	public void deleteByTexto(Texto texto) {
 		
 		List<ProcessoTexto> processoTextoList = processoTextoRepository.findByTexto(texto);
-
-		processoTextoRepository.delete(processoTextoList);
+		for (ProcessoTexto processoTexto2 : processoTextoList) {
+			processoTextoRepository.delete(processoTexto2);
+			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

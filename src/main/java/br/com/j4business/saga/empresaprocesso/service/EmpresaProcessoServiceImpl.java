@@ -4,7 +4,6 @@ import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.email.Mensagem;
 import br.com.j4business.saga.processo.model.Processo;
 import br.com.j4business.saga.processo.service.ProcessoService;
 import br.com.j4business.saga.empresa.model.Empresa;
@@ -13,10 +12,10 @@ import br.com.j4business.saga.empresaprocesso.model.EmpresaProcesso;
 import br.com.j4business.saga.empresaprocesso.model.EmpresaProcessoForm;
 import br.com.j4business.saga.empresaprocesso.repository.EmpresaProcessoRepository;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -85,7 +84,8 @@ public class EmpresaProcessoServiceImpl implements EmpresaProcessoService {
 
 	@Override
 	public EmpresaProcesso getEmpresaProcessoByEmpresaProcessoPK(long empresaProcessoPK) {
-		return empresaProcessoRepository.findOne(empresaProcessoPK);
+		Optional<EmpresaProcesso> empresaProcesso = empresaProcessoRepository.findById(empresaProcessoPK);
+		return empresaProcesso.get();
 	}
 
 	@Override
@@ -116,7 +116,7 @@ public class EmpresaProcessoServiceImpl implements EmpresaProcessoService {
 
 		EmpresaProcesso empresaProcessoTemp = this.getEmpresaProcessoByEmpresaProcessoPK(empresaProcessoPK);
 
-		empresaProcessoRepository.delete(empresaProcessoPK);
+		empresaProcessoRepository.delete(empresaProcessoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("EmpresaProcesso Save " + "\n Usuário => " + username + 
@@ -130,7 +130,9 @@ public class EmpresaProcessoServiceImpl implements EmpresaProcessoService {
 		
 		List<EmpresaProcesso> empresaProcessoList = empresaProcessoRepository.findByProcesso(processo);
 
-		empresaProcessoRepository.delete(empresaProcessoList);
+		for (EmpresaProcesso empresaProcesso2 : empresaProcessoList) {
+			empresaProcessoRepository.delete(empresaProcesso2);			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

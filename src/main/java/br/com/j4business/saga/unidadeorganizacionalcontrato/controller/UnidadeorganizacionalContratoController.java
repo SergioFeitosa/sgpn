@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,21 +17,20 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import br.com.j4business.saga.unidadeorganizacional.model.UnidadeorganizacionalForm;
-import br.com.j4business.saga.unidadeorganizacional.service.UnidadeorganizacionalService;
-import br.com.j4business.saga.unidadeorganizacionalcenario.model.UnidadeorganizacionalCenario;
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.contrato.model.ContratoForm;
 import br.com.j4business.saga.contrato.service.ContratoService;
+import br.com.j4business.saga.unidadeorganizacional.model.UnidadeorganizacionalForm;
+import br.com.j4business.saga.unidadeorganizacional.service.UnidadeorganizacionalService;
 import br.com.j4business.saga.unidadeorganizacionalcontrato.model.UnidadeorganizacionalContrato;
 import br.com.j4business.saga.unidadeorganizacionalcontrato.model.UnidadeorganizacionalContratoByUnidadeorganizacionalForm;
 import br.com.j4business.saga.unidadeorganizacionalcontrato.model.UnidadeorganizacionalContratoForm;
@@ -55,7 +54,7 @@ public class UnidadeorganizacionalContratoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/unidadeorganizacionalContratoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalContratoAdd")
 	public ModelAndView unidadeorganizacionalContratoAdd(UnidadeorganizacionalContratoForm unidadeorganizacionalContratoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("unidadeorganizacionalContrato/unidadeorganizacionalContratoAdd");
@@ -63,18 +62,18 @@ public class UnidadeorganizacionalContratoController {
 		mv.addObject("unidadeorganizacionalContratoForm", unidadeorganizacionalContratoForm);
 		mv.addObject("unidadeorganizacionalContratoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("unidadeorganizacionalContratoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable contratoPageable = new PageRequest(0, 200, Direction.ASC, "contratoNome");
+		Pageable contratoPageable = PageRequest.of(0, 200, Direction.ASC, "contratoNome");
 		mv.addObject("contratoPage", contratoService.getContratoAll(contratoPageable));
-		Pageable unidadeorganizacionalPageable = new PageRequest(0, 200, Direction.ASC, "unidadeorganizacionalNome");
+		Pageable unidadeorganizacionalPageable = PageRequest.of(0, 200, Direction.ASC, "unidadeorganizacionalNome");
 		mv.addObject("unidadeorganizacionalPage", unidadeorganizacionalService.getUnidadeorganizacionalAll(unidadeorganizacionalPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/unidadeorganizacionalContratoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/unidadeorganizacionalContratoCreate")
 	public ModelAndView unidadeorganizacionalContratoCreate(@Valid UnidadeorganizacionalContratoForm unidadeorganizacionalContratoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -108,7 +107,7 @@ public class UnidadeorganizacionalContratoController {
 	}
 
 
-	@RequestMapping(path = "/unidadeorganizacionalContratoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalContratoDelete/{id}")
 	public ModelAndView unidadeorganizacionalContratoDelete(@PathVariable("id") long unidadeorganizacionalContratoId, @Valid ContratoForm contratoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/unidadeorganizacionalContratoHome");
@@ -134,7 +133,7 @@ public class UnidadeorganizacionalContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/unidadeorganizacionalContratoEdit/{unidadeorganizacionalContratoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalContratoEdit/{unidadeorganizacionalContratoPK}")
 	public ModelAndView unidadeorganizacionalContratoEdit(@PathVariable("unidadeorganizacionalContratoPK") Long unidadeorganizacionalContratoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("unidadeorganizacionalContrato/unidadeorganizacionalContratoEdit");
@@ -143,18 +142,18 @@ public class UnidadeorganizacionalContratoController {
 		mv.addObject("unidadeorganizacionalContratoForm", unidadeorganizacionalContratoForm);
 		mv.addObject("unidadeorganizacionalContratoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("unidadeorganizacionalContratoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable contratoPageable = new PageRequest(0, 200, Direction.ASC, "contratoNome");
+		Pageable contratoPageable = PageRequest.of(0, 200, Direction.ASC, "contratoNome");
 		mv.addObject("contratoPage", contratoService.getContratoAll(contratoPageable));
-		Pageable unidadeorganizacionalPageable = new PageRequest(0, 200, Direction.ASC, "unidadeorganizacionalNome");
+		Pageable unidadeorganizacionalPageable = PageRequest.of(0, 200, Direction.ASC, "unidadeorganizacionalNome");
 		mv.addObject("unidadeorganizacionalPage", unidadeorganizacionalService.getUnidadeorganizacionalAll(unidadeorganizacionalPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/unidadeorganizacionalContratoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalContratoHome")
 	public ModelAndView unidadeorganizacionalContratoHome(@Valid UnidadeorganizacionalContratoByUnidadeorganizacionalForm unidadeorganizacionalContratoByUnidadeorganizacionalForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("unidadeorganizacionalContrato/unidadeorganizacionalContratoHome");
@@ -174,10 +173,10 @@ public class UnidadeorganizacionalContratoController {
 
 		if (unidadeorganizacionalContratoByUnidadeorganizacionalForm.getUnidadeorganizacionalContratoSortTipo().equalsIgnoreCase("UnidadeorganizacionalNome")
 				|| unidadeorganizacionalContratoByUnidadeorganizacionalForm.getUnidadeorganizacionalContratoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"unidadeorganizacional.unidadeorganizacionalNome","contrato.contratoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"unidadeorganizacional.unidadeorganizacionalNome","contrato.contratoNome"); 
 		
 		} else if (unidadeorganizacionalContratoByUnidadeorganizacionalForm.getUnidadeorganizacionalContratoSortTipo().equalsIgnoreCase("ContratoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"contrato.contratoNome","unidadeorganizacional.unidadeorganizacionalNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"contrato.contratoNome","unidadeorganizacional.unidadeorganizacionalNome"); 
 
 		}
 
@@ -200,7 +199,7 @@ public class UnidadeorganizacionalContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/unidadeorganizacionalContratoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/unidadeorganizacionalContratoSave")
 	public ModelAndView unidadeorganizacionalContratoSave(@Valid UnidadeorganizacionalContratoForm unidadeorganizacionalContratoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -223,7 +222,7 @@ public class UnidadeorganizacionalContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/unidadeorganizacionalContratoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalContratoRelMenu")
 	public ModelAndView unidadeorganizacionalContratoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("unidadeorganizacionalContrato/unidadeorganizacionalContratoRelMenu");
@@ -232,18 +231,18 @@ public class UnidadeorganizacionalContratoController {
 		return mv;
 	}
 
-	@RequestMapping("/unidadeorganizacionalContratoRel001")
+	@GetMapping("/unidadeorganizacionalContratoRel001")
 	public ModelAndView unidadeorganizacionalContratoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("unidadeorganizacionalContrato/unidadeorganizacionalContratoRel001");
-		Pageable unidadeorganizacionalContratoPageable = new PageRequest(0, 200, Direction.ASC, "unidadeorganizacional.unidadeorganizacionalNome","contrato.contratoNome");
+		Pageable unidadeorganizacionalContratoPageable = PageRequest.of(0, 200, Direction.ASC, "unidadeorganizacional.unidadeorganizacionalNome","contrato.contratoNome");
 		mv.addObject("unidadeorganizacionalContratoPage", unidadeorganizacionalContratoService.getUnidadeorganizacionalContratoAll(unidadeorganizacionalContratoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/unidadeorganizacionalContratoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/unidadeorganizacionalContratoView/{id}")
 	public ModelAndView unidadeorganizacionalContratoView(@PathVariable("id") Long unidadeorganizacionalContratoId) {
 
 		UnidadeorganizacionalContrato unidadeorganizacionalContrato = unidadeorganizacionalContratoService.getUnidadeorganizacionalContratoByUnidadeorganizacionalContratoPK(unidadeorganizacionalContratoId);

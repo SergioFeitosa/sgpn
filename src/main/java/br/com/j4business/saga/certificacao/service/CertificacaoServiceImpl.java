@@ -1,9 +1,10 @@
 package br.com.j4business.saga.certificacao.service;
 
 import java.util.List;
+import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,7 +51,9 @@ public class CertificacaoServiceImpl implements CertificacaoService {
 	@Override
 	public Certificacao getCertificacaoByCertificacaoPK(long certificacaoPK) {
 		
-		return certificacaoRepository.findOne(certificacaoPK);
+		Optional<Certificacao> certificacao = certificacaoRepository.findById(certificacaoPK);
+
+		return certificacao.get();
 	}
 
 	@Transactional
@@ -96,7 +99,7 @@ public class CertificacaoServiceImpl implements CertificacaoService {
 
 		Certificacao certificacao = this.getCertificacaoByCertificacaoPK(certificacaoId);
 		
-		certificacaoRepository.delete(certificacao.getCertificacaoPK());
+		certificacaoRepository.delete(certificacao);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Certificacao Delete " + "\n Usuário => " + username + 

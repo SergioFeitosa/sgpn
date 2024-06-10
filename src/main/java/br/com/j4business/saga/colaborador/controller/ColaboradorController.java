@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -80,7 +80,7 @@ public class ColaboradorController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/colaboradorAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorAdd")
 	public ModelAndView colaboradorAdd(ColaboradorForm colaboradorForm) {
 
 		ModelAndView mv = new ModelAndView("colaborador/colaboradorAdd");
@@ -89,22 +89,22 @@ public class ColaboradorController {
 		
 		mv.addObject("colaboradorForm", colaboradorForm);
 		mv.addObject("colaboradorStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable certificacaoPageable = new PageRequest(0, 200, Direction.ASC, "certificacaoNome");
+		Pageable certificacaoPageable = PageRequest.of(0, 200, Direction.ASC, "certificacaoNome");
 		mv.addObject("certificacaoPage", certificacaoService.getCertificacaoAll(certificacaoPageable));
-		Pageable cursoPageable = new PageRequest(0, 200, Direction.ASC, "cursoNome");
+		Pageable cursoPageable = PageRequest.of(0, 200, Direction.ASC, "cursoNome");
 		mv.addObject("cursoPage", cursoService.getCursoAll(cursoPageable));
-		Pageable formacaoPageable = new PageRequest(0, 200, Direction.ASC, "formacaoNivel");
+		Pageable formacaoPageable = PageRequest.of(0, 200, Direction.ASC, "formacaoNivel");
 		mv.addObject("formacaoPage", formacaoService.getFormacaoAll(formacaoPageable));
-		Pageable habilidadePageable = new PageRequest(0, 200, Direction.ASC, "habilidadeNome");
+		Pageable habilidadePageable = PageRequest.of(0, 200, Direction.ASC, "habilidadeNome");
 		mv.addObject("habilidadePage", habilidadeService.getHabilidadeAll(habilidadePageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/colaboradorCreate")
 	public ModelAndView colaboradorCreate(@Valid ColaboradorForm colaboradorForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -140,7 +140,7 @@ public class ColaboradorController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorDelete/{id}")
 	public ModelAndView colaboradorDelete(@PathVariable("id") long colaboradorPK, @Valid ColaboradorForm colaboradorForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/colaboradorHome");
@@ -160,7 +160,7 @@ public class ColaboradorController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorEdit/{id}")
 	public ModelAndView colaboradorEdit(@PathVariable("id") Long colaboradorPK) {
 
 		
@@ -170,26 +170,26 @@ public class ColaboradorController {
 		ColaboradorForm colaboradorForm = colaboradorService.converteColaborador(colaborador);
 		mv.addObject("colaboradorForm", colaboradorForm);
 		mv.addObject("colaboradorStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable colaboradorCertificacaoPageable = new PageRequest(0, 200, Direction.ASC, "certificacao.certificacaoNome");
+		Pageable colaboradorCertificacaoPageable = PageRequest.of(0, 200, Direction.ASC, "certificacao.certificacaoNome");
 		mv.addObject("colaboradorCertificacaoPage", colaboradorCertificacaoService.getByColaboradorPK(colaboradorPK, colaboradorCertificacaoPageable));
-		Pageable colaboradorCursoPageable = new PageRequest(0, 200, Direction.ASC, "curso.cursoNome");
+		Pageable colaboradorCursoPageable = PageRequest.of(0, 200, Direction.ASC, "curso.cursoNome");
 		mv.addObject("colaboradorCursoPage", colaboradorCursoService.getByColaboradorPK(colaboradorPK, colaboradorCursoPageable));
-		Pageable colaboradorFormacaoPageable = new PageRequest(0, 200, Direction.ASC, "formacao.formacaoNome");
+		Pageable colaboradorFormacaoPageable = PageRequest.of(0, 200, Direction.ASC, "formacao.formacaoNome");
 		mv.addObject("colaboradorFormacaoPage", colaboradorFormacaoService.getByColaboradorPK(colaboradorPK, colaboradorFormacaoPageable));
-		Pageable colaboradorHabilidadePageable = new PageRequest(0, 200, Direction.ASC, "habilidade.habilidadeNome");
+		Pageable colaboradorHabilidadePageable = PageRequest.of(0, 200, Direction.ASC, "habilidade.habilidadeNome");
 		mv.addObject("colaboradorHabilidadePage", colaboradorHabilidadeService.getByColaboradorPK(colaboradorPK, colaboradorHabilidadePageable));
-		Pageable colaboradorProcessoPageable = new PageRequest(0, 200, Direction.ASC, "processo.processoNome");
+		Pageable colaboradorProcessoPageable = PageRequest.of(0, 200, Direction.ASC, "processo.processoNome");
 		mv.addObject("colaboradorProcessoPage", colaboradorProcessoService.getByColaboradorPK(colaboradorPK, colaboradorProcessoPageable));
-		Pageable colaboradorTreinamentoPageable = new PageRequest(0, 200, Direction.ASC, "treinamento.treinamentoNome");
+		Pageable colaboradorTreinamentoPageable = PageRequest.of(0, 200, Direction.ASC, "treinamento.treinamentoNome");
 		mv.addObject("colaboradorTreinamentoPage", colaboradorTreinamentoService.getByColaboradorPK(colaboradorPK,colaboradorTreinamentoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 	
-	@RequestMapping("/colaboradorHome")
+	@GetMapping("/colaboradorHome")
 	public ModelAndView colaboradorHome(@Valid ColaboradorByColaboradorForm colaboradorByColaboradorForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaborador/colaboradorHome");
@@ -207,10 +207,10 @@ public class ColaboradorController {
 		}
 
 		if (colaboradorByColaboradorForm.getColaboradorSortTipo().equalsIgnoreCase("ColaboradorNome") || colaboradorByColaboradorForm.getColaboradorSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "pessoaNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "pessoaNome");
 
 		} else if (colaboradorByColaboradorForm.getColaboradorSortTipo().equalsIgnoreCase("ColaboradorApelido")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "colaboradorApelido");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "colaboradorApelido");
 
 		}
 
@@ -232,7 +232,7 @@ public class ColaboradorController {
 		return mv;
 	}
 	
-	@RequestMapping(path = "/colaboradorSave", method = RequestMethod.POST)
+	@PostMapping(path = "/colaboradorSave")
 	public ModelAndView colaboradorSave(@Valid ColaboradorForm colaboradorForm,BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -258,7 +258,7 @@ public class ColaboradorController {
 	}
 
 
-	@RequestMapping(path = "/colaboradorRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorRelMenu")
 	public ModelAndView colaboradorRelMenu() {
 		ModelAndView mv = new ModelAndView("colaborador/colaboradorRelMenu");
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
@@ -267,66 +267,66 @@ public class ColaboradorController {
 		
 	}
 
-	@RequestMapping("/colaboradorRel001")
+	@GetMapping("/colaboradorRel001")
 	public ModelAndView colaboradorRel001() {
 
 		ModelAndView mv = new ModelAndView("colaborador/colaboradorRel001");
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping("/colaboradorRel002")
+	@GetMapping("/colaboradorRel002")
 	public ModelAndView colaboradorRel002() {
 
 		ModelAndView mv = new ModelAndView("colaborador/colaboradorRel002");
 		
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorRel002List", colaboradorService.preparaRelatorio002(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping("/colaboradorRel003")
+	@GetMapping("/colaboradorRel003")
 	public ModelAndView colaboradorRel003() {
 
 		ModelAndView mv = new ModelAndView("colaborador/colaboradorRel003");
 		
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorRel003List", colaboradorService.preparaRelatorio003(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping("/colaboradorRel004")
+	@GetMapping("/colaboradorRel004")
 	public ModelAndView colaboradorRel004() {
 
 		ModelAndView mv = new ModelAndView("colaborador/colaboradorRel004");
 		
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorRel004List", colaboradorService.preparaRelatorio004(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping("/colaboradorRel005")
+	@GetMapping("/colaboradorRel005")
 	public ModelAndView colaboradorRel005() {
 
 		ModelAndView mv = new ModelAndView("colaborador/colaboradorRel005");
 		
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorRel005List", colaboradorService.preparaRelatorio005(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorView/{id}")
 	public ModelAndView colaboradorView(@PathVariable("id") Long colaboradorId) {
 
 		Colaborador colaborador = colaboradorService.getColaboradorByColaboradorPK(colaboradorId);

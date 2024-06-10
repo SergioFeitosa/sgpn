@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +17,14 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import br.com.j4business.saga.empresa.model.EmpresaForm;
 import br.com.j4business.saga.empresa.service.EmpresaService;
 import br.com.j4business.saga.UsuarioSeguranca;
-import br.com.j4business.saga.agendaevento.model.AgendaEvento;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
@@ -54,7 +53,7 @@ public class EmpresaProcessoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/empresaProcessoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/empresaProcessoAdd")
 	public ModelAndView empresaProcessoAdd(EmpresaProcessoForm empresaProcessoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("empresaProcesso/empresaProcessoAdd");
@@ -62,17 +61,17 @@ public class EmpresaProcessoController {
 		mv.addObject("empresaProcessoForm", empresaProcessoForm);
 		mv.addObject("empresaProcessoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("empresaProcessoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable empresaPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable empresaPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("empresaPage", empresaService.getEmpresaAll(empresaPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/empresaProcessoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/empresaProcessoCreate")
 	public ModelAndView empresaProcessoCreate(@Valid EmpresaProcessoForm empresaProcessoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -106,7 +105,7 @@ public class EmpresaProcessoController {
 	}
 
 
-	@RequestMapping(path = "/empresaProcessoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/empresaProcessoDelete/{id}")
 	public ModelAndView empresaProcessoDelete(@PathVariable("id") long empresaProcessoId, @Valid ProcessoForm processoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/empresaProcessoHome");
@@ -132,7 +131,7 @@ public class EmpresaProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/empresaProcessoEdit/{empresaProcessoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/empresaProcessoEdit/{empresaProcessoPK}")
 	public ModelAndView empresaProcessoEdit(@PathVariable("empresaProcessoPK") Long empresaProcessoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("empresaProcesso/empresaProcessoEdit");
@@ -141,18 +140,18 @@ public class EmpresaProcessoController {
 		mv.addObject("empresaProcessoForm", empresaProcessoForm);
 		mv.addObject("empresaProcessoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("empresaProcessoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable empresaPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable empresaPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("empresaPage", empresaService.getEmpresaAll(empresaPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 	
 		return mv;
 	}
 	
-	@RequestMapping(path = "/empresaProcessoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/empresaProcessoHome")
 	public ModelAndView empresaProcessoHome(@Valid EmpresaProcessoByEmpresaForm empresaProcessoByEmpresaForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("empresaProcesso/empresaProcessoHome");
@@ -172,10 +171,10 @@ public class EmpresaProcessoController {
 
 		if (empresaProcessoByEmpresaForm.getEmpresaProcessoSortTipo().equalsIgnoreCase("EmpresaNome")
 				|| empresaProcessoByEmpresaForm.getEmpresaProcessoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"empresa.pessoaNome","processo.processoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"empresa.pessoaNome","processo.processoNome"); 
 		
 		} else if (empresaProcessoByEmpresaForm.getEmpresaProcessoSortTipo().equalsIgnoreCase("ProcessoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","empresa.pessoaNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","empresa.pessoaNome"); 
 
 		}
 
@@ -198,7 +197,7 @@ public class EmpresaProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/empresaProcessoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/empresaProcessoSave")
 	public ModelAndView empresaProcessoSave(@Valid EmpresaProcessoForm empresaProcessoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -222,7 +221,7 @@ public class EmpresaProcessoController {
 		
 	}
 
-	@RequestMapping(path = "/empresaProcessoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/empresaProcessoRelMenu")
 	public ModelAndView empresaProcessoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("empresaProcesso/empresaProcessoRelMenu");
@@ -232,18 +231,18 @@ public class EmpresaProcessoController {
 		
 	}
 
-	@RequestMapping("/empresaProcessoRel001")
+	@GetMapping("/empresaProcessoRel001")
 	public ModelAndView empresaProcessoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("empresaProcesso/empresaProcessoRel001");
-		Pageable empresaProcessoPageable = new PageRequest(0, 200, Direction.ASC, "empresa.pessoaNome","processo.processoNome");
+		Pageable empresaProcessoPageable = PageRequest.of(0, 200, Direction.ASC, "empresa.pessoaNome","processo.processoNome");
 		mv.addObject("empresaProcessoPage", empresaProcessoService.getEmpresaProcessoAll(empresaProcessoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/empresaProcessoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/empresaProcessoView/{id}")
 	public ModelAndView empresaProcessoView(@PathVariable("id") Long empresaProcessoId) {
 
 		EmpresaProcesso empresaProcesso = empresaProcessoService.getEmpresaProcessoByEmpresaProcessoPK(empresaProcessoId);

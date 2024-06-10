@@ -1,8 +1,10 @@
 package br.com.j4business.saga.habilidade.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,8 @@ public class HabilidadeServiceImpl implements HabilidadeService {
 	@Override
 	public Habilidade getHabilidadeByHabilidadePK(long habilidadePK) {
 		
-		return habilidadeRepository.findOne(habilidadePK);
+		Optional<Habilidade> habilidade =  habilidadeRepository.findById(habilidadePK);
+		return habilidade.get();
 	}
 
 	@Transactional
@@ -93,7 +96,7 @@ public class HabilidadeServiceImpl implements HabilidadeService {
 
 		Habilidade habilidade = this.getHabilidadeByHabilidadePK(habilidadeId);
 		
-		habilidadeRepository.delete(habilidade.getHabilidadePK());
+		habilidadeRepository.delete(habilidade);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Habilidade Delete " + "\n Usuário => " + username + 

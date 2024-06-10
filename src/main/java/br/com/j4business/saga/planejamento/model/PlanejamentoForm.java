@@ -3,14 +3,14 @@ package br.com.j4business.saga.planejamento.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.DecimalMax;
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.DecimalMin;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.NumberFormat;
 
@@ -25,19 +25,19 @@ public class PlanejamentoForm {
 
 	private long planejamentoPK;
 	
-    @NotEmpty(message = "Nome é uma informação obrigatória.")
+    @NotBlank(message = "Nome é uma informação obrigatória.")
 	@Size(min = 3,max = 200, message = "O nome não pode ter menos que 3 e mais que 100 caracteres")
 	private String planejamentoNome;
 	
-    @NotEmpty(message = "Descrição é uma informação obrigatória.")
+    @NotBlank(message = "Descrição é uma informação obrigatória.")
 	@Size(min = 5,max = 200, message = "A descrição não pode ter menos que 5 e mais que 200 caracteres")
 	private String planejamentoDescricao;
 
-    @NotEmpty(message = "O Gestor da Ação é uma informação obrigatória.")
+    @NotBlank(message = "O Gestor da Ação é uma informação obrigatória.")
 	@NotNull(message = "O Gestor da Ação é uma informação obrigatória.")
 	private String planejamentoGestor;
 
-    @NotEmpty(message = "O Dono da Ação é uma informação obrigatória.")
+    @NotBlank(message = "O Dono da Ação é uma informação obrigatória.")
 	@NotNull(message = "O Dono da Ação é uma informação obrigatória.")
 	private String planejamentoDono;
 
@@ -81,11 +81,11 @@ public class PlanejamentoForm {
 	@Enumerated(EnumType.STRING)
 	private AtributoStatus planejamentoStatus;
 
-    @NotEmpty(message = "Responsável é uma informação obrigatória.")
+    @NotBlank(message = "Responsável é uma informação obrigatória.")
 	@NotNull(message = "Responsável é uma informação obrigatória.")
 	private String planejamentoResponsavel;
 
-    @NotEmpty(message = "Motivo da Operação é uma informação obrigatória.")
+    @NotBlank(message = "Motivo da Operação é uma informação obrigatória.")
 	@Size(min = 5,max = 200, message = "Motivo da Operação não pode ter menos que 5 e mais que 200 caracteres")
 	private String planejamentoMotivoOperacao;
 

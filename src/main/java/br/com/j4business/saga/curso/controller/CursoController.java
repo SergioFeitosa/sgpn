@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -43,20 +43,20 @@ public class CursoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/cursoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/cursoAdd")
 	public ModelAndView cursoAdd(CursoForm cursoForm) {
 
 		ModelAndView mv = new ModelAndView("curso/cursoAdd");
 		cursoForm = cursoService.cursoParametros(cursoForm);
 		mv.addObject("cursoForm", cursoForm);
 		mv.addObject("cursoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/cursoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/cursoCreate")
 	public ModelAndView cursoCreate(@Valid CursoForm cursoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -89,7 +89,7 @@ public class CursoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/cursoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/cursoDelete/{id}")
 	public ModelAndView cursoDelete(@PathVariable("id") long cursoPK, @Valid CursoForm cursoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/cursoHome");
@@ -110,7 +110,7 @@ public class CursoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/cursoEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/cursoEdit/{id}")
 	public ModelAndView cursoEdit(@PathVariable("id") Long cursoId, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("curso/cursoEdit");
@@ -118,14 +118,14 @@ public class CursoController {
 		CursoForm cursoForm = cursoService.converteCurso(curso);
 		mv.addObject("cursoForm", cursoForm);
 		mv.addObject("cursoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping("/cursoHome")
+	@GetMapping("/cursoHome")
 	public ModelAndView cursoHome(@Valid CursoByCursoForm cursoByCursoForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("curso/cursoHome");
@@ -144,10 +144,10 @@ public class CursoController {
 		}
 
 		if (cursoByCursoForm.getCursoSortTipo().equalsIgnoreCase("CursoNome") || cursoByCursoForm.getCursoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "cursoNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "cursoNome");
 
 		} else if (cursoByCursoForm.getCursoSortTipo().equalsIgnoreCase("CursoDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "cursoDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "cursoDescricao");
 
 		}
 
@@ -169,7 +169,7 @@ public class CursoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/cursoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/cursoSave")
 	public ModelAndView cursoSave(@Valid CursoForm cursoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -192,7 +192,7 @@ public class CursoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/cursoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/cursoRelMenu")
 	public ModelAndView cursoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("curso/cursoRelMenu");
@@ -202,29 +202,29 @@ public class CursoController {
 		
 	}
 
-	@RequestMapping("/cursoRel001")
+	@GetMapping("/cursoRel001")
 	public ModelAndView cursoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("curso/cursoRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "cursoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "cursoNome");
 		mv.addObject("cursoPage", cursoService.getCursoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping("/cursoRel002")
+	@GetMapping("/cursoRel002")
 	public ModelAndView cursoRel002(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("curso/cursoRel002");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "cursoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "cursoNome");
 		mv.addObject("cursoPage", cursoService.getCursoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/cursoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/cursoView/{id}")
 	public ModelAndView cursoView(@PathVariable("id") Long cursoId) {
 
 		Curso curso = cursoService.getCursoByCursoPK(cursoId);

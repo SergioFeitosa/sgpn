@@ -16,8 +16,8 @@ import br.com.j4business.saga.agendatreinamento.enumeration.AgendaTreinamentoEnv
 import br.com.j4business.saga.agendatreinamento.model.AgendaTreinamentoForm;
 import br.com.j4business.saga.agendatreinamento.repository.AgendaTreinamentoRepository;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -101,7 +101,7 @@ public class AgendaTreinamentoServiceImpl implements AgendaTreinamentoService {
 
 	@Override
 	public AgendaTreinamento getAgendaTreinamentoByAgendaTreinamentoPK(long agendaTreinamentoPK) {
-		return agendaTreinamentoRepository.findOne(agendaTreinamentoPK);
+		return agendaTreinamentoRepository.findByAgendaTreinamentoPK(agendaTreinamentoPK);
 	}
 
 	@Override
@@ -133,7 +133,7 @@ public class AgendaTreinamentoServiceImpl implements AgendaTreinamentoService {
 
 		AgendaTreinamento agendaTreinamentoTemp = this.getAgendaTreinamentoByAgendaTreinamentoPK(agendaTreinamentoPK);
 
-		agendaTreinamentoRepository.delete(agendaTreinamentoPK);
+		agendaTreinamentoRepository.delete(agendaTreinamentoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("AgendaTreinamento Save " + "\n Usuário => " + username + 
@@ -147,7 +147,11 @@ public class AgendaTreinamentoServiceImpl implements AgendaTreinamentoService {
 		
 		List<AgendaTreinamento> agendaTreinamentoList = agendaTreinamentoRepository.findByTreinamento(treinamento);
 
-		agendaTreinamentoRepository.delete(agendaTreinamentoList);
+		for (AgendaTreinamento agendaTreinamento2 : agendaTreinamentoList) {
+
+			agendaTreinamentoRepository.delete(agendaTreinamento2);
+
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 
@@ -384,7 +388,6 @@ public class AgendaTreinamentoServiceImpl implements AgendaTreinamentoService {
 			try {
 				treinamentoDataInicio.setTime(sdf.parse(treinamento.getTreinamentoDataPrevistaInicio()));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}// all done
 			
@@ -517,7 +520,6 @@ public class AgendaTreinamentoServiceImpl implements AgendaTreinamentoService {
 			try {
 				treinamentoDataInicio.setTime(sdf.parse(treinamento.getTreinamentoDataPrevistaInicio()));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}// all done
 			

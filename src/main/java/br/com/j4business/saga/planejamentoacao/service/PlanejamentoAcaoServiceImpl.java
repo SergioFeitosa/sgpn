@@ -1,25 +1,28 @@
 package br.com.j4business.saga.planejamentoacao.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.acao.model.Acao;
 import br.com.j4business.saga.acao.service.AcaoService;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.planejamentoacao.model.PlanejamentoAcao;
 import br.com.j4business.saga.planejamento.model.Planejamento;
 import br.com.j4business.saga.planejamento.service.PlanejamentoService;
+import br.com.j4business.saga.planejamentoacao.model.PlanejamentoAcao;
 import br.com.j4business.saga.planejamentoacao.model.PlanejamentoAcaoForm;
 import br.com.j4business.saga.planejamentoacao.repository.PlanejamentoAcaoRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 @Service("planejamentoAcaoService")
 public class PlanejamentoAcaoServiceImpl implements PlanejamentoAcaoService {
@@ -67,7 +70,8 @@ public class PlanejamentoAcaoServiceImpl implements PlanejamentoAcaoService {
 
 	@Override
 	public PlanejamentoAcao getPlanejamentoAcaoByPlanejamentoAcaoPK(long planejamentoAcaoPK) {
-		return planejamentoAcaoRepository.findOne(planejamentoAcaoPK);
+		Optional<PlanejamentoAcao> planejamentoAcao = planejamentoAcaoRepository.findById(planejamentoAcaoPK);
+		return planejamentoAcao.get();
 	}
 
 	@Override
@@ -118,7 +122,7 @@ public class PlanejamentoAcaoServiceImpl implements PlanejamentoAcaoService {
 
 		PlanejamentoAcao planejamentoAcaoTemp = this.getPlanejamentoAcaoByPlanejamentoAcaoPK(planejamentoAcaoPK);
 
-		planejamentoAcaoRepository.delete(planejamentoAcaoPK);
+		planejamentoAcaoRepository.delete(planejamentoAcaoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("PlanejamentoAcao Save " + "\n Usuário => " + username + 
@@ -133,7 +137,10 @@ public class PlanejamentoAcaoServiceImpl implements PlanejamentoAcaoService {
 		
 		List<PlanejamentoAcao> planejamentoAcaoList = planejamentoAcaoRepository.findByPlanejamento(planejamento);
 
-		planejamentoAcaoRepository.delete(planejamentoAcaoList);
+		for (PlanejamentoAcao planejamentoAcao2 : planejamentoAcaoList) {
+			planejamentoAcaoRepository.delete(planejamentoAcao2);
+			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

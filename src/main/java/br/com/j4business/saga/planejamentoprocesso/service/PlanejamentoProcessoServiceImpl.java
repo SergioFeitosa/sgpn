@@ -1,26 +1,28 @@
 package br.com.j4business.saga.planejamentoprocesso.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.planejamentoprocesso.model.PlanejamentoProcesso;
-import br.com.j4business.saga.processo.model.Processo;
-import br.com.j4business.saga.processo.service.ProcessoService;
 import br.com.j4business.saga.planejamento.model.Planejamento;
 import br.com.j4business.saga.planejamento.service.PlanejamentoService;
-import br.com.j4business.saga.planejamentoacao.model.PlanejamentoAcao;
+import br.com.j4business.saga.planejamentoprocesso.model.PlanejamentoProcesso;
 import br.com.j4business.saga.planejamentoprocesso.model.PlanejamentoProcessoForm;
 import br.com.j4business.saga.planejamentoprocesso.repository.PlanejamentoProcessoRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
+import br.com.j4business.saga.processo.model.Processo;
+import br.com.j4business.saga.processo.service.ProcessoService;
 
 @Service("planejamentoProcessoService")
 public class PlanejamentoProcessoServiceImpl implements PlanejamentoProcessoService {
@@ -83,7 +85,8 @@ public class PlanejamentoProcessoServiceImpl implements PlanejamentoProcessoServ
 
 	@Override
 	public PlanejamentoProcesso getPlanejamentoProcessoByPlanejamentoProcessoPK(long planejamentoProcessoPK) {
-		return planejamentoProcessoRepository.findOne(planejamentoProcessoPK);
+		Optional<PlanejamentoProcesso> planejamentoProcesso = planejamentoProcessoRepository.findById(planejamentoProcessoPK);
+		return planejamentoProcesso.get();
 	}
 
 	@Override
@@ -114,7 +117,7 @@ public class PlanejamentoProcessoServiceImpl implements PlanejamentoProcessoServ
 
 		PlanejamentoProcesso planejamentoProcessoTemp = this.getPlanejamentoProcessoByPlanejamentoProcessoPK(planejamentoProcessoPK);
 
-		planejamentoProcessoRepository.delete(planejamentoProcessoPK);
+		planejamentoProcessoRepository.delete(planejamentoProcessoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("PlanejamentoProcesso Save " + "\n Usuário => " + username + 
@@ -128,7 +131,9 @@ public class PlanejamentoProcessoServiceImpl implements PlanejamentoProcessoServ
 		
 		List<PlanejamentoProcesso> planejamentoProcessoList = planejamentoProcessoRepository.findByProcesso(processo);
 
-		planejamentoProcessoRepository.delete(planejamentoProcessoList);
+		for (PlanejamentoProcesso planejamentoProcesso2 : planejamentoProcessoList) {
+			planejamentoProcessoRepository.delete(planejamentoProcesso2);			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

@@ -2,7 +2,6 @@ package br.com.j4business.saga.colaboradorcertificacao.service;
 
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
-import br.com.j4business.saga.avaliacaoresultado.model.AvaliacaoResultado;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.certificacao.model.Certificacao;
@@ -13,10 +12,10 @@ import br.com.j4business.saga.colaboradorcertificacao.repository.ColaboradorCert
 import br.com.j4business.saga.fornecedor.model.Fornecedor;
 import br.com.j4business.saga.fornecedor.service.FornecedorService;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -85,7 +84,9 @@ public class ColaboradorCertificacaoServiceImpl implements ColaboradorCertificac
 
 	@Override
 	public ColaboradorCertificacao getColaboradorCertificacaoByColaboradorCertificacaoPK(long colaboradorCertificacaoPK) {
-		return colaboradorCertificacaoRepository.findOne(colaboradorCertificacaoPK);
+		
+		Optional<ColaboradorCertificacao> colaboradorCertificacao = colaboradorCertificacaoRepository.findById(colaboradorCertificacaoPK);
+		return colaboradorCertificacao.get();
 	}
 
 	@Override
@@ -116,7 +117,7 @@ public class ColaboradorCertificacaoServiceImpl implements ColaboradorCertificac
 
 		ColaboradorCertificacao colaboradorCertificacaoTemp = this.getColaboradorCertificacaoByColaboradorCertificacaoPK(colaboradorCertificacaoPK);
 
-		colaboradorCertificacaoRepository.delete(colaboradorCertificacaoPK);
+		colaboradorCertificacaoRepository.delete(colaboradorCertificacaoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ColaboradorCertificacao Save " + "\n Usuário => " + username + 
@@ -130,7 +131,9 @@ public class ColaboradorCertificacaoServiceImpl implements ColaboradorCertificac
 		
 		List<ColaboradorCertificacao> colaboradorCertificacaoList = colaboradorCertificacaoRepository.findByCertificacao(certificacao);
 
-		colaboradorCertificacaoRepository.delete(colaboradorCertificacaoList);
+		for (ColaboradorCertificacao colaboradorCertificacao2 : colaboradorCertificacaoList) {
+			colaboradorCertificacaoRepository.delete(colaboradorCertificacao2);
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

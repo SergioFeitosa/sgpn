@@ -1,27 +1,28 @@
 package br.com.j4business.saga.servicoprocesso.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.servicoprocesso.model.ServicoProcesso;
 import br.com.j4business.saga.processo.model.Processo;
 import br.com.j4business.saga.processo.service.ProcessoService;
 import br.com.j4business.saga.servico.model.Servico;
 import br.com.j4business.saga.servico.service.ServicoService;
+import br.com.j4business.saga.servicoprocesso.model.ServicoProcesso;
 import br.com.j4business.saga.servicoprocesso.model.ServicoProcessoForm;
 import br.com.j4business.saga.servicoprocesso.repository.ServicoProcessoRepository;
-
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.List;
-
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 @Service("servicoProcessoService")
 public class ServicoProcessoServiceImpl implements ServicoProcessoService {
@@ -88,7 +89,8 @@ public class ServicoProcessoServiceImpl implements ServicoProcessoService {
 
 	@Override
 	public ServicoProcesso getServicoProcessoByServicoProcessoPK(long servicoProcessoPK) {
-		return servicoProcessoRepository.findOne(servicoProcessoPK);
+		Optional<ServicoProcesso> servicoProcesso = servicoProcessoRepository.findById(servicoProcessoPK);
+		return servicoProcesso.get();
 	}
 
 	@Override
@@ -140,7 +142,7 @@ public class ServicoProcessoServiceImpl implements ServicoProcessoService {
 
 		ServicoProcesso servicoProcessoTemp = this.getServicoProcessoByServicoProcessoPK(servicoProcessoPK);
 
-		servicoProcessoRepository.delete(servicoProcessoPK);
+		servicoProcessoRepository.delete(servicoProcessoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ServicoProcesso Save " + "\n Usuário => " + username + 
@@ -155,7 +157,9 @@ public class ServicoProcessoServiceImpl implements ServicoProcessoService {
 		
 		List<ServicoProcesso> servicoProcessoList = servicoProcessoRepository.findByProcesso(processo);
 
-		servicoProcessoRepository.delete(servicoProcessoList);
+		for (ServicoProcesso servicoProcesso2 : servicoProcessoList) {
+			servicoProcessoRepository.delete(servicoProcesso2);			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

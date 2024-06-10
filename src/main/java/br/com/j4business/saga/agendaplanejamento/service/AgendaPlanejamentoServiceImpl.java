@@ -9,13 +9,13 @@ import br.com.j4business.saga.planejamento.model.Planejamento;
 import br.com.j4business.saga.planejamento.service.PlanejamentoService;
 import br.com.j4business.saga.agenda.model.Agenda;
 import br.com.j4business.saga.agenda.service.AgendaService;
-import br.com.j4business.saga.agendaplanejamento.enumeration.AgendaPlanejamentoEnvio;
 import br.com.j4business.saga.agendaplanejamento.model.AgendaPlanejamento;
+import br.com.j4business.saga.agendaplanejamento.enumeration.AgendaPlanejamentoEnvio;
 import br.com.j4business.saga.agendaplanejamento.model.AgendaPlanejamentoForm;
 import br.com.j4business.saga.agendaplanejamento.repository.AgendaPlanejamentoRepository;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -91,7 +92,7 @@ public class AgendaPlanejamentoServiceImpl implements AgendaPlanejamentoService 
 
 	@Override
 	public AgendaPlanejamento getAgendaPlanejamentoByAgendaPlanejamentoPK(long agendaPlanejamentoPK) {
-		return agendaPlanejamentoRepository.findOne(agendaPlanejamentoPK);
+		return agendaPlanejamentoRepository.getReferenceById(agendaPlanejamentoPK);
 	}
 
 	@Override
@@ -121,15 +122,17 @@ public class AgendaPlanejamentoServiceImpl implements AgendaPlanejamentoService 
 	@Transactional
 	public void delete(Long agendaPlanejamentoPK) {
 
-		AgendaPlanejamento agendaPlanejamentoTemp = this.getAgendaPlanejamentoByAgendaPlanejamentoPK(agendaPlanejamentoPK);
+		Optional<AgendaPlanejamento> agendaPlanejamentoSalvo = agendaPlanejamentoRepository.findById(agendaPlanejamentoPK);
 
-		agendaPlanejamentoRepository.delete(agendaPlanejamentoPK);
+		if (agendaPlanejamentoSalvo.isPresent()) {
+			agendaPlanejamentoRepository.delete(agendaPlanejamentoSalvo.get());
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("AgendaPlanejamento Save " + "\n Usuário => " + username + 
-										" // Id => "+agendaPlanejamentoTemp.getAgendaPlanejamentoPK() + 
-										" // Agenda Id => "+agendaPlanejamentoTemp.getAgenda().getAgendaPK() + 
-										" // Planejamento Id => "+agendaPlanejamentoTemp.getPlanejamento().getPlanejamentoPK()); 
+										" // Id => "+agendaPlanejamentoSalvo.get().getAgendaPlanejamentoPK() + 
+										" // Agenda Id => "+agendaPlanejamentoSalvo.get().getAgenda().getAgendaPK() + 
+										" // Planejamento Id => "+agendaPlanejamentoSalvo.get().getPlanejamento().getPlanejamentoPK()); 
     }
 
 	@Transactional
@@ -137,7 +140,11 @@ public class AgendaPlanejamentoServiceImpl implements AgendaPlanejamentoService 
 		
 		List<AgendaPlanejamento> agendaPlanejamentoList = agendaPlanejamentoRepository.findByPlanejamento(planejamento);
 
-		agendaPlanejamentoRepository.delete(agendaPlanejamentoList);
+		for (AgendaPlanejamento agendaPlanejamento2 : agendaPlanejamentoList) {
+
+			agendaPlanejamentoRepository.delete(agendaPlanejamento2);
+
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 
@@ -375,7 +382,6 @@ public class AgendaPlanejamentoServiceImpl implements AgendaPlanejamentoService 
 			try {
 				planejamentoDataInicio.setTime(sdf.parse(planejamento.getPlanejamentoDataPrevistaInicio()));
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}// all done
 			

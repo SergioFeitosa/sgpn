@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -43,20 +43,20 @@ public class AtendimentoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/atendimentoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/atendimentoAdd")
 	public ModelAndView atendimentoAdd(AtendimentoForm atendimentoForm) {
 
 		ModelAndView mv = new ModelAndView("atendimento/atendimentoAdd");
 		atendimentoForm = atendimentoService.atendimentoParametros(atendimentoForm);
 		mv.addObject("atendimentoForm", atendimentoForm);
 		mv.addObject("atendimentoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/atendimentoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/atendimentoCreate")
 	public ModelAndView atendimentoCreate(@Valid AtendimentoForm atendimentoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -86,7 +86,7 @@ public class AtendimentoController {
 		
 	}
 
-	@RequestMapping(path = "/atendimentoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/atendimentoDelete/{id}")
 	public ModelAndView atendimentoDelete(@PathVariable("id") long atendimentoPK, @Valid AtendimentoForm atendimentoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/atendimentoHome");
@@ -107,7 +107,7 @@ public class AtendimentoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/atendimentoEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/atendimentoEdit/{id}")
 	public ModelAndView atendimentoEdit(@PathVariable("id") Long atendimentoId, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("atendimento/atendimentoEdit");
@@ -115,14 +115,14 @@ public class AtendimentoController {
 		AtendimentoForm atendimentoForm = atendimentoService.converteAtendimento(atendimento);
 		mv.addObject("atendimentoForm", atendimentoForm);
 		mv.addObject("atendimentoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/atendimentoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/atendimentoHome")
 	public ModelAndView atendimentoHome(@Valid AtendimentoByAtendimentoForm atendimentoByAtendimentoForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("atendimento/atendimentoHome");
@@ -141,10 +141,10 @@ public class AtendimentoController {
 		}
 
 		if (atendimentoByAtendimentoForm.getAtendimentoSortTipo().equalsIgnoreCase("AtendimentoNome") || atendimentoByAtendimentoForm.getAtendimentoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "atendimentoNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "atendimentoNome");
 
 		} else if (atendimentoByAtendimentoForm.getAtendimentoSortTipo().equalsIgnoreCase("AtendimentoDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "atendimentoDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "atendimentoDescricao");
 
 		}
 
@@ -166,7 +166,7 @@ public class AtendimentoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/atendimentoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/atendimentoRelMenu")
 	public ModelAndView atendimentoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("atendimento/atendimentoRelMenu");
@@ -175,18 +175,18 @@ public class AtendimentoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/atendimentoRel001", method = RequestMethod.GET)
+	@GetMapping(path = "/atendimentoRel001")
 	public ModelAndView atendimentoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("atendimento/atendimentoRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "atendimentoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "atendimentoNome");
 		mv.addObject("atendimentoPage", atendimentoService.getAtendimentoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/atendimentoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/atendimentoSave")
 	public ModelAndView atendimentoSave(@Valid AtendimentoForm atendimentoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -210,7 +210,7 @@ public class AtendimentoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/atendimentoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/atendimentoView/{id}")
 	public ModelAndView atendimentoView(@PathVariable("id") Long atendimentoId) {
 
 		Atendimento atendimento = atendimentoService.getAtendimentoByAtendimentoPK(atendimentoId);

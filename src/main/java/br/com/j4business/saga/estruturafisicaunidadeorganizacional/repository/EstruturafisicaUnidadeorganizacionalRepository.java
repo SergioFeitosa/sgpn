@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ import br.com.j4business.saga.estruturafisica.model.Estruturafisica;
 import br.com.j4business.saga.estruturafisicaunidadeorganizacional.model.EstruturafisicaUnidadeorganizacional;
 
 @Repository("estruturafisicaUnidadeorganizacionalRepository")
-public interface EstruturafisicaUnidadeorganizacionalRepository extends PagingAndSortingRepository<EstruturafisicaUnidadeorganizacional, Long>{
+public interface EstruturafisicaUnidadeorganizacionalRepository extends JpaRepository<EstruturafisicaUnidadeorganizacional, Long>{
 
 /*	 @Query("SELECT ea FROM EstruturafisicaUnidadeorganizacional ea where ea.unidadeorganizacional.unidadeorganizacionalPK = :id") 
 	    List<EstruturafisicaUnidadeorganizacional> findByUnidadeorganizacionalPK(@Param("id") Long id);
@@ -22,7 +22,7 @@ public interface EstruturafisicaUnidadeorganizacionalRepository extends PagingAn
 	@Query("SELECT ep FROM EstruturafisicaUnidadeorganizacional ep INNER JOIN ep.unidadeorganizacional p WHERE p = :unidadeorganizacional")
 	public List<EstruturafisicaUnidadeorganizacional> findByUnidadeorganizacional(@Param("unidadeorganizacional")Unidadeorganizacional unidadeorganizacional);
 
-	@Query("SELECT ep FROM EstruturafisicaUnidadeorganizacional ep INNER JOIN ep.unidadeorganizacional p INNER JOIN ep.estruturafisica e WHERE p = :unidadeorganizacional AND s = :estruturafisica")
+	@Query("SELECT eu FROM EstruturafisicaUnidadeorganizacional eu INNER JOIN eu.unidadeorganizacional u INNER JOIN eu.estruturafisica e WHERE u = :unidadeorganizacional AND e = :estruturafisica")
 	public EstruturafisicaUnidadeorganizacional findByEstruturafisicaAndUnidadeorganizacional( @Param("estruturafisica") Estruturafisica estruturafisica, @Param("unidadeorganizacional")Unidadeorganizacional unidadeorganizacional);
 	
 	@Query("SELECT ep FROM EstruturafisicaUnidadeorganizacional ep")

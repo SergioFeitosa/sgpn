@@ -3,8 +3,8 @@ package br.com.j4business.saga.empresaprocesso.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.empresa.model.Empresa;
 import br.com.j4business.saga.empresaprocesso.model.EmpresaProcesso;
 
 @Repository("empresaProcessoRepository")
-public interface EmpresaProcessoRepository extends PagingAndSortingRepository<EmpresaProcesso, Long>{
+public interface EmpresaProcessoRepository extends JpaRepository<EmpresaProcesso, Long>{
 
 /*	 @Query("SELECT ea FROM EmpresaProcesso ea where ea.processo.processoPK = :id") 
 	    List<EmpresaProcesso> findByProcessoPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface EmpresaProcessoRepository extends PagingAndSortingRepository<Em
 	@Query("SELECT ep FROM EmpresaProcesso ep INNER JOIN ep.processo p WHERE p = :processo")
 	public List<EmpresaProcesso> findByProcesso(@Param("processo")Processo processo);
 
-	@Query("SELECT ep FROM EmpresaProcesso ep INNER JOIN ep.processo p INNER JOIN ep.empresa e WHERE p = :processo AND s = :empresa")
+	@Query("SELECT ep FROM EmpresaProcesso ep INNER JOIN ep.processo p INNER JOIN ep.empresa e WHERE p = :processo AND e = :empresa")
 	public EmpresaProcesso findByEmpresaAndProcesso( @Param("empresa") Empresa empresa, @Param("processo")Processo processo);
 	
 	@Query("SELECT ep FROM EmpresaProcesso ep")

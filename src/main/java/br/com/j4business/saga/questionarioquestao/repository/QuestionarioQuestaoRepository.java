@@ -3,8 +3,8 @@ package br.com.j4business.saga.questionarioquestao.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.questionario.model.Questionario;
 import br.com.j4business.saga.questionarioquestao.model.QuestionarioQuestao;
 
 @Repository("questionarioQuestaoRepository")
-public interface QuestionarioQuestaoRepository extends PagingAndSortingRepository<QuestionarioQuestao, Long>{
+public interface QuestionarioQuestaoRepository extends JpaRepository<QuestionarioQuestao, Long>{
 
 /*	 @Query("SELECT ea FROM QuestionarioQuestao ea where ea.questao.questaoPK = :id") 
 	    List<QuestionarioQuestao> findByQuestaoPK(@Param("id") Long id);

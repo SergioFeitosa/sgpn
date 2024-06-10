@@ -4,7 +4,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.mail.internet.MimeMessage;
+
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,7 +27,6 @@ import br.com.j4business.saga.cenario.service.CenarioService;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
 import br.com.j4business.saga.contrato.service.ContratoService;
 import br.com.j4business.saga.elemento.service.ElementoService;
-import br.com.j4business.saga.email.Mensagem;
 import br.com.j4business.saga.estruturafisica.service.EstruturafisicaService;
 import br.com.j4business.saga.evento.service.EventoService;
 import br.com.j4business.saga.ocorrencia.service.OcorrenciaService;
@@ -35,6 +34,7 @@ import br.com.j4business.saga.planejamento.service.PlanejamentoService;
 import br.com.j4business.saga.processo.service.ProcessoService;
 import br.com.j4business.saga.servico.service.ServicoService;
 import br.com.j4business.saga.unidadeorganizacional.service.UnidadeorganizacionalService;
+import jakarta.mail.internet.MimeMessage;
 
 @Controller
 @EnableScheduling

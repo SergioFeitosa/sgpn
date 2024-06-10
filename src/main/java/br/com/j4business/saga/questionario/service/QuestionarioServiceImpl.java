@@ -1,8 +1,10 @@
 package br.com.j4business.saga.questionario.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,7 +54,8 @@ public class QuestionarioServiceImpl implements QuestionarioService {
 	@Override
 	public Questionario getQuestionarioByQuestionarioPK(long questionarioPK) {
 		
-		return questionarioRepository.findOne(questionarioPK);
+		Optional<Questionario> questionario = questionarioRepository.findById(questionarioPK);
+		return questionario.get();
 	}
 
 	@Transactional
@@ -98,7 +101,7 @@ public class QuestionarioServiceImpl implements QuestionarioService {
 
 		Questionario questionario = this.getQuestionarioByQuestionarioPK(questionarioId);
 		
-		questionarioRepository.delete(questionario.getQuestionarioPK());
+		questionarioRepository.delete(questionario);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Questionario Delete " + "\n Usuário => " + username + 

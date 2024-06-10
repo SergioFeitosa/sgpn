@@ -4,17 +4,16 @@ import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.colaboradorhabilidade.model.ColaboradorHabilidade;
 import br.com.j4business.saga.processo.model.Processo;
 import br.com.j4business.saga.processo.service.ProcessoService;
 import br.com.j4business.saga.colaboradorprocesso.model.ColaboradorProcesso;
 import br.com.j4business.saga.colaboradorprocesso.model.ColaboradorProcessoForm;
 import br.com.j4business.saga.colaboradorprocesso.repository.ColaboradorProcessoRepository;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -80,7 +79,8 @@ public class ColaboradorProcessoServiceImpl implements ColaboradorProcessoServic
 
 	@Override
 	public ColaboradorProcesso getColaboradorProcessoByColaboradorProcessoPK(long colaboradorProcessoPK) {
-		return colaboradorProcessoRepository.findOne(colaboradorProcessoPK);
+		Optional<ColaboradorProcesso> colaboradorProcesso = colaboradorProcessoRepository.findById(colaboradorProcessoPK);
+		return colaboradorProcesso.get();
 	}
 
 	@Override
@@ -111,7 +111,7 @@ public class ColaboradorProcessoServiceImpl implements ColaboradorProcessoServic
 
 		ColaboradorProcesso colaboradorProcessoTemp = this.getColaboradorProcessoByColaboradorProcessoPK(colaboradorProcessoPK);
 
-		colaboradorProcessoRepository.delete(colaboradorProcessoPK);
+		colaboradorProcessoRepository.delete(colaboradorProcessoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ColaboradorProcesso Save " + "\n Usuário => " + username + 
@@ -125,7 +125,9 @@ public class ColaboradorProcessoServiceImpl implements ColaboradorProcessoServic
 		
 		List<ColaboradorProcesso> colaboradorProcessoList = colaboradorProcessoRepository.findByProcesso(processo);
 
-		colaboradorProcessoRepository.delete(colaboradorProcessoList);
+		for (ColaboradorProcesso colaboradorProcesso2 : colaboradorProcessoList) {
+			colaboradorProcessoRepository.delete(colaboradorProcesso2);	
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

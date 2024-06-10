@@ -1,9 +1,10 @@
 package br.com.j4business.saga.cenario.service;
 
 import java.util.List;
+import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -50,7 +51,8 @@ public class CenarioServiceImpl implements CenarioService {
 	@Override
 	public Cenario getCenarioByCenarioPK(long cenarioPK) {
 		
-		return cenarioRepository.findOne(cenarioPK);
+		Optional<Cenario> cenario = cenarioRepository.findById(cenarioPK);
+		return cenario.get();
 	}
 
 	@Transactional
@@ -98,7 +100,7 @@ public class CenarioServiceImpl implements CenarioService {
 
 		Cenario cenario = this.getCenarioByCenarioPK(cenarioId);
 		
-		cenarioRepository.delete(cenario.getCenarioPK());
+		cenarioRepository.delete(cenario);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Cenario Delete " + "\n Usuário => " + username + 

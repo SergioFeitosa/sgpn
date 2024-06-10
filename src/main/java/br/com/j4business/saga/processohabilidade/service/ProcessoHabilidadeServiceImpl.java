@@ -1,26 +1,28 @@
 package br.com.j4business.saga.processohabilidade.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.processo.model.Processo;
-import br.com.j4business.saga.processo.service.ProcessoService;
-import br.com.j4business.saga.processoformacao.model.ProcessoFormacao;
-import br.com.j4business.saga.processohabilidade.model.ProcessoHabilidade;
 import br.com.j4business.saga.habilidade.model.Habilidade;
 import br.com.j4business.saga.habilidade.service.HabilidadeService;
+import br.com.j4business.saga.processo.model.Processo;
+import br.com.j4business.saga.processo.service.ProcessoService;
+import br.com.j4business.saga.processohabilidade.model.ProcessoHabilidade;
 import br.com.j4business.saga.processohabilidade.model.ProcessoHabilidadeForm;
 import br.com.j4business.saga.processohabilidade.repository.ProcessoHabilidadeRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 @Service("processoHabilidadeService")
 public class ProcessoHabilidadeServiceImpl implements ProcessoHabilidadeService {
@@ -83,7 +85,8 @@ public class ProcessoHabilidadeServiceImpl implements ProcessoHabilidadeService 
 
 	@Override
 	public ProcessoHabilidade getProcessoHabilidadeByProcessoHabilidadePK(long processoHabilidadePK) {
-		return processoHabilidadeRepository.findOne(processoHabilidadePK);
+		Optional<ProcessoHabilidade> processoHabilidade = processoHabilidadeRepository.findById(processoHabilidadePK);
+		return processoHabilidade.get();
 	}
 
 	@Override
@@ -132,7 +135,7 @@ public class ProcessoHabilidadeServiceImpl implements ProcessoHabilidadeService 
 
 		ProcessoHabilidade processoHabilidadeTemp = this.getProcessoHabilidadeByProcessoHabilidadePK(processoHabilidadePK);
 
-		processoHabilidadeRepository.delete(processoHabilidadePK);
+		processoHabilidadeRepository.delete(processoHabilidadeTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ProcessoHabilidade Save " + "\n Usuário => " + username + 
@@ -146,7 +149,10 @@ public class ProcessoHabilidadeServiceImpl implements ProcessoHabilidadeService 
 		
 		List<ProcessoHabilidade> processoHabilidadeList = processoHabilidadeRepository.findByHabilidade(habilidade);
 
-		processoHabilidadeRepository.delete(processoHabilidadeList);
+		for (ProcessoHabilidade processoHabilidade2 : processoHabilidadeList) {
+			processoHabilidadeRepository.delete(processoHabilidade2);
+			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

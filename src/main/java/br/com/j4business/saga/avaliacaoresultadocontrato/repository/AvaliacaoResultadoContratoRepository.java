@@ -3,8 +3,8 @@ package br.com.j4business.saga.avaliacaoresultadocontrato.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.avaliacao.model.Avaliacao;
 import br.com.j4business.saga.avaliacaoresultadocontrato.model.AvaliacaoResultadoContrato;
 
 @Repository("avaliacaoResultadoContratoRepository")
-public interface AvaliacaoResultadoContratoRepository extends PagingAndSortingRepository<AvaliacaoResultadoContrato, Long>{
+public interface AvaliacaoResultadoContratoRepository extends JpaRepository<AvaliacaoResultadoContrato, Long>{
 
 /*	 @Query("SELECT ea FROM AvaliacaoResultadoContrato ea where ea.resultado.resultadoPK = :id") 
 	    List<AvaliacaoResultadoContrato> findByResultadoPK(@Param("id") Long id);

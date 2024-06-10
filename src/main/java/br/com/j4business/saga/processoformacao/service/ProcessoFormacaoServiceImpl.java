@@ -1,26 +1,28 @@
 package br.com.j4business.saga.processoformacao.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.processo.model.Processo;
-import br.com.j4business.saga.processo.service.ProcessoService;
-import br.com.j4business.saga.processocurso.model.ProcessoCurso;
 import br.com.j4business.saga.formacao.model.Formacao;
 import br.com.j4business.saga.formacao.service.FormacaoService;
+import br.com.j4business.saga.processo.model.Processo;
+import br.com.j4business.saga.processo.service.ProcessoService;
 import br.com.j4business.saga.processoformacao.model.ProcessoFormacao;
 import br.com.j4business.saga.processoformacao.model.ProcessoFormacaoForm;
 import br.com.j4business.saga.processoformacao.repository.ProcessoFormacaoRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 @Service("processoFormacaoService")
 public class ProcessoFormacaoServiceImpl implements ProcessoFormacaoService {
@@ -83,7 +85,8 @@ public class ProcessoFormacaoServiceImpl implements ProcessoFormacaoService {
 
 	@Override
 	public ProcessoFormacao getProcessoFormacaoByProcessoFormacaoPK(long processoFormacaoPK) {
-		return processoFormacaoRepository.findOne(processoFormacaoPK);
+		Optional<ProcessoFormacao> processoFormacao = processoFormacaoRepository.findById(processoFormacaoPK);
+		return processoFormacao.get();
 	}
 
 	@Override
@@ -138,7 +141,7 @@ public class ProcessoFormacaoServiceImpl implements ProcessoFormacaoService {
 
 		ProcessoFormacao processoFormacaoTemp = this.getProcessoFormacaoByProcessoFormacaoPK(processoFormacaoPK);
 
-		processoFormacaoRepository.delete(processoFormacaoPK);
+		processoFormacaoRepository.delete(processoFormacaoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("ProcessoFormacao Save " + "\n Usuário => " + username + 
@@ -152,7 +155,9 @@ public class ProcessoFormacaoServiceImpl implements ProcessoFormacaoService {
 		
 		List<ProcessoFormacao> processoFormacaoList = processoFormacaoRepository.findByFormacao(formacao);
 
-		processoFormacaoRepository.delete(processoFormacaoList);
+		for (ProcessoFormacao processoFormacao2 : processoFormacaoList) {
+			processoFormacaoRepository.delete(processoFormacao2);			
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -51,23 +51,23 @@ public class QuestionarioController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/questionarioAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/questionarioAdd")
 	public ModelAndView questionarioAdd(QuestionarioForm questionarioForm) {
 
 		ModelAndView mv = new ModelAndView("questionario/questionarioAdd");
 		questionarioForm = questionarioService.questionarioParametros(questionarioForm);
 		mv.addObject("questionarioForm", questionarioForm);
 		mv.addObject("questionarioStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable cenarioPageable = new PageRequest(0, 200, Direction.ASC, "cenarioNome");
+		Pageable cenarioPageable = PageRequest.of(0, 200, Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(cenarioPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/questionarioCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/questionarioCreate")
 	public ModelAndView questionarioCreate(@Valid QuestionarioForm questionarioForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -100,7 +100,7 @@ public class QuestionarioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/questionarioDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/questionarioDelete/{id}")
 	public ModelAndView questionarioDelete(@PathVariable("id") long questionarioPK, @Valid QuestionarioForm questionarioForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/questionarioHome");
@@ -121,7 +121,7 @@ public class QuestionarioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/questionarioEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/questionarioEdit/{id}")
 	public ModelAndView questionarioEdit(@PathVariable("id") Long questionarioPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("questionario/questionarioEdit");
@@ -129,18 +129,18 @@ public class QuestionarioController {
 		QuestionarioForm questionarioForm = questionarioService.converteQuestionario(questionario);
 		mv.addObject("questionarioForm", questionarioForm);
 		mv.addObject("questionarioStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable cenarioPageable = new PageRequest(0, 200, Direction.ASC, "cenarioNome");
+		Pageable cenarioPageable = PageRequest.of(0, 200, Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(cenarioPageable));
-		Pageable questionarioQuestaoPageable = new PageRequest(0, 200, Direction.ASC, "questao.questaoNome");
+		Pageable questionarioQuestaoPageable = PageRequest.of(0, 200, Direction.ASC, "questao.questaoNome");
 		mv.addObject("questionarioQuestaoPage", questionarioQuestaoService.getByQuestionarioPK(questionarioPK, questionarioQuestaoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/questionarioHome", method = RequestMethod.GET)
+	@GetMapping(path = "/questionarioHome")
 	public ModelAndView questionarioHome(@Valid QuestionarioByQuestionarioForm questionarioByQuestionarioForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("questionario/questionarioHome");
@@ -160,13 +160,13 @@ public class QuestionarioController {
 		}
 
 		if (questionarioByQuestionarioForm.getQuestionarioSortTipo().equalsIgnoreCase("QuestionarioNome") || questionarioByQuestionarioForm.getQuestionarioSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "questionarioNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "questionarioNome");
 
 		} else if (questionarioByQuestionarioForm.getQuestionarioSortTipo().equalsIgnoreCase("QuestionarioDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "questionarioDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "questionarioDescricao");
 
 		} else if (questionarioByQuestionarioForm.getQuestionarioSortTipo().equalsIgnoreCase("CenarioNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "cenario.cenarioNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "cenario.cenarioNome");
 
 		}
 
@@ -191,7 +191,7 @@ public class QuestionarioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/questionarioRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/questionarioRelMenu")
 	public ModelAndView questionarioRelMenu() {
 
 		ModelAndView mv = new ModelAndView("questionario/questionarioRelMenu");
@@ -201,18 +201,18 @@ public class QuestionarioController {
 		
 	}
 
-	@RequestMapping(path = "/questionarioRel001", method = RequestMethod.GET)
+	@GetMapping(path = "/questionarioRel001")
 	public ModelAndView questionarioRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("questionario/questionarioRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "questionarioNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "questionarioNome");
 		mv.addObject("questionarioPage", questionarioService.getQuestionarioAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/questionarioSave", method = RequestMethod.POST)
+	@PostMapping(path = "/questionarioSave")
 	public ModelAndView questionarioSave(@Valid QuestionarioForm questionarioForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -235,7 +235,7 @@ public class QuestionarioController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/questionarioView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/questionarioView/{id}")
 	public ModelAndView questionarioView(@PathVariable("id") Long questionarioId) {
 
 		Questionario questionario = questionarioService.getQuestionarioByQuestionarioPK(questionarioId);

@@ -1,26 +1,28 @@
 package br.com.j4business.saga.treinamentotexto.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.treinamento.model.Treinamento;
-import br.com.j4business.saga.treinamento.service.TreinamentoService;
-import br.com.j4business.saga.treinamentoimagem.model.TreinamentoImagem;
-import br.com.j4business.saga.treinamentotexto.model.TreinamentoTexto;
 import br.com.j4business.saga.texto.model.Texto;
 import br.com.j4business.saga.texto.service.TextoService;
+import br.com.j4business.saga.treinamento.model.Treinamento;
+import br.com.j4business.saga.treinamento.service.TreinamentoService;
+import br.com.j4business.saga.treinamentotexto.model.TreinamentoTexto;
 import br.com.j4business.saga.treinamentotexto.model.TreinamentoTextoForm;
 import br.com.j4business.saga.treinamentotexto.repository.TreinamentoTextoRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 @Service("treinamentoTextoService")
 public class TreinamentoTextoServiceImpl implements TreinamentoTextoService {
@@ -93,7 +95,8 @@ public class TreinamentoTextoServiceImpl implements TreinamentoTextoService {
 
 	@Override
 	public TreinamentoTexto getTreinamentoTextoByTreinamentoTextoPK(long treinamentoTextoPK) {
-		return treinamentoTextoRepository.findOne(treinamentoTextoPK);
+		Optional<TreinamentoTexto> treinamentoTexto = treinamentoTextoRepository.findById(treinamentoTextoPK);
+		return treinamentoTexto.get();
 	}
 
 	@Override
@@ -142,7 +145,7 @@ public class TreinamentoTextoServiceImpl implements TreinamentoTextoService {
 
 		TreinamentoTexto treinamentoTextoTemp = this.getTreinamentoTextoByTreinamentoTextoPK(treinamentoTextoPK);
 
-		treinamentoTextoRepository.delete(treinamentoTextoPK);
+		treinamentoTextoRepository.delete(treinamentoTextoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("TreinamentoTexto Save " + "\n Usuário => " + username + 
@@ -155,8 +158,10 @@ public class TreinamentoTextoServiceImpl implements TreinamentoTextoService {
 	public void deleteByTexto(Texto texto) {
 		
 		List<TreinamentoTexto> treinamentoTextoList = treinamentoTextoRepository.findByTexto(texto);
-
-		treinamentoTextoRepository.delete(treinamentoTextoList);
+		for (TreinamentoTexto treinamentoTexto2 : treinamentoTextoList) {
+			treinamentoTextoRepository.delete(treinamentoTexto2);	
+		}
+		
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

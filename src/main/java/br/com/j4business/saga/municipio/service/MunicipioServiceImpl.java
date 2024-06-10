@@ -1,8 +1,10 @@
 package br.com.j4business.saga.municipio.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,8 @@ public class MunicipioServiceImpl implements MunicipioService {
 	@Override
 	public Municipio getMunicipioByMunicipioPK(long municipioPK) {
 		
-		return municipioRepository.findOne(municipioPK);
+		Optional<Municipio> municipio = municipioRepository.findById(municipioPK);
+		return municipio.get();
 	}
 
 	@Transactional
@@ -83,7 +86,7 @@ public class MunicipioServiceImpl implements MunicipioService {
 
 		Municipio municipio = this.getMunicipioByMunicipioPK(municipioId);
 		
-		municipioRepository.delete(municipio.getMunicipioPK());
+		municipioRepository.delete(municipio);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Municipio Delete " + "\n Usuário => " + username + 

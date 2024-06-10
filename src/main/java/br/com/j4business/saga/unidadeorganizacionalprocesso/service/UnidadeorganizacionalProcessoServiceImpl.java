@@ -1,26 +1,28 @@
 package br.com.j4business.saga.unidadeorganizacionalprocesso.service;
 
+import java.util.List;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.unidadeorganizacionalprocesso.model.UnidadeorganizacionalProcesso;
 import br.com.j4business.saga.processo.model.Processo;
 import br.com.j4business.saga.processo.service.ProcessoService;
 import br.com.j4business.saga.unidadeorganizacional.model.Unidadeorganizacional;
 import br.com.j4business.saga.unidadeorganizacional.service.UnidadeorganizacionalService;
-import br.com.j4business.saga.unidadeorganizacionalcontrato.model.UnidadeorganizacionalContrato;
+import br.com.j4business.saga.unidadeorganizacionalprocesso.model.UnidadeorganizacionalProcesso;
 import br.com.j4business.saga.unidadeorganizacionalprocesso.model.UnidadeorganizacionalProcessoForm;
 import br.com.j4business.saga.unidadeorganizacionalprocesso.repository.UnidadeorganizacionalProcessoRepository;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
-import java.util.Iterator;
-import java.util.List;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 @Service("unidadeorganizacionalProcessoService")
 public class UnidadeorganizacionalProcessoServiceImpl implements UnidadeorganizacionalProcessoService {
@@ -88,7 +90,8 @@ public class UnidadeorganizacionalProcessoServiceImpl implements Unidadeorganiza
 
 	@Override
 	public UnidadeorganizacionalProcesso getUnidadeorganizacionalProcessoByUnidadeorganizacionalProcessoPK(long unidadeorganizacionalProcessoPK) {
-		return unidadeorganizacionalProcessoRepository.findOne(unidadeorganizacionalProcessoPK);
+		Optional<UnidadeorganizacionalProcesso> unidadeorganizacionalProcesso = unidadeorganizacionalProcessoRepository.findById(unidadeorganizacionalProcessoPK);
+		return unidadeorganizacionalProcesso.get();
 	}
 
 	@Override
@@ -138,7 +141,7 @@ public class UnidadeorganizacionalProcessoServiceImpl implements Unidadeorganiza
 
 		UnidadeorganizacionalProcesso unidadeorganizacionalProcessoTemp = this.getUnidadeorganizacionalProcessoByUnidadeorganizacionalProcessoPK(unidadeorganizacionalProcessoPK);
 
-		unidadeorganizacionalProcessoRepository.delete(unidadeorganizacionalProcessoPK);
+		unidadeorganizacionalProcessoRepository.delete(unidadeorganizacionalProcessoTemp);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("UnidadeorganizacionalProcesso Save " + "\n Usuário => " + username + 
@@ -151,8 +154,9 @@ public class UnidadeorganizacionalProcessoServiceImpl implements Unidadeorganiza
 	public void deleteByProcesso(Processo processo) {
 		
 		List<UnidadeorganizacionalProcesso> unidadeorganizacionalProcessoList = unidadeorganizacionalProcessoRepository.findByProcesso(processo);
-
-		unidadeorganizacionalProcessoRepository.delete(unidadeorganizacionalProcessoList);
+		for (UnidadeorganizacionalProcesso unidadeorganizacionalProcesso2 : unidadeorganizacionalProcessoList) {
+			unidadeorganizacionalProcessoRepository.delete(unidadeorganizacionalProcesso2);	
+		}
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 

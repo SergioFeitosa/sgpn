@@ -1,9 +1,10 @@
 package br.com.j4business.saga.contrato.service;
 
 import java.util.List;
+import java.util.Optional;
 
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -49,8 +50,8 @@ public class ContratoServiceImpl implements ContratoService {
 
 	@Override
 	public Contrato getContratoByContratoPK(long contratoPK) {
-		
-		return contratoRepository.findOne(contratoPK);
+		Optional<Contrato> contrato = contratoRepository.findById(contratoPK);
+		return contrato.get();
 	}
 
 	@Transactional
@@ -96,7 +97,7 @@ public class ContratoServiceImpl implements ContratoService {
 
 		Contrato contrato = this.getContratoByContratoPK(contratoId);
 		
-		contratoRepository.delete(contrato.getContratoPK());
+		contratoRepository.delete(contrato);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Contrato Delete " + "\n Usuário => " + username + 

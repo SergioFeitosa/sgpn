@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -43,20 +43,20 @@ public class ImagemController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/imagemAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/imagemAdd")
 	public ModelAndView imagemAdd(ImagemForm imagemForm) {
 
 		ModelAndView mv = new ModelAndView("imagem/imagemAdd");
 		imagemForm = imagemService.imagemParametros(imagemForm);
 		mv.addObject("imagemForm", imagemForm);
 		mv.addObject("imagemStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/imagemCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/imagemCreate")
 	public ModelAndView imagemCreate(@Valid ImagemForm imagemForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -89,7 +89,7 @@ public class ImagemController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/imagemDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/imagemDelete/{id}")
 	public ModelAndView imagemDelete(@PathVariable("id") long imagemPK, @Valid ImagemForm imagemForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/imagemHome");
@@ -109,7 +109,7 @@ public class ImagemController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/imagemEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/imagemEdit/{id}")
 	public ModelAndView imagemEdit(@PathVariable("id") Long imagemId, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("imagem/imagemEdit");
@@ -117,14 +117,14 @@ public class ImagemController {
 		ImagemForm imagemForm = imagemService.converteImagem(imagem);
 		mv.addObject("imagemForm", imagemForm);
 		mv.addObject("imagemStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping("/imagemHome")
+	@GetMapping("/imagemHome")
 	public ModelAndView imagemHome(@Valid ImagemByImagemForm imagemByImagemForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("imagem/imagemHome");
@@ -143,10 +143,10 @@ public class ImagemController {
 		}
 
 		if (imagemByImagemForm.getImagemSortTipo().equalsIgnoreCase("ImagemNome") || imagemByImagemForm.getImagemSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "imagemNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "imagemNome");
 
 		} else if (imagemByImagemForm.getImagemSortTipo().equalsIgnoreCase("ImagemDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "imagemDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "imagemDescricao");
 
 		}
 
@@ -168,7 +168,7 @@ public class ImagemController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/imagemSave", method = RequestMethod.POST)
+	@PostMapping(path = "/imagemSave")
 	public ModelAndView imagemSave(@Valid ImagemForm imagemForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -191,7 +191,7 @@ public class ImagemController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/imagemRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/imagemRelMenu")
 	public ModelAndView imagemRelMenu() {
 
 		ModelAndView mv = new ModelAndView("imagem/imagemRelMenu");
@@ -201,18 +201,18 @@ public class ImagemController {
 		
 	}
 
-	@RequestMapping("/imagemRel001")
+	@GetMapping("/imagemRel001")
 	public ModelAndView imagemRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("imagem/imagemRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "imagemNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "imagemNome");
 		mv.addObject("imagemPage", imagemService.getImagemAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/imagemView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/imagemView/{id}")
 	public ModelAndView imagemView(@PathVariable("id") Long imagemId) {
 
 		Imagem imagem = imagemService.getImagemByImagemPK(imagemId);

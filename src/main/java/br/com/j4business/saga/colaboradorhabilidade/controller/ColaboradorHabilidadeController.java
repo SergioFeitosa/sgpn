@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +17,14 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.j4business.saga.colaborador.model.ColaboradorForm;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.colaboradorcurso.model.ColaboradorCurso;
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
@@ -55,7 +54,7 @@ public class ColaboradorHabilidadeController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/colaboradorHabilidadeAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorHabilidadeAdd")
 	public ModelAndView colaboradorHabilidadeAdd(ColaboradorHabilidadeForm colaboradorHabilidadeForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorHabilidade/colaboradorHabilidadeAdd");
@@ -63,17 +62,17 @@ public class ColaboradorHabilidadeController {
 		mv.addObject("colaboradorHabilidadeForm", colaboradorHabilidadeForm);
 		mv.addObject("colaboradorHabilidadePrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("colaboradorHabilidadeStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable fornecedorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable fornecedorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("fornecedorPage", fornecedorService.getFornecedorAll(fornecedorPageable));
-		Pageable habilidadePageable = new PageRequest(0, 200, Direction.ASC, "habilidadeNome");
+		Pageable habilidadePageable = PageRequest.of(0, 200, Direction.ASC, "habilidadeNome");
 		mv.addObject("habilidadePage", habilidadeService.getHabilidadeAll(habilidadePageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorHabilidadeCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/colaboradorHabilidadeCreate")
 	public ModelAndView colaboradorHabilidadeCreate(@Valid ColaboradorHabilidadeForm colaboradorHabilidadeForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -107,7 +106,7 @@ public class ColaboradorHabilidadeController {
 	}
 
 
-	@RequestMapping(path = "/colaboradorHabilidadeDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorHabilidadeDelete/{id}")
 	public ModelAndView colaboradorHabilidadeDelete(@PathVariable("id") long colaboradorHabilidadeId, @Valid HabilidadeForm habilidadeForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/colaboradorHabilidadeHome");
@@ -133,7 +132,7 @@ public class ColaboradorHabilidadeController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorHabilidadeEdit/{colaboradorHabilidadePK}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorHabilidadeEdit/{colaboradorHabilidadePK}")
 	public ModelAndView colaboradorHabilidadeEdit(@PathVariable("colaboradorHabilidadePK") Long colaboradorHabilidadePK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorHabilidade/colaboradorHabilidadeEdit");
@@ -142,18 +141,18 @@ public class ColaboradorHabilidadeController {
 		mv.addObject("colaboradorHabilidadeForm", colaboradorHabilidadeForm);
 		mv.addObject("colaboradorHabilidadePrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("colaboradorHabilidadeStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable fornecedorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable fornecedorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("fornecedorPage", fornecedorService.getFornecedorAll(fornecedorPageable));
-		Pageable habilidadePageable = new PageRequest(0, 200, Direction.ASC, "habilidadeNome");
+		Pageable habilidadePageable = PageRequest.of(0, 200, Direction.ASC, "habilidadeNome");
 		mv.addObject("habilidadePage", habilidadeService.getHabilidadeAll(habilidadePageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 	
-	@RequestMapping(path = "/colaboradorHabilidadeHome", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorHabilidadeHome")
 	public ModelAndView colaboradorHabilidadeHome(@Valid ColaboradorHabilidadeByColaboradorForm colaboradorHabilidadeByColaboradorForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorHabilidade/colaboradorHabilidadeHome");
@@ -173,10 +172,10 @@ public class ColaboradorHabilidadeController {
 
 		if (colaboradorHabilidadeByColaboradorForm.getColaboradorHabilidadeSortTipo().equalsIgnoreCase("ColaboradorNome")
 				|| colaboradorHabilidadeByColaboradorForm.getColaboradorHabilidadeSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"colaborador.pessoaNome","habilidade.habilidadeNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"colaborador.pessoaNome","habilidade.habilidadeNome"); 
 		
 		} else if (colaboradorHabilidadeByColaboradorForm.getColaboradorHabilidadeSortTipo().equalsIgnoreCase("HabilidadeNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"habilidade.habilidadeNome","colaborador.pessoaNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"habilidade.habilidadeNome","colaborador.pessoaNome"); 
 
 		}
 
@@ -199,7 +198,7 @@ public class ColaboradorHabilidadeController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorHabilidadeSave", method = RequestMethod.POST)
+	@PostMapping(path = "/colaboradorHabilidadeSave")
 	public ModelAndView colaboradorHabilidadeSave(@Valid ColaboradorHabilidadeForm colaboradorHabilidadeForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -222,7 +221,7 @@ public class ColaboradorHabilidadeController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorHabilidadeRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorHabilidadeRelMenu")
 	public ModelAndView colaboradorHabilidadeRelMenu() {
 
 		ModelAndView mv = new ModelAndView("colaboradorHabilidade/colaboradorHabilidadeRelMenu");
@@ -231,18 +230,18 @@ public class ColaboradorHabilidadeController {
 		return mv;
 	}
 
-	@RequestMapping("/colaboradorHabilidadeRel001")
+	@GetMapping("/colaboradorHabilidadeRel001")
 	public ModelAndView colaboradorHabilidadeRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorHabilidade/colaboradorHabilidadeRel001");
-		Pageable colaboradorHabilidadePageable = new PageRequest(0, 200, Direction.ASC, "colaborador.pessoaNome","habilidade.habilidadeNome");
+		Pageable colaboradorHabilidadePageable = PageRequest.of(0, 200, Direction.ASC, "colaborador.pessoaNome","habilidade.habilidadeNome");
 		mv.addObject("colaboradorHabilidadePage", colaboradorHabilidadeService.getColaboradorHabilidadeAll(colaboradorHabilidadePageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorHabilidadeView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorHabilidadeView/{id}")
 	public ModelAndView colaboradorHabilidadeView(@PathVariable("id") Long colaboradorHabilidadeId) {
 
 		ColaboradorHabilidade colaboradorHabilidade = colaboradorHabilidadeService.getColaboradorHabilidadeByColaboradorHabilidadePK(colaboradorHabilidadeId);

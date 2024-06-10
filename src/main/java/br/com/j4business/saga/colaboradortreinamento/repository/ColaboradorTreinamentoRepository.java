@@ -3,8 +3,8 @@ package br.com.j4business.saga.colaboradortreinamento.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaboradortreinamento.model.ColaboradorTreinamento;
 
 @Repository("colaboradorTreinamentoRepository")
-public interface ColaboradorTreinamentoRepository extends PagingAndSortingRepository<ColaboradorTreinamento, Long>{
+public interface ColaboradorTreinamentoRepository extends JpaRepository<ColaboradorTreinamento, Long>{
 
 /*	 @Query("SELECT ea FROM ColaboradorTreinamento ea where ea.treinamento.treinamentoPK = :id") 
 	    List<ColaboradorTreinamento> findByTreinamentoPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface ColaboradorTreinamentoRepository extends PagingAndSortingReposi
 	@Query("SELECT ep FROM ColaboradorTreinamento ep INNER JOIN ep.treinamento p WHERE p = :treinamento")
 	public List<ColaboradorTreinamento> findByTreinamento(@Param("treinamento")Treinamento treinamento);
 
-	@Query("SELECT ep FROM ColaboradorTreinamento ep INNER JOIN ep.treinamento p INNER JOIN ep.colaborador e WHERE p = :treinamento AND s = :colaborador")
+	@Query("SELECT ct FROM ColaboradorTreinamento ct INNER JOIN ct.treinamento t INNER JOIN ct.colaborador c WHERE t = :treinamento AND c = :colaborador")
 	public ColaboradorTreinamento findByColaboradorAndTreinamento( @Param("colaborador") Colaborador colaborador, @Param("treinamento")Treinamento treinamento);
 	
 	@Query("SELECT ep FROM ColaboradorTreinamento ep")

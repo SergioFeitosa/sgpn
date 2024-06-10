@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -43,20 +43,20 @@ public class AtividadeController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 	
-	@RequestMapping(path = "/atividadeAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/atividadeAdd")
 	public ModelAndView atividadeAdd(AtividadeForm atividadeForm) {
 
 		ModelAndView mv = new ModelAndView("atividade/atividadeAdd");
 		atividadeForm = atividadeService.atividadeParametros(atividadeForm);
 		mv.addObject("atividadeForm", atividadeForm);
 		mv.addObject("atividadeStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/atividadeCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/atividadeCreate")
 	public ModelAndView atividadeCreate(@Valid AtividadeForm atividadeForm, BindingResult result,
 			RedirectAttributes attributes) {
 
@@ -89,7 +89,7 @@ public class AtividadeController {
 		
 	}
 
-	@RequestMapping(path = "/atividadeDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/atividadeDelete/{id}")
 	public ModelAndView atividadeDelete(@PathVariable("id") long atividadePK, @Valid AtividadeForm atividadeForm,BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/atividadeHome");
@@ -110,7 +110,7 @@ public class AtividadeController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/atividadeEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/atividadeEdit/{id}")
 	public ModelAndView atividadeEdit(@PathVariable("id") Long atividadeId) {
 
 		ModelAndView mv = new ModelAndView("atividade/atividadeEdit");
@@ -118,14 +118,14 @@ public class AtividadeController {
 		AtividadeForm atividadeForm = atividadeService.converteAtividade(atividade);
 		mv.addObject("atividadeForm", atividadeForm);
 		mv.addObject("atividadeStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 	
-	@RequestMapping(path = "/atividadeHome", method = RequestMethod.GET)
+	@GetMapping(path = "/atividadeHome")
 	public ModelAndView atividadeHome(@Valid AtividadeByAtividadeForm atividadeByAtividadeForm, BindingResult result,
 			RedirectAttributes attributes, Pageable pageable) {
 
@@ -146,10 +146,10 @@ public class AtividadeController {
 
 		if (atividadeByAtividadeForm.getAtividadeSortTipo().equalsIgnoreCase("AtividadeNome")
 				|| atividadeByAtividadeForm.getAtividadeSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "atividadeNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "atividadeNome");
 
 		} else if (atividadeByAtividadeForm.getAtividadeSortTipo().equalsIgnoreCase("AtividadeDescricao")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "atividadeDescricao");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "atividadeDescricao");
 
 		}
 
@@ -175,7 +175,7 @@ public class AtividadeController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/atividadeRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/atividadeRelMenu")
 	public ModelAndView atividadeRelMenu() {
 
 		ModelAndView mv = new ModelAndView("atividade/atividadeRelMenu");
@@ -185,18 +185,18 @@ public class AtividadeController {
 		
 	}
 
-	@RequestMapping(path = "/atividadeRel001", method = RequestMethod.GET)
+	@GetMapping(path = "/atividadeRel001")
 	public ModelAndView atividadeRel001() {
 
 		ModelAndView mv = new ModelAndView("atividade/atividadeRel001");
-		Pageable pageable = new PageRequest(0, 200, Direction.ASC, "atividadeNome");
+		Pageable pageable = PageRequest.of(0, 200, Direction.ASC, "atividadeNome");
 		mv.addObject("atividadePage", atividadeService.getAtividadeAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/atividadeSave", method = RequestMethod.POST)
+	@PostMapping(path = "/atividadeSave")
 	public ModelAndView atividadeSave(@Valid AtividadeForm atividadeForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -220,7 +220,7 @@ public class AtividadeController {
 	}
 
 	
-	@RequestMapping(path = "/atividadeView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/atividadeView/{id}")
 	public ModelAndView atividadeView(@PathVariable("id") Long atividadeId) {
 
 		Atividade atividade = atividadeService.getAtividadeByAtividadePK(atividadeId);

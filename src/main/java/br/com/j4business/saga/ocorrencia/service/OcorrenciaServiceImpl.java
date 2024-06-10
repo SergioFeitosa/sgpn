@@ -1,8 +1,10 @@
 package br.com.j4business.saga.ocorrencia.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +49,8 @@ public class OcorrenciaServiceImpl implements OcorrenciaService {
 	@Override
 	public Ocorrencia getOcorrenciaByOcorrenciaPK(long ocorrenciaPK) {
 		
-		return ocorrenciaRepository.findOne(ocorrenciaPK);
+		Optional<Ocorrencia> ocorrencia = ocorrenciaRepository.findById(ocorrenciaPK);
+		return ocorrencia.get();
 	}
 
 	@Transactional
@@ -93,7 +96,7 @@ public class OcorrenciaServiceImpl implements OcorrenciaService {
 
 		Ocorrencia ocorrencia = this.getOcorrenciaByOcorrenciaPK(ocorrenciaId);
 		
-		ocorrenciaRepository.delete(ocorrencia.getOcorrenciaPK());
+		ocorrenciaRepository.delete(ocorrencia);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Ocorrencia Delete " + "\n Usuário => " + username + 

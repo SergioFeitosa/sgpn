@@ -3,8 +3,9 @@ package br.com.j4business.saga.unidadeorganizacionalcontrato.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
+
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import br.com.j4business.saga.unidadeorganizacional.model.Unidadeorganizacional;
 import br.com.j4business.saga.unidadeorganizacionalcontrato.model.UnidadeorganizacionalContrato;
 
 @Repository("unidadeorganizacionalContratoRepository")
-public interface UnidadeorganizacionalContratoRepository extends PagingAndSortingRepository<UnidadeorganizacionalContrato, Long>{
+public interface UnidadeorganizacionalContratoRepository extends JpaRepository<UnidadeorganizacionalContrato, Long>{
 
 /*	 @Query("SELECT ea FROM UnidadeorganizacionalContrato ea where ea.contrato.contratoPK = :id") 
 	    List<UnidadeorganizacionalContrato> findByContratoPK(@Param("id") Long id);
@@ -21,7 +22,7 @@ public interface UnidadeorganizacionalContratoRepository extends PagingAndSortin
 	@Query("SELECT ep FROM UnidadeorganizacionalContrato ep INNER JOIN ep.contrato p WHERE p = :contrato")
 	public List<UnidadeorganizacionalContrato> findByContrato(@Param("contrato")Contrato contrato);
 
-	@Query("SELECT ep FROM UnidadeorganizacionalContrato ep INNER JOIN ep.contrato p INNER JOIN ep.unidadeorganizacional e WHERE p = :contrato AND s = :unidadeorganizacional")
+	@Query("SELECT uc FROM UnidadeorganizacionalContrato uc INNER JOIN uc.contrato c INNER JOIN uc.unidadeorganizacional u WHERE c = :contrato AND u = :unidadeorganizacional")
 	public UnidadeorganizacionalContrato findByUnidadeorganizacionalAndContrato( @Param("unidadeorganizacional") Unidadeorganizacional unidadeorganizacional, @Param("contrato")Contrato contrato);
 	
 	@Query("SELECT ep FROM UnidadeorganizacionalContrato ep")

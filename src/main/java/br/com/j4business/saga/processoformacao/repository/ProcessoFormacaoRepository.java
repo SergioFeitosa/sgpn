@@ -3,8 +3,9 @@ package br.com.j4business.saga.processoformacao.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
+
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +14,7 @@ import br.com.j4business.saga.processo.model.Processo;
 import br.com.j4business.saga.processoformacao.model.ProcessoFormacao;
 
 @Repository("processoFormacaoRepository")
-public interface ProcessoFormacaoRepository extends PagingAndSortingRepository<ProcessoFormacao, Long>{
+public interface ProcessoFormacaoRepository extends JpaRepository<ProcessoFormacao, Long>{
 
 /*	 @Query("SELECT ea FROM ProcessoFormacao ea where ea.formacao.formacaoPK = :id") 
 	    List<ProcessoFormacao> findByFormacaoPK(@Param("id") Long id);

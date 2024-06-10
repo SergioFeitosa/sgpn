@@ -3,8 +3,8 @@ package br.com.j4business.saga.planejamentoprocesso.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.planejamento.model.Planejamento;
 import br.com.j4business.saga.planejamentoprocesso.model.PlanejamentoProcesso;
 
 @Repository("planejamentoProcessoRepository")
-public interface PlanejamentoProcessoRepository extends PagingAndSortingRepository<PlanejamentoProcesso, Long>{
+public interface PlanejamentoProcessoRepository extends JpaRepository<PlanejamentoProcesso, Long>{
 
 /*	 @Query("SELECT ea FROM PlanejamentoProcesso ea where ea.processo.processoPK = :id") 
 	    List<PlanejamentoProcesso> findByProcessoPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface PlanejamentoProcessoRepository extends PagingAndSortingReposito
 	@Query("SELECT ep FROM PlanejamentoProcesso ep INNER JOIN ep.processo p WHERE p = :processo")
 	public List<PlanejamentoProcesso> findByProcesso(@Param("processo")Processo processo);
 
-	@Query("SELECT ep FROM PlanejamentoProcesso ep INNER JOIN ep.processo p INNER JOIN ep.planejamento e WHERE p = :processo AND s = :planejamento")
+	@Query("SELECT pl FROM PlanejamentoProcesso pl INNER JOIN pl.processo p INNER JOIN pl.planejamento l WHERE p = :processo AND l = :planejamento")
 	public PlanejamentoProcesso findByPlanejamentoAndProcesso( @Param("planejamento") Planejamento planejamento, @Param("processo")Processo processo);
 	
 	@Query("SELECT ep FROM PlanejamentoProcesso ep")

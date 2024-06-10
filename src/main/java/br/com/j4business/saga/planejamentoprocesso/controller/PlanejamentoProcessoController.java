@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,24 +17,24 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import br.com.j4business.saga.planejamento.model.PlanejamentoForm;
-import br.com.j4business.saga.planejamento.service.PlanejamentoService;
-import br.com.j4business.saga.planejamentoacao.model.PlanejamentoAcao;
+
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.processo.model.ProcessoForm;
-import br.com.j4business.saga.processo.service.ProcessoService;
+import br.com.j4business.saga.planejamento.model.PlanejamentoForm;
+import br.com.j4business.saga.planejamento.service.PlanejamentoService;
 import br.com.j4business.saga.planejamentoprocesso.model.PlanejamentoProcesso;
 import br.com.j4business.saga.planejamentoprocesso.model.PlanejamentoProcessoByPlanejamentoForm;
 import br.com.j4business.saga.planejamentoprocesso.model.PlanejamentoProcessoForm;
 import br.com.j4business.saga.planejamentoprocesso.service.PlanejamentoProcessoService;
+import br.com.j4business.saga.processo.model.ProcessoForm;
+import br.com.j4business.saga.processo.service.ProcessoService;
 
 @Controller
 public class PlanejamentoProcessoController {
@@ -54,7 +54,7 @@ public class PlanejamentoProcessoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/planejamentoProcessoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoProcessoAdd")
 	public ModelAndView planejamentoProcessoAdd(PlanejamentoProcessoForm planejamentoProcessoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("planejamentoProcesso/planejamentoProcessoAdd");
@@ -62,18 +62,18 @@ public class PlanejamentoProcessoController {
 		mv.addObject("planejamentoProcessoForm", planejamentoProcessoForm);
 		mv.addObject("planejamentoProcessoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("planejamentoProcessoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable planejamentoPageable = new PageRequest(0, 200, Direction.ASC, "planejamentoNome");
+		Pageable planejamentoPageable = PageRequest.of(0, 200, Direction.ASC, "planejamentoNome");
 		mv.addObject("planejamentoPage", planejamentoService.getPlanejamentoAll(planejamentoPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoProcessoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/planejamentoProcessoCreate")
 	public ModelAndView planejamentoProcessoCreate(@Valid PlanejamentoProcessoForm planejamentoProcessoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -107,7 +107,7 @@ public class PlanejamentoProcessoController {
 	}
 
 
-	@RequestMapping(path = "/planejamentoProcessoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoProcessoDelete/{id}")
 	public ModelAndView planejamentoProcessoDelete(@PathVariable("id") long planejamentoProcessoId, @Valid ProcessoForm processoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/planejamentoProcessoHome");
@@ -133,7 +133,7 @@ public class PlanejamentoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoProcessoEdit/{planejamentoProcessoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoProcessoEdit/{planejamentoProcessoPK}")
 	public ModelAndView planejamentoProcessoEdit(@PathVariable("planejamentoProcessoPK") Long planejamentoProcessoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("planejamentoProcesso/planejamentoProcessoEdit");
@@ -142,18 +142,18 @@ public class PlanejamentoProcessoController {
 		mv.addObject("planejamentoProcessoForm", planejamentoProcessoForm);
 		mv.addObject("planejamentoProcessoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("planejamentoProcessoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable planejamentoPageable = new PageRequest(0, 200, Direction.ASC, "planejamentoNome");
+		Pageable planejamentoPageable = PageRequest.of(0, 200, Direction.ASC, "planejamentoNome");
 		mv.addObject("planejamentoPage", planejamentoService.getPlanejamentoAll(planejamentoPageable));
-		Pageable processoPageable = new PageRequest(0, 200, Direction.ASC, "processoNome");
+		Pageable processoPageable = PageRequest.of(0, 200, Direction.ASC, "processoNome");
 		mv.addObject("processoPage", processoService.getProcessoAll(processoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		
 		return mv;
 	}
 	
-	@RequestMapping(path = "/planejamentoProcessoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoProcessoHome")
 	public ModelAndView planejamentoProcessoHome(@Valid PlanejamentoProcessoByPlanejamentoForm planejamentoProcessoByPlanejamentoForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("planejamentoProcesso/planejamentoProcessoHome");
@@ -173,10 +173,10 @@ public class PlanejamentoProcessoController {
 
 		if (planejamentoProcessoByPlanejamentoForm.getPlanejamentoProcessoSortTipo().equalsIgnoreCase("PlanejamentoNome")
 				|| planejamentoProcessoByPlanejamentoForm.getPlanejamentoProcessoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"planejamento.planejamentoNome","processo.processoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"planejamento.planejamentoNome","processo.processoNome"); 
 		
 		} else if (planejamentoProcessoByPlanejamentoForm.getPlanejamentoProcessoSortTipo().equalsIgnoreCase("ProcessoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","planejamento.planejamentoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"processo.processoNome","planejamento.planejamentoNome"); 
 
 		}
 
@@ -199,7 +199,7 @@ public class PlanejamentoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoProcessoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/planejamentoProcessoSave")
 	public ModelAndView planejamentoProcessoSave(@Valid PlanejamentoProcessoForm planejamentoProcessoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -222,7 +222,7 @@ public class PlanejamentoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoProcessoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoProcessoRelMenu")
 	public ModelAndView planejamentoProcessoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("planejamentoProcesso/planejamentoProcessoRelMenu");
@@ -231,18 +231,18 @@ public class PlanejamentoProcessoController {
 		return mv;
 	}
 
-	@RequestMapping("/planejamentoProcessoRel001")
+	@GetMapping("/planejamentoProcessoRel001")
 	public ModelAndView planejamentoProcessoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("planejamentoProcesso/planejamentoProcessoRel001");
-		Pageable planejamentoProcessoPageable = new PageRequest(0, 200, Direction.ASC, "planejamento.planejamentoNome","processo.processoNome");
+		Pageable planejamentoProcessoPageable = PageRequest.of(0, 200, Direction.ASC, "planejamento.planejamentoNome","processo.processoNome");
 		mv.addObject("planejamentoProcessoPage", planejamentoProcessoService.getPlanejamentoProcessoAll(planejamentoProcessoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/planejamentoProcessoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/planejamentoProcessoView/{id}")
 	public ModelAndView planejamentoProcessoView(@PathVariable("id") Long planejamentoProcessoId) {
 
 		PlanejamentoProcesso planejamentoProcesso = planejamentoProcessoService.getPlanejamentoProcessoByPlanejamentoProcessoPK(planejamentoProcessoId);

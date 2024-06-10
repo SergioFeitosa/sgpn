@@ -3,8 +3,8 @@ package br.com.j4business.saga.colaboradorprocesso.repository;
 import java.util.List;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,7 +13,7 @@ import br.com.j4business.saga.colaborador.model.Colaborador;
 import br.com.j4business.saga.colaboradorprocesso.model.ColaboradorProcesso;
 
 @Repository("colaboradorProcessoRepository")
-public interface ColaboradorProcessoRepository extends PagingAndSortingRepository<ColaboradorProcesso, Long>{
+public interface ColaboradorProcessoRepository extends JpaRepository<ColaboradorProcesso, Long>{
 
 /*	 @Query("SELECT ea FROM ColaboradorProcesso ea where ea.processo.processoPK = :id") 
 	    List<ColaboradorProcesso> findByProcessoPK(@Param("id") Long id);
@@ -21,7 +21,7 @@ public interface ColaboradorProcessoRepository extends PagingAndSortingRepositor
 	@Query("SELECT ep FROM ColaboradorProcesso ep INNER JOIN ep.processo p WHERE p = :processo")
 	public List<ColaboradorProcesso> findByProcesso(@Param("processo")Processo processo);
 
-	@Query("SELECT ep FROM ColaboradorProcesso ep INNER JOIN ep.processo p INNER JOIN ep.colaborador e WHERE p = :processo AND s = :colaborador")
+	@Query("SELECT cp FROM ColaboradorProcesso cp INNER JOIN cp.processo p INNER JOIN cp.colaborador c WHERE p = :processo AND c = :colaborador")
 	public ColaboradorProcesso findByColaboradorAndProcesso( @Param("colaborador") Colaborador colaborador, @Param("processo")Processo processo);
 	
 	@Query("SELECT ep FROM ColaboradorProcesso ep")

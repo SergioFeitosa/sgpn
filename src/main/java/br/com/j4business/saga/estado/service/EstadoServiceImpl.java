@@ -1,8 +1,10 @@
 package br.com.j4business.saga.estado.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,8 @@ public class EstadoServiceImpl implements EstadoService {
 	@Override
 	public Estado getEstadoByEstadoPK(long estadoPK) {
 		
-		return estadoRepository.findOne(estadoPK);
+		Optional<Estado> estado = estadoRepository.findById(estadoPK);
+		return estado.get();
 	}
 
 	@Transactional
@@ -88,7 +91,7 @@ public class EstadoServiceImpl implements EstadoService {
 
 		Estado estado = this.getEstadoByEstadoPK(estadoId);
 		
-		estadoRepository.delete(estado.getEstadoPK());
+		estadoRepository.delete(estado);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Estado Delete " + "\n Usuário => " + username + 

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,15 +17,14 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import br.com.j4business.saga.colaborador.model.ColaboradorForm;
 import br.com.j4business.saga.colaborador.service.ColaboradorService;
-import br.com.j4business.saga.colaboradorcurso.model.ColaboradorCurso;
 import br.com.j4business.saga.UsuarioSeguranca;
 import br.com.j4business.saga.atributo.enumeration.AtributoPrioridade;
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
@@ -51,7 +50,7 @@ public class ColaboradorFuncaoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/colaboradorFuncaoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorFuncaoAdd")
 	public ModelAndView colaboradorFuncaoAdd(ColaboradorFuncaoForm colaboradorFuncaoForm,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorFuncao/colaboradorFuncaoAdd");
@@ -59,15 +58,15 @@ public class ColaboradorFuncaoController {
 		mv.addObject("colaboradorFuncaoForm", colaboradorFuncaoForm);
 		mv.addObject("colaboradorFuncaoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("colaboradorFuncaoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable funcaoPageable = new PageRequest(0, 200, Direction.ASC, "funcaoNome");
+		Pageable funcaoPageable = PageRequest.of(0, 200, Direction.ASC, "funcaoNome");
 		mv.addObject("funcaoPage", funcaoService.getFuncaoAll(funcaoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorFuncaoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/colaboradorFuncaoCreate")
 	public ModelAndView colaboradorFuncaoCreate(@Valid ColaboradorFuncaoForm colaboradorFuncaoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -101,7 +100,7 @@ public class ColaboradorFuncaoController {
 	}
 
 
-	@RequestMapping(path = "/colaboradorFuncaoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorFuncaoDelete/{id}")
 	public ModelAndView colaboradorFuncaoDelete(@PathVariable("id") long colaboradorFuncaoId, @Valid FuncaoForm funcaoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/colaboradorFuncaoHome");
@@ -126,7 +125,7 @@ public class ColaboradorFuncaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorFuncaoEdit/{colaboradorFuncaoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorFuncaoEdit/{colaboradorFuncaoPK}")
 	public ModelAndView colaboradorFuncaoEdit(@PathVariable("colaboradorFuncaoPK") Long colaboradorFuncaoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorFuncao/colaboradorFuncaoEdit");
@@ -135,16 +134,16 @@ public class ColaboradorFuncaoController {
 		mv.addObject("colaboradorFuncaoForm", colaboradorFuncaoForm);
 		mv.addObject("colaboradorFuncaoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("colaboradorFuncaoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable funcaoPageable = new PageRequest(0, 200, Direction.ASC, "funcaoNome");
+		Pageable funcaoPageable = PageRequest.of(0, 200, Direction.ASC, "funcaoNome");
 		mv.addObject("funcaoPage", funcaoService.getFuncaoAll(funcaoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 	
-	@RequestMapping(path = "/colaboradorFuncaoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorFuncaoHome")
 	public ModelAndView colaboradorFuncaoHome(@Valid ColaboradorFuncaoByColaboradorForm colaboradorFuncaoByColaboradorForm, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorFuncao/colaboradorFuncaoHome");
@@ -164,10 +163,10 @@ public class ColaboradorFuncaoController {
 
 		if (colaboradorFuncaoByColaboradorForm.getColaboradorFuncaoSortTipo().equalsIgnoreCase("ColaboradorNome")
 				|| colaboradorFuncaoByColaboradorForm.getColaboradorFuncaoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"colaborador.pessoaNome","funcao.funcaoNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"colaborador.pessoaNome","funcao.funcaoNome"); 
 		
 		} else if (colaboradorFuncaoByColaboradorForm.getColaboradorFuncaoSortTipo().equalsIgnoreCase("FuncaoNome")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC,"funcao.funcaoNome","colaborador.pessoaNome"); 
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC,"funcao.funcaoNome","colaborador.pessoaNome"); 
 
 		}
 
@@ -190,7 +189,7 @@ public class ColaboradorFuncaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorFuncaoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/colaboradorFuncaoSave")
 	public ModelAndView colaboradorFuncaoSave(@Valid ColaboradorFuncaoForm colaboradorFuncaoForm, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		if (result.hasErrors()) {
@@ -213,7 +212,7 @@ public class ColaboradorFuncaoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorFuncaoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorFuncaoRelMenu")
 	public ModelAndView colaboradorFuncaoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("colaboradorFuncao/colaboradorFuncaoRelMenu");
@@ -222,18 +221,18 @@ public class ColaboradorFuncaoController {
 		return mv;
 	}
 
-	@RequestMapping("/colaboradorFuncaoRel001")
+	@GetMapping("/colaboradorFuncaoRel001")
 	public ModelAndView colaboradorFuncaoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("colaboradorFuncao/colaboradorFuncaoRel001");
-		Pageable colaboradorFuncaoPageable = new PageRequest(0, 200, Direction.ASC, "colaborador.pessoaNome","funcao.funcaoNome");
+		Pageable colaboradorFuncaoPageable = PageRequest.of(0, 200, Direction.ASC, "colaborador.pessoaNome","funcao.funcaoNome");
 		mv.addObject("colaboradorFuncaoPage", colaboradorFuncaoService.getColaboradorFuncaoAll(colaboradorFuncaoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/colaboradorFuncaoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/colaboradorFuncaoView/{id}")
 	public ModelAndView colaboradorFuncaoView(@PathVariable("id") Long colaboradorFuncaoId) {
 
 		ColaboradorFuncao colaboradorFuncao = colaboradorFuncaoService.getColaboradorFuncaoByColaboradorFuncaoPK(colaboradorFuncaoId);

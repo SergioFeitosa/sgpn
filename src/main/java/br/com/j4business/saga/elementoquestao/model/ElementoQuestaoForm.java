@@ -1,12 +1,12 @@
 package br.com.j4business.saga.elementoquestao.model;
 
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
@@ -17,11 +17,11 @@ public class ElementoQuestaoForm {
 	private long questaoPK;
 	private long elementoPK;
 	
-    @NotEmpty(message = "Nome do questao é uma informação obrigatória.")
+    @NotBlank(message = "Nome do questao é uma informação obrigatória.")
 	@NotNull
 	private String questaoNome;
 	
-    @NotEmpty(message = "Nome da Elemento é uma informação obrigatória.")
+    @NotBlank(message = "Nome da Elemento é uma informação obrigatória.")
 	@NotNull
 	private String elementoNome;
 	
@@ -32,11 +32,11 @@ public class ElementoQuestaoForm {
 	@Enumerated(EnumType.STRING)
 	private AtributoStatus elementoQuestaoStatus;
 
-    @NotEmpty(message = "Responsável é uma informação obrigatória.")
+    @NotBlank(message = "Responsável é uma informação obrigatória.")
 	@NotNull
 	private String elementoQuestaoResponsavel;
 
-    @NotEmpty(message = "Motivo da Operação é uma informação obrigatória.")
+    @NotBlank(message = "Motivo da Operação é uma informação obrigatória.")
 	@Size(min = 5,max = 200, message = "Motivo da Operação não pode ter menos que 5 e mais que 200 caracteres")
 	private String elementoQuestaoMotivoOperacao;
 

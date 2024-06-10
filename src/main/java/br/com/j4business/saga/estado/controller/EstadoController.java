@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.PersistenceException;
-import javax.validation.Valid;
+import jakarta.persistence.PersistenceException;
+import jakarta.validation.Valid;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +17,9 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -43,20 +43,20 @@ public class EstadoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/estadoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/estadoAdd")
 	public ModelAndView estadoAdd(EstadoForm estadoForm) {
 
 		ModelAndView mv = new ModelAndView("estado/estadoAdd");
 		estadoForm = estadoService.estadoParametros(estadoForm);
 		mv.addObject("estadoForm", estadoForm);
 		mv.addObject("estadoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/estadoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/estadoCreate")
 	public ModelAndView estadoCreate(@Valid EstadoForm estadoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -93,7 +93,7 @@ public class EstadoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/estadoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/estadoDelete/{id}")
 	public ModelAndView estadoDelete(@PathVariable("id") long estadoPK, @Valid EstadoForm estadoForm, BindingResult result, RedirectAttributes attributes) {
 
 		ModelAndView mv = new ModelAndView("redirect:/estadoHome");
@@ -113,7 +113,7 @@ public class EstadoController {
 		return mv;
 	}
 
-	@RequestMapping("/estadoHome")
+	@GetMapping("/estadoHome")
 	public ModelAndView estadoHome(@Valid EstadoByEstadoForm estadoByEstadoForm, BindingResult result, RedirectAttributes attributes, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("estado/estadoHome");
@@ -133,10 +133,10 @@ public class EstadoController {
 		}
 
 		if (estadoByEstadoForm.getEstadoSortTipo().equalsIgnoreCase("EstadoNome") || estadoByEstadoForm.getEstadoSortTipo().equalsIgnoreCase("")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "estadoNome");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "estadoNome");
 
 		} else if (estadoByEstadoForm.getEstadoSortTipo().equalsIgnoreCase("EstadoSigla")) {
-			pageable = new PageRequest(pageable.getPageNumber(), 15, Direction.ASC, "estadoSigla");
+			pageable = PageRequest.of(pageable.getPageNumber(), 15, Direction.ASC, "estadoSigla");
 
 		}
 
@@ -158,7 +158,7 @@ public class EstadoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/estadoEdit/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/estadoEdit/{id}")
 	public ModelAndView estadoEdit(@PathVariable("id") Long estadoId, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("estado/estadoEdit");
@@ -166,14 +166,14 @@ public class EstadoController {
 		EstadoForm estadoForm = estadoService.converteEstado(estado);
 		mv.addObject("estadoForm", estadoForm);
 		mv.addObject("estadoStatusValues", AtributoStatus.values());
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 
-	@RequestMapping(path = "/estadoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/estadoSave")
 	public ModelAndView estadoSave(@Valid EstadoForm estadoForm, BindingResult result, RedirectAttributes attributes) {
 
 		if (result.hasErrors()) {
@@ -201,7 +201,7 @@ public class EstadoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/estadoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/estadoRelMenu")
 	public ModelAndView estadoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("estado/estadoRelMenu");
@@ -211,11 +211,11 @@ public class EstadoController {
 		
 	}
 
-	@RequestMapping("/estadoRel001")
+	@GetMapping("/estadoRel001")
 	public ModelAndView estadoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("estado/estadoRel001");
-		pageable = new PageRequest(pageable.getPageNumber(), 200 , Direction.ASC, "estadoNome");
+		pageable = PageRequest.of(pageable.getPageNumber(), 200 , Direction.ASC, "estadoNome");
 		mv.addObject("estadoPage", estadoService.getEstadoAll(pageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
@@ -223,7 +223,7 @@ public class EstadoController {
 	}
 
 
-	@RequestMapping(path = "/estadoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/estadoView/{id}")
 	public ModelAndView estadoView(@PathVariable("id") Long estadoId) {
 
 		Estado estado = estadoService.getEstadoByEstadoPK(estadoId);

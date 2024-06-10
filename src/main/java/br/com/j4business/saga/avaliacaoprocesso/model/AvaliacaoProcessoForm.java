@@ -1,12 +1,12 @@
 package br.com.j4business.saga.avaliacaoprocesso.model;
 
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import br.com.j4business.saga.atributo.enumeration.AtributoStatus;
@@ -220,23 +220,23 @@ public class AvaliacaoProcessoForm {
 	}
 
 	
-    @NotEmpty(message = "Nome da Avaliacao é uma informação obrigatória.")
+    @NotBlank(message = "Nome da Avaliacao é uma informação obrigatória.")
 	@NotNull(message = "Nome da Avaliacao é uma informação obrigatória.")
 	private String avaliacaoNome;
 
-    @NotEmpty(message = "Nome da Estrutura Física é uma informação obrigatória.")
+    @NotBlank(message = "Nome da Estrutura Física é uma informação obrigatória.")
 	@NotNull(message = "Nome da Estrutura Física é uma informação obrigatória.")
 	private String estruturafisicaNome;
 	
-    @NotEmpty(message = "Nome do processo é uma informação obrigatória.")
+    @NotBlank(message = "Nome do processo é uma informação obrigatória.")
 	@NotNull(message = "Nome do processo é uma informação obrigatória.")
 	private String processoNome;
 	
-    @NotEmpty(message = "Nome do questionário é uma informação obrigatória.")
+    @NotBlank(message = "Nome do questionário é uma informação obrigatória.")
 	@NotNull(message = "Nome do questionário é uma informação obrigatória.")
 	private String questionarioNome;
 	
-    @NotEmpty(message = "Nome da Unidade Organizacional é uma informação obrigatória.")
+    @NotBlank(message = "Nome da Unidade Organizacional é uma informação obrigatória.")
 	@NotNull(message = "Nome da Unidade Organizacional é uma informação obrigatória.")
 	private String unidadeorganizacionalNome;
 	
@@ -250,11 +250,11 @@ public class AvaliacaoProcessoForm {
 	@Enumerated(EnumType.STRING)
 	private AtributoStatus avaliacaoProcessoStatus;
 
-    @NotEmpty(message = "Responsável é uma informação obrigatória.")
+    @NotBlank(message = "Responsável é uma informação obrigatória.")
 	@NotNull(message = "Responsável é uma informação obrigatória.")
 	private String avaliacaoProcessoResponsavel;
 
-    @NotEmpty(message = "Motivo da Operação é uma informação obrigatória.")
+    @NotBlank(message = "Motivo da Operação é uma informação obrigatória.")
 	@Size(min = 5,max = 200, message = "Motivo da Operação não pode ter menos que 5 e mais que 200 caracteres")
 	private String avaliacaoProcessoMotivoOperacao;
 

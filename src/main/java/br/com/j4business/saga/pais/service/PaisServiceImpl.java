@@ -1,8 +1,10 @@
 package br.com.j4business.saga.pais.service;
 
 import java.util.List;
-import javax.persistence.EntityManager;
-import javax.transaction.Transactional;
+import java.util.Optional;
+
+import jakarta.persistence.EntityManager;
+import jakarta.transaction.Transactional;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +44,8 @@ public class PaisServiceImpl implements PaisService {
 	@Override
 	public Pais getPaisByPaisPK(long paisPK) {
 		
-		return paisRepository.findOne(paisPK);
+		Optional<Pais> pais = paisRepository.findById(paisPK);
+		return pais.get();
 	}
 
 	@Transactional
@@ -84,7 +87,7 @@ public class PaisServiceImpl implements PaisService {
 
 		Pais pais = this.getPaisByPaisPK(paisId);
 		
-		paisRepository.delete(pais.getPaisPK());
+		paisRepository.delete(pais);
 
 		String username = usuarioSeguranca.getUsuarioLogado();
 		logger.info("Pais Delete " + "\n Usuário => " + username + 

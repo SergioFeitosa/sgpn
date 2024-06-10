@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.Valid;
+import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,9 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -61,28 +61,28 @@ public class AvaliacaoResultadoContratoController {
 	@Autowired
 	private UsuarioSeguranca usuarioSeguranca;
 
-	@RequestMapping(path = "/avaliacaoResultadoContratoAdd", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoResultadoContratoAdd")
 	public ModelAndView avaliacaoResultadoContratoAdd(AvaliacaoResultadoContrato avaliacaoResultadoContrato) {
 
 		ModelAndView mv = new ModelAndView("avaliacaoResultadoContrato/avaliacaoResultadoContratoAdd");
 		mv.addObject("avaliacaoResultadoContrato", avaliacaoResultadoContrato);
 		mv.addObject("avaliacaoResultadoContratoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("avaliacaoResultadoContratoStatusValues", AtributoStatus.values());
-		Pageable avaliacaoPageable = new PageRequest(0, 200, Direction.ASC, "avaliacaoNome");
+		Pageable avaliacaoPageable = PageRequest.of(0, 200, Direction.ASC, "avaliacaoNome");
 		mv.addObject("avaliacaoPage", avaliacaoService.getAvaliacaoAll(avaliacaoPageable));
-		Pageable cenarioPageable = new PageRequest(0, 200, Direction.ASC, "cenarioNome");
+		Pageable cenarioPageable = PageRequest.of(0, 200, Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(cenarioPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable questionarioPageable = new PageRequest(0, 200, Direction.ASC, "questionarioNome");
+		Pageable questionarioPageable = PageRequest.of(0, 200, Direction.ASC, "questionarioNome");
 		mv.addObject("questionarioPage", questionarioService.getQuestionarioAll(questionarioPageable));
-		Pageable resultadoPageable = new PageRequest(0, 200, Direction.ASC, "resultadoNome");
+		Pageable resultadoPageable = PageRequest.of(0, 200, Direction.ASC, "resultadoNome");
 		mv.addObject("resultadoPage", resultadoService.getResultadoAll(resultadoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoResultadoContratoCreate", method = RequestMethod.POST)
+	@PostMapping(path = "/avaliacaoResultadoContratoCreate")
 	public ModelAndView avaliacaoResultadoContratoCreate(AvaliacaoResultadoContrato avaliacaoResultadoContrato, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		
@@ -101,7 +101,7 @@ public class AvaliacaoResultadoContratoController {
 	}
 
 
-	@RequestMapping(path = "/avaliacaoResultadoContratoDelete/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoResultadoContratoDelete/{id}")
 	public ModelAndView avaliacaoResultadoContratoDelete(@PathVariable("id") long resultadoId, @Valid ResultadoForm resultadoForm, BindingResult result, RedirectAttributes attributes) {
 
 		avaliacaoResultadoContratoService.delete(resultadoId);
@@ -112,7 +112,7 @@ public class AvaliacaoResultadoContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoResultadoContratoEdit/{avaliacaoResultadoContratoPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoResultadoContratoEdit/{avaliacaoResultadoContratoPK}")
 	public ModelAndView avaliacaoResultadoContratoEdit(@PathVariable("avaliacaoResultadoContratoPK") Long avaliacaoResultadoContratoPK, Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("avaliacaoResultadoContrato/avaliacaoResultadoContratoEdit");
@@ -120,22 +120,22 @@ public class AvaliacaoResultadoContratoController {
 		mv.addObject("avaliacaoResultadoContrato", avaliacaoResultadoContrato);
 		mv.addObject("avaliacaoResultadoContratoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("avaliacaoResultadoContratoStatusValues", AtributoStatus.values());
-		Pageable avaliacaoPageable = new PageRequest(0, 200, Direction.ASC, "avaliacaoNome");
+		Pageable avaliacaoPageable = PageRequest.of(0, 200, Direction.ASC, "avaliacaoNome");
 		mv.addObject("avaliacaoPage", avaliacaoService.getAvaliacaoAll(avaliacaoPageable));
-		Pageable cenarioPageable = new PageRequest(0, 200, Direction.ASC, "cenarioNome");
+		Pageable cenarioPageable = PageRequest.of(0, 200, Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(cenarioPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable questionarioPageable = new PageRequest(0, 200, Direction.ASC, "questionarioNome");
+		Pageable questionarioPageable = PageRequest.of(0, 200, Direction.ASC, "questionarioNome");
 		mv.addObject("questionarioPage", questionarioService.getQuestionarioAll(questionarioPageable));
-		Pageable resultadoPageable = new PageRequest(0, 200, Direction.ASC, "resultadoNome");
+		Pageable resultadoPageable = PageRequest.of(0, 200, Direction.ASC, "resultadoNome");
 		mv.addObject("resultadoPage", resultadoService.getResultadoAll(resultadoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoResultadoContratoQuestionario/{avaliacaoResultadoContratoPK}/{questionarioPK}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoResultadoContratoQuestionario/{avaliacaoResultadoContratoPK}/{questionarioPK}")
 	public ModelAndView avaliacaoResultadoContratoQuestionario(@PathVariable("avaliacaoResultadoContratoPK") Long avaliacaoResultadoContratoPK,
 													  @PathVariable("questionarioPK") Long questionarioPK)
 						{
@@ -146,24 +146,24 @@ public class AvaliacaoResultadoContratoController {
 		mv.addObject("avaliacaoResultadoContratoPrioridadeValues", AtributoPrioridade.values());
 		mv.addObject("avaliacaoResultadoContratoStatusValues", AtributoStatus.values());
 		mv.addObject("colaboradorList", colaboradorService.getColaboradorAll());
-		Pageable avaliacaoPageable = new PageRequest(0, 200, Direction.ASC, "avaliacaoNome");
+		Pageable avaliacaoPageable = PageRequest.of(0, 200, Direction.ASC, "avaliacaoNome");
 		mv.addObject("avaliacaoPage", avaliacaoService.getAvaliacaoAll(avaliacaoPageable));
-		Pageable cenarioPageable = new PageRequest(0, 200, Direction.ASC, "cenarioNome");
+		Pageable cenarioPageable = PageRequest.of(0, 200, Direction.ASC, "cenarioNome");
 		mv.addObject("cenarioPage", cenarioService.getCenarioAll(cenarioPageable));
-		Pageable colaboradorPageable = new PageRequest(0, 200, Direction.ASC, "pessoaNome");
+		Pageable colaboradorPageable = PageRequest.of(0, 200, Direction.ASC, "pessoaNome");
 		mv.addObject("colaboradorPage", colaboradorService.getColaboradorAll(colaboradorPageable));
-		Pageable questionarioPageable = new PageRequest(0, 200, Direction.ASC, "questionarioNome");
+		Pageable questionarioPageable = PageRequest.of(0, 200, Direction.ASC, "questionarioNome");
 		mv.addObject("questionarioPage", questionarioService.getQuestionarioAll(questionarioPageable));
-		Pageable resultadoPageable = new PageRequest(0, 200, Direction.ASC, "resultadoNome");
+		Pageable resultadoPageable = PageRequest.of(0, 200, Direction.ASC, "resultadoNome");
 		mv.addObject("resultadoPage", resultadoService.getResultadoAll(resultadoPageable));
-		Pageable questaoPageable = new PageRequest(0, 200, Direction.ASC, "questaoSequencia");
+		Pageable questaoPageable = PageRequest.of(0, 200, Direction.ASC, "questaoSequencia");
 		mv.addObject("questaoPage", questionarioQuestaoService.getByQuestionarioPK(questionarioPK,questaoPageable));
 		mv.addObject("usuarioNome",usuarioSeguranca.getUsuarioLogado()); mv.addObject("standardDate",new Date());
 
 		return mv;
 	}
 	
-	@RequestMapping(path = "/avaliacaoResultadoContratoHome", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoResultadoContratoHome")
 	public ModelAndView avaliacaoResultadoContratoHome(@Valid AvaliacaoResultadoContrato avaliacaoResultadoContrato, BindingResult result,RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("avaliacaoResultadoContrato/avaliacaoResultadoContratoHome");
@@ -182,7 +182,7 @@ public class AvaliacaoResultadoContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoResultadoContratoSave", method = RequestMethod.POST)
+	@PostMapping(path = "/avaliacaoResultadoContratoSave")
 	public ModelAndView avaliacaoResultadoContratoSave(@Valid AvaliacaoResultadoContrato avaliacaoResultadoContrato, BindingResult result, RedirectAttributes attributes,Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("redirect:/avaliacaoResultadoContratoHome");
@@ -192,7 +192,7 @@ public class AvaliacaoResultadoContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoResultadoContratoRelMenu", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoResultadoContratoRelMenu")
 	public ModelAndView avaliacaoResultadoContratoRelMenu() {
 
 		ModelAndView mv = new ModelAndView("avaliacaoResultadoContrato/avaliacaoResultadoContratoRelMenu");
@@ -201,7 +201,7 @@ public class AvaliacaoResultadoContratoController {
 		return mv;
 	}
 
-	@RequestMapping("/avaliacaoResultadoContratoRel001")
+	@GetMapping("/avaliacaoResultadoContratoRel001")
 	public ModelAndView avaliacaoResultadoContratoRel001(Pageable pageable) {
 
 		ModelAndView mv = new ModelAndView("avaliacaoResultadoContrato/avaliacaoResultadoContratoRel001");
@@ -211,7 +211,7 @@ public class AvaliacaoResultadoContratoController {
 		return mv;
 	}
 
-	@RequestMapping(path = "/avaliacaoResultadoContratoView/{id}", method = RequestMethod.GET)
+	@GetMapping(path = "/avaliacaoResultadoContratoView/{id}")
 	public ModelAndView avaliacaoResultadoContratoView(@PathVariable("id") Long avaliacaoResultadoContratoId) {
 
 		AvaliacaoResultadoContrato avaliacaoResultadoContrato = avaliacaoResultadoContratoService.getAvaliacaoResultadoContratoByAvaliacaoResultadoContratoPK(avaliacaoResultadoContratoId);
